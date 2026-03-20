@@ -4,6 +4,15 @@ on:
   # 在推送到 main 分支时触发
   push:
     branches: ['main']
+    paths:
+      - 'posts/**'      # 文章目录变化
+      - 'src/**'        # 源代码变化
+      - 'public/**'     # 静态资源变化
+      - 'index.html'    # HTML 模板变化
+      - 'package.json'  # 依赖变化
+      - 'vite.config.ts'
+      - 'tailwind.config.js'
+      - 'tsconfig.json'
   
   # 允许手动触发
   workflow_dispatch:
@@ -35,8 +44,24 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
+      
+      # 检查 posts 目录是否有变化
+      - name: Check posts changes
+        id: posts-check
+        run: |
+          if git diff --name-only HEAD^ HEAD | grep -q "^posts/"; then
+            echo "Posts directory changed"
+            echo "posts_changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "No posts changes"
+            echo "posts_changed=false" >> $GITHUB_OUTPUT
+          fi
+        continue-on-error: true
         
-      - name: Build
+      - name: Build posts data
+        run: npm run build:posts
+        
+      - name: Build project
         run: npm run build
         
       - name: Setup Pages

@@ -1,18 +1,19 @@
 # DevBlog - 现代静态博客
 
-一个基于 React + TypeScript + Tailwind CSS 构建的现代化静态博客，支持暗黑模式、Markdown 渲染、代码高亮、评论系统等丰富功能。
+一个基于 React + TypeScript + Tailwind CSS 构建的现代化静态博客，支持从 `/posts` 目录自动读取 Markdown 文章。
 
 ## 特性
 
 - 🎨 **现代设计** - 简洁美观的界面，支持响应式布局
 - 🌙 **暗黑模式** - 支持自动/手动切换暗黑模式
 - 📝 **Markdown 支持** - 完整的 Markdown 渲染，包括代码高亮
+- 📂 **文章自动同步** - 只需在 `/posts` 目录添加 `.md` 文件即可自动发布
 - 🔍 **搜索功能** - 前端实现的实时文章搜索
 - 🏷️ **分类标签** - 支持文章分类和标签筛选
 - 💬 **评论系统** - 集成 Giscus（基于 GitHub Discussions）
 - 🛠️ **开发工具** - 内置 JSON 格式化、Base64 编解码等实用工具
 - 🔗 **SEO 优化** - 完善的 meta 标签和 Open Graph 支持
-- ⚡ **性能优化** - 代码分割、懒加载等优化
+- ⚡ **自动部署** - GitHub Actions 自动构建部署
 
 ## 技术栈
 
@@ -51,42 +52,25 @@ npm run dev
 npm run build
 ```
 
-## 项目结构
-
-```
-├── public/                 # 静态资源
-├── src/
-│   ├── components/         # 组件
-│   │   ├── tools/         # 工具组件
-│   │   └── ...
-│   ├── contexts/          # React Context
-│   ├── data/              # 数据和配置
-│   ├── hooks/             # 自定义 Hooks
-│   ├── pages/             # 页面组件
-│   ├── styles/            # 样式文件
-│   ├── types/             # TypeScript 类型
-│   ├── utils/             # 工具函数
-│   ├── App.tsx            # 主应用组件
-│   └── main.tsx           # 入口文件
-├── index.html
-├── package.json
-├── tailwind.config.js
-├── tsconfig.json
-└── vite.config.ts
-```
-
 ## 如何新增文章
 
-1. 打开 `src/data/posts.ts` 文件
-2. 在 `posts` 数组中添加新文章对象：
+### 方法一：直接在 `/posts` 目录添加 Markdown 文件（推荐）
 
-```typescript
-{
-  id: '7',
-  title: '文章标题',
-  slug: 'article-slug',  // URL 友好的标识
-  excerpt: '文章摘要，显示在列表中',
-  content: `
+1. 在 `posts/` 目录下创建新的 `.md` 文件，例如 `my-new-post.md`
+2. 在文件头部添加 frontmatter 信息
+3. 提交并推送到 GitHub，自动触发部署
+
+```markdown
+---
+title: "文章标题"
+slug: "article-slug"
+excerpt: "文章摘要，显示在列表中"
+date: "2024-01-15"
+category: "frontend"
+tags: ["React", "TypeScript"]
+readingTime: 8
+---
+
 # 文章标题
 
 正文内容，支持 Markdown 语法...
@@ -100,26 +84,57 @@ npm run build
 // 代码块
 const example = 'Hello World';
 \`\`\`
-  `,
-  date: '2024-01-20',
-  updatedAt: '2024-01-21',  // 可选
-  category: 'frontend',     // 分类 slug
-  tags: ['React', 'TypeScript'],
-  cover: '/images/cover.png',  // 可选
-  readingTime: 5,
-  author: 'Author Name',
-}
 ```
 
-3. 重新构建部署
+### Frontmatter 字段说明
 
-### Markdown 写作规范
+| 字段 | 必填 | 说明 |
+|------|------|------|
+| `title` | ✅ | 文章标题 |
+| `slug` | ✅ | URL 友好的标识，如 `react-hooks-guide` |
+| `excerpt` | ✅ | 文章摘要，显示在列表中 |
+| `date` | ✅ | 发布日期，格式 `YYYY-MM-DD` |
+| `category` | ✅ | 分类 slug，见下方可用分类 |
+| `tags` | ✅ | 标签数组，如 `["React", "Hooks"]` |
+| `updatedAt` | ❌ | 更新日期（可选） |
+| `readingTime` | ❌ | 预计阅读时间（分钟），不填则自动计算 |
+| `cover` | ❌ | 封面图片路径（可选） |
+| `author` | ❌ | 作者名（可选，默认使用站点配置） |
 
-- 使用 `#` 表示一级标题（文章主标题）
-- 使用 `##` 表示二级标题（章节标题）
-- 使用 `###` 表示三级标题（小节标题）
-- 代码块使用三个反引号包裹，并指定语言
-- 支持 GitHub 风格的表格、任务列表等
+### 可用分类
+
+| slug | 名称 |
+|------|------|
+| `frontend` | 前端开发 |
+| `backend` | 后端开发 |
+| `devops` | DevOps |
+| `tools` | 工具效率 |
+| `best-practices` | 最佳实践 |
+
+### 文章模板
+
+参考 `posts/TEMPLATE.md` 文件，包含完整的格式说明和示例。
+
+## 项目结构
+
+```
+├── posts/                      # 文章目录（Markdown 文件）
+│   ├── TEMPLATE.md            # 文章模板
+│   ├── react-typescript-modern-web.md
+│   └── ...
+├── scripts/
+│   └── build-posts.js         # Markdown 解析脚本
+├── src/
+│   ├── components/            # 组件
+│   ├── data/
+│   │   ├── config.ts          # 站点配置
+│   │   ├── posts.ts           # 文章数据入口
+│   │   └── posts.json         # 生成的文章数据（自动）
+│   └── ...
+├── .github/workflows/
+│   └── deploy.yml             # GitHub Actions 自动部署
+└── ...
+```
 
 ## 如何配置评论系统
 
@@ -144,10 +159,10 @@ const example = 'Hello World';
 ```typescript
 comment: {
   provider: 'giscus',
-  repo: 'username/blog-comments',  // 你的仓库
-  repoId: 'R_kgDOG...',            // 从 giscus.app 获取
+  repo: 'username/blog-comments',
+  repoId: 'R_kgDOG...',
   category: 'Announcements',
-  categoryId: 'DIC_kwDOG...',      // 从 giscus.app 获取
+  categoryId: 'DIC_kwDOG...',
   mapping: 'pathname',
   reactionsEnabled: true,
   emitMetadata: false,
@@ -160,19 +175,30 @@ comment: {
 
 ## 部署到 GitHub Pages
 
-### 方法一：使用 GitHub Actions（推荐）
+### 自动部署（推荐）
+
+项目已配置 GitHub Actions 自动部署：
 
 1. 在仓库设置中启用 GitHub Pages
 2. 选择 "GitHub Actions" 作为源
-3. 推送代码，自动触发部署
+3. 推送代码到 `main` 分支，自动触发构建部署
 
-### 方法二：手动部署
+### 部署触发条件
+
+以下文件变化会自动触发部署：
+- `posts/**` - 文章目录
+- `src/**` - 源代码
+- `public/**` - 静态资源
+- `index.html`, `package.json`, `vite.config.ts` 等配置文件
+
+### 手动部署
 
 ```bash
 # 构建
 npm run build
 
-# 部署到 gh-pages 分支
+# 部署到 gh-pages 分支（需要安装 gh-pages）
+npm install -D gh-pages
 npm run deploy
 ```
 

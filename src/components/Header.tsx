@@ -119,7 +119,7 @@ export const Header: React.FC<HeaderProps> = ({ onSearchClick }) => {
       {/* Mobile Menu */}
       <div
         className={cn(
-          'md:hidden fixed inset-0 top-16 bg-white dark:bg-gray-900 transition-transform duration-300 z-40',
+          'md:hidden fixed inset-0 top-16 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md transition-transform duration-300 z-40',
           mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
         )}
       >
