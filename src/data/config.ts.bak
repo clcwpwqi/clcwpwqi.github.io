@@ -6,14 +6,14 @@ import type { SiteConfig, Tool } from '@/types';
 
 // 站点基本信息配置
 export const siteConfig: SiteConfig = {
-  title: 'clc’Blog',
+  title: 'DevBlog',
   description: '一个简洁、现代的开发者博客，分享技术文章与实用工具',
-  author: 'clcwpwqi',
-  email: 'clcwpwqi@outlook.com',
-  github: 'https://github.com/clcwpwqi',
-  telegram: 'https://t.me/clcwpwqi',
+  author: 'Developer',
+  email: 'developer@example.com',
+  github: 'https://github.com/username',
+  twitter: 'https://twitter.com/username',
   avatar: '/images/avatar.png',
-  url: 'https://clcwpwqi.github.io',
+  url: 'https://username.github.io',
   
   // 评论系统配置 (Giscus)
   // 配置步骤：
@@ -21,10 +21,10 @@ export const siteConfig: SiteConfig = {
   // 2. 替换以下配置项
   comment: {
     provider: 'giscus',
-    repo: 'clcwpwqi/clcwpwqi.github.io',  // 替换为你的仓库
-    repoId: 'R_kgDORslu9w',            // 从 giscus.app 获取
+    repo: 'username/blog-comments',  // 替换为你的仓库
+    repoId: 'R_kgDOG...',            // 从 giscus.app 获取
     category: 'Announcements',
-    categoryId: 'DIC_kwDORslu984C45V0',      // 从 giscus.app 获取
+    categoryId: 'DIC_kwDOG...',      // 从 giscus.app 获取
     mapping: 'pathname',
     reactionsEnabled: true,
     emitMetadata: false,
@@ -32,6 +32,7 @@ export const siteConfig: SiteConfig = {
     crossorigin: 'anonymous',
   }
 };
+
 // 导航链接配置
 export const navLinks = [
   { label: '首页', href: '/' },
@@ -89,7 +90,7 @@ export const tools: Tool[] = [
 // 社交链接配置
 export const socialLinks = {
   github: siteConfig.github,
-  telegram: siteConfig.telegram,
+  twitter: siteConfig.twitter,
   email: `mailto:${siteConfig.email}`,
   rss: '/rss.xml',
 };

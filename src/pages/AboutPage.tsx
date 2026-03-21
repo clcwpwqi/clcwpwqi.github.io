@@ -51,7 +51,7 @@ export const AboutPage: React.FC = () => {
               {siteConfig.author}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              全栈开发者，热爱开源，喜欢分享技术文章和开发经验
+              开发者，热爱开源，喜欢分享技术文章和开发经验
             </p>
           </motion.div>
         </div>
@@ -189,9 +189,9 @@ export const AboutPage: React.FC = () => {
                     <Github className="w-5 h-5 mr-3" />
                     GitHub
                   </a>
-                  {siteConfig.twitter && (
+                  {siteConfig.telegram && (
                     <a
-                      href={siteConfig.twitter}
+                      href={siteConfig.telegram}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-400 transition-colors"
