@@ -11,7 +11,7 @@ export const siteConfig: SiteConfig = {
   author: 'clcwpwqi',
   email: 'clcwpwqi@outlook.com',
   github: 'https://github.com/clcwpwqi',
-  Telegram: 'https://t.me/clcwpwqi',
+  twitter: 'https://t.me/clcwpwqi',
   avatar: '/images/avatar.png',
   url: 'https://clcwpwqi.github.io',
   
