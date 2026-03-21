@@ -89,7 +89,7 @@ export const tools: Tool[] = [
 // 社交链接配置
 export const socialLinks = {
   github: siteConfig.github,
-  twitter: siteConfig.Telegram,
+  twitter: siteConfig.twitter,
   email: `mailto:${siteConfig.email}`,
   rss: '/rss.xml',
 };
