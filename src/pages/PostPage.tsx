@@ -1,7 +1,7 @@
 /**
  * 文章详情页
  */
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
@@ -17,12 +17,11 @@ import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 import { TableOfContents } from '@/components/TableOfContents';
 import { GiscusComments } from '@/components/GiscusComments';
 import { SEO } from '@/components/SEO';
-import { getPostBySlug, posts } from '@/data/posts';
+import { posts, getPostBySlug, getCategoryBySlug } from '@/data/posts';
 import { formatDate, getRelativeTime } from '@/utils/helpers';
 import { siteConfig } from '@/data/config';
-// import { cn } from '@/lib/utils';
 
-export const PostPage: React.FC = () => {
+export const PostPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getPostBySlug(slug) : undefined;
 
@@ -39,6 +38,10 @@ export const PostPage: React.FC = () => {
   const currentIndex = posts.findIndex((p) => p.id === post.id);
   const prevPost = currentIndex > 0 ? posts[currentIndex - 1] : null;
   const nextPost = currentIndex < posts.length - 1 ? posts[currentIndex + 1] : null;
+
+  // 获取分类名称
+  const category = getCategoryBySlug(post.category);
+  const categoryName = category?.name || post.category;
 
   return (
     <>
@@ -72,7 +75,7 @@ export const PostPage: React.FC = () => {
               to={`/categories?category=${post.category}`}
               className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium mb-4"
             >
-              {post.category}
+              {categoryName}
             </Link>
 
             {/* Title */}

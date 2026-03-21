@@ -1,0 +1,7 @@
+{
+  "id": "frontend",
+  "name": "前端开发",
+  "slug": "frontend",
+  "description": "HTML, CSS, JavaScript, React, Vue 等前端技术",
+  "order": 1
+}

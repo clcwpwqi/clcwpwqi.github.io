@@ -1,12 +1,18 @@
 /**
- * 文章数据
+ * 文章数据入口
  * 从 posts.json 加载，该文件由 scripts/build-posts.js 生成
  */
-import type { Post } from '@/types';
+import type { Post, Category, Tag, PostsData } from '@/types';
 import postsData from './posts.json';
 
 // 类型断言确保数据格式正确
-export const posts: Post[] = postsData as Post[];
+const data = postsData as PostsData;
+
+// 导出数据
+export const posts: Post[] = data.posts || [];
+export const categories: Category[] = data.categories || [];
+export const tags: Tag[] = data.tags || [];
+export const labelsConfig = data.labelsConfig || {};
 
 // 获取所有文章
 export const getAllPosts = () => posts;
@@ -41,11 +47,17 @@ export const searchPosts = (query: string) => {
 
 // 获取所有标签
 export const getAllTags = () => {
-  const tagSet = new Set<string>();
-  posts.forEach((post) => {
-    post.tags.forEach((tag) => tagSet.add(tag));
-  });
-  return Array.from(tagSet);
+  return tags.map(t => t.name);
+};
+
+// 根据标签名获取标签配置
+export const getTagByName = (name: string) => {
+  return tags.find(t => t.name === name);
+};
+
+// 根据分类 slug 获取分类信息
+export const getCategoryBySlug = (slug: string) => {
+  return categories.find(c => c.slug === slug);
 };
 
 // 获取所有分类及其文章数

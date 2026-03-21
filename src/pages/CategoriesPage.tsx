@@ -8,36 +8,23 @@ import { Folder, Tag, FileText } from 'lucide-react';
 import { PostCard } from '@/components/PostCard';
 import { TagCloud } from '@/components/TagCloud';
 import { SEO } from '@/components/SEO';
-import { categories } from '@/data/config';
-import { posts, getAllTags, getPostsByCategory, getPostsByTag } from '@/data/posts';
-import { cn } from '@/lib/utils';
+import { posts, categories, tags, getPostsByCategory, getPostsByTag, getCategoryBySlug } from '@/data/posts';
 
-export const CategoriesPage: React.FC = () => {
+export const CategoriesPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeCategory = searchParams.get('category');
   const activeTag = searchParams.get('tag');
 
-  const allTags = getAllTags();
-
-  // 计算每个分类的文章数
-  const categoryCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
-    categories.forEach((cat) => {
-      counts[cat.slug] = posts.filter((p) => p.category === cat.slug).length;
-    });
-    return counts;
-  }, []);
-
   // 计算每个标签的文章数
   const tagCounts = useMemo(() => {
     const counts: Record<string, number> = {};
-    allTags.forEach((tag) => {
-      counts[tag] = posts.filter((p) =>
-        p.tags.some((t) => t.toLowerCase() === tag.toLowerCase())
+    tags.forEach((tag) => {
+      counts[tag.name] = posts.filter((p) =>
+        p.tags.some((t) => t.toLowerCase() === tag.name.toLowerCase())
       ).length;
     });
     return counts;
-  }, [allTags]);
+  }, []);
 
   // 筛选文章
   const filteredPosts = useMemo(() => {
@@ -73,6 +60,11 @@ export const CategoriesPage: React.FC = () => {
   const clearFilters = () => {
     setSearchParams({});
   };
+
+  // 获取当前分类名称
+  const activeCategoryName = activeCategory 
+    ? getCategoryBySlug(activeCategory)?.name || activeCategory
+    : null;
 
   return (
     <>
@@ -116,36 +108,29 @@ export const CategoriesPage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
                 onClick={() => handleCategoryClick(category.slug)}
-                className={cn(
-                  'p-6 rounded-xl text-left transition-all duration-200',
+                className={`p-6 rounded-xl text-left transition-all duration-200 ${
                   activeCategory === category.slug
                     ? 'bg-blue-600 text-white shadow-lg'
                     : 'bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-blue-50 dark:hover:bg-gray-700'
-                )}
+                }`}
               >
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="text-lg font-semibold mb-2">{category.name}</h3>
-                    <p
-                      className={cn(
-                        'text-sm',
-                        activeCategory === category.slug
-                          ? 'text-blue-100'
-                          : 'text-gray-600 dark:text-gray-400'
-                      )}
-                    >
+                    <p className={`text-sm ${
+                      activeCategory === category.slug
+                        ? 'text-blue-100'
+                        : 'text-gray-600 dark:text-gray-400'
+                    }`}>
                       {category.description}
                     </p>
                   </div>
-                  <span
-                    className={cn(
-                      'px-3 py-1 rounded-full text-sm font-medium',
-                      activeCategory === category.slug
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
-                    )}
-                  >
-                    {categoryCounts[category.slug] || 0}
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    activeCategory === category.slug
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  }`}>
+                    {posts.filter((p) => p.category === category.slug).length}
                   </span>
                 </div>
               </motion.button>
@@ -162,7 +147,7 @@ export const CategoriesPage: React.FC = () => {
             热门标签
           </h2>
           <TagCloud
-            tags={allTags}
+            tags={tags.map(t => t.name)}
             activeTag={activeTag || undefined}
             onTagClick={handleTagClick}
             showCount
@@ -179,7 +164,7 @@ export const CategoriesPage: React.FC = () => {
               <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
                 <FileText className="w-5 h-5 mr-2" />
                 {activeCategory
-                  ? `分类: ${categories.find((c) => c.slug === activeCategory)?.name}`
+                  ? `分类: ${activeCategoryName}`
                   : `标签: ${activeTag}`}
                 <span className="ml-2 text-sm font-normal text-gray-500">
                   ({filteredPosts.length} 篇)

@@ -24,7 +24,8 @@ export interface Category {
   name: string;
   slug: string;
   description: string;
-  count: number;
+  order?: number;
+  count?: number;
 }
 
 // 标签类型
@@ -32,7 +33,16 @@ export interface Tag {
   id: string;
   name: string;
   slug: string;
-  count: number;
+  color?: string;
+  count?: number;
+}
+
+// 标签配置类型
+export interface LabelConfig {
+  id: string;
+  name: string;
+  slug: string;
+  color: string;
 }
 
 // 导航链接类型
@@ -89,4 +99,12 @@ export interface SiteConfig {
   avatar: string;
   url: string;
   comment: CommentConfig;
+}
+
+// 文章数据输出类型
+export interface PostsData {
+  posts: Post[];
+  categories: Category[];
+  tags: Tag[];
+  labelsConfig: Record<string, LabelConfig>;
 }

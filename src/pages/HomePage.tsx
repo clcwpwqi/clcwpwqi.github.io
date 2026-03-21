@@ -8,29 +8,23 @@ import { Sparkles, TrendingUp, Tag } from 'lucide-react';
 import { PostCard } from '@/components/PostCard';
 import { TagCloud } from '@/components/TagCloud';
 import { SEO } from '@/components/SEO';
-import { posts, getAllTags } from '@/data/posts';
-import { categories } from '@/data/config';
-import { cn } from '@/lib/utils';
+import { posts, categories, tags, getPostsByCategory, getPostsByTag } from '@/data/posts';
 
-export const HomePage: React.FC = () => {
+export const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTag = searchParams.get('tag');
   const activeCategory = searchParams.get('category');
-
-  const allTags = getAllTags();
 
   // 筛选文章
   const filteredPosts = useMemo(() => {
     let result = [...posts];
 
     if (activeTag) {
-      result = result.filter((post) =>
-        post.tags.some((tag) => tag.toLowerCase() === activeTag.toLowerCase())
-      );
+      result = getPostsByTag(activeTag);
     }
 
     if (activeCategory) {
-      result = result.filter((post) => post.category === activeCategory);
+      result = getPostsByCategory(activeCategory);
     }
 
     return result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -50,6 +44,7 @@ export const HomePage: React.FC = () => {
     } else {
       searchParams.set('tag', tag);
     }
+    searchParams.delete('category');
     setSearchParams(searchParams);
   };
 
@@ -183,12 +178,11 @@ export const HomePage: React.FC = () => {
                     <a
                       key={category.slug}
                       href={`/categories?category=${category.slug}`}
-                      className={cn(
-                        'flex items-center justify-between p-3 rounded-lg transition-colors',
+                      className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
                         activeCategory === category.slug
                           ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
                           : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
-                      )}
+                      }`}
                     >
                       <span>{category.name}</span>
                       <span className="text-sm text-gray-400">
@@ -206,7 +200,7 @@ export const HomePage: React.FC = () => {
                   标签
                 </h3>
                 <TagCloud
-                  tags={allTags}
+                  tags={tags.map(t => t.name)}
                   activeTag={activeTag || undefined}
                   onTagClick={handleTagClick}
                 />

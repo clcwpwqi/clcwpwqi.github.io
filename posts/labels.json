@@ -1,0 +1,110 @@
+{
+  "React": {
+    "id": "react",
+    "name": "React",
+    "slug": "react",
+    "color": "#61DAFB"
+  },
+  "TypeScript": {
+    "id": "typescript",
+    "name": "TypeScript",
+    "slug": "typescript",
+    "color": "#3178C6"
+  },
+  "Frontend": {
+    "id": "frontend",
+    "name": "前端",
+    "slug": "frontend",
+    "color": "#42B883"
+  },
+  "Tailwind CSS": {
+    "id": "tailwind-css",
+    "name": "Tailwind CSS",
+    "slug": "tailwind-css",
+    "color": "#06B6D4"
+  },
+  "CSS": {
+    "id": "css",
+    "name": "CSS",
+    "slug": "css",
+    "color": "#264DE4"
+  },
+  "Docker": {
+    "id": "docker",
+    "name": "Docker",
+    "slug": "docker",
+    "color": "#2496ED"
+  },
+  "DevOps": {
+    "id": "devops",
+    "name": "DevOps",
+    "slug": "devops",
+    "color": "#FF6B6B"
+  },
+  "Container": {
+    "id": "container",
+    "name": "容器",
+    "slug": "container",
+    "color": "#326CE5"
+  },
+  "Git": {
+    "id": "git",
+    "name": "Git",
+    "slug": "git",
+    "color": "#F05032"
+  },
+  "Best Practices": {
+    "id": "best-practices",
+    "name": "最佳实践",
+    "slug": "best-practices",
+    "color": "#9B59B6"
+  },
+  "VS Code": {
+    "id": "vscode",
+    "name": "VS Code",
+    "slug": "vscode",
+    "color": "#007ACC"
+  },
+  "Tools": {
+    "id": "tools",
+    "name": "工具",
+    "slug": "tools",
+    "color": "#E74C3C"
+  },
+  "Productivity": {
+    "id": "productivity",
+    "name": "效率",
+    "slug": "productivity",
+    "color": "#27AE60"
+  },
+  "Node.js": {
+    "id": "nodejs",
+    "name": "Node.js",
+    "slug": "nodejs",
+    "color": "#339933"
+  },
+  "Backend": {
+    "id": "backend",
+    "name": "后端",
+    "slug": "backend",
+    "color": "#8CC84B"
+  },
+  "HTML": {
+    "id": "html",
+    "name": "HTML",
+    "slug": "HTML",
+    "color": "#8CC84B"
+  },
+  "CMS-2026": {
+    "id": "CMS-2026",
+    "name": "CMS-2026 算法",
+    "slug": "CMS-2026",
+    "color": "#8CC84B"
+  },
+  "Performance": {
+    "id": "performance",
+    "name": "性能",
+    "slug": "performance",
+    "color": "#FF9500"
+  }
+}

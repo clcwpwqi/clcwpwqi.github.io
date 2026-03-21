@@ -1,104 +1,360 @@
-[
-  {
-    "id": "react-typescript-modern-web",
-    "title": "使用 React 和 TypeScript 构建现代 Web 应用",
-    "slug": "react-typescript-modern-web",
-    "excerpt": "学习如何使用 React 和 TypeScript 构建类型安全、可维护的现代 Web 应用程序，包括最佳实践和常见模式。",
-    "content": "# 使用 React 和 TypeScript 构建现代 Web 应用\n\nReact 和 TypeScript 的组合已经成为现代前端开发的标准配置。TypeScript 提供了静态类型检查，而 React 提供了灵活的组件化开发模式。\n\n## 为什么选择 TypeScript？\n\nTypeScript 带来了诸多好处：\n\n- **类型安全**：在编译时捕获错误\n- **智能提示**：更好的 IDE 支持\n- **可维护性**：代码更易理解和重构\n- **文档化**：类型即文档\n\n## 基础配置\n\n首先，创建一个新的 React + TypeScript 项目：\n\n```bash\nnpm create vite@latest my-app -- --template react-ts\n```\n\n## 组件定义\n\n### 函数组件\n\n使用 FC 类型或直接使用函数参数类型：\n\n```tsx\nimport { FC } from 'react';\n\ninterface UserCardProps {\n  name: string;\n  email: string;\n  avatar?: string;\n}\n\n// 方式一：使用 FC\nexport const UserCard: FC<UserCardProps> = ({ name, email, avatar }) => {\n  return (\n    <div className=\"user-card\">\n      {avatar && <img src={avatar} alt={name} />}\n      <h3>{name}</h3>\n      <p>{email}</p>\n    </div>\n  );\n};\n\n// 方式二：直接定义（推荐）\nexport function UserCard({ name, email, avatar }: UserCardProps) {\n  return (\n    <div className=\"user-card\">\n      {avatar && <img src={avatar} alt={name} />}\n      <h3>{name}</h3>\n      <p>{email}</p>\n    </div>\n  );\n}\n```\n\n## 常用类型定义\n\n### 事件处理\n\n```tsx\n// 按钮点击事件\nconst handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {\n  console.log('Clicked!', event.target);\n};\n\n// 输入框变化事件\nconst handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {\n  setValue(event.target.value);\n};\n\n// 表单提交事件\nconst handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {\n  event.preventDefault();\n  // 处理提交\n};\n```\n\n### useState 钩子\n\n```tsx\n// 基本类型\nconst [count, setCount] = useState<number>(0);\nconst [name, setName] = useState<string>('');\nconst [isActive, setIsActive] = useState<boolean>(false);\n\n// 对象类型\ninterface User {\n  id: number;\n  name: string;\n  email: string;\n}\n\nconst [user, setUser] = useState<User | null>(null);\n\n// 数组类型\nconst [items, setItems] = useState<string[]>([]);\n```\n\n### useRef 钩子\n\n```tsx\n// DOM 引用\nconst inputRef = useRef<HTMLInputElement>(null);\n\n// 值引用（不触发重渲染）\nconst timerRef = useRef<number | null>(null);\n```\n\n## 高级模式\n\n### 泛型组件\n\n```tsx\ninterface ListProps<T> {\n  items: T[];\n  renderItem: (item: T) => React.ReactNode;\n  keyExtractor: (item: T) => string | number;\n}\n\nexport function List<T>({ items, renderItem, keyExtractor }: ListProps<T>) {\n  return (\n    <ul>\n      {items.map((item) => (\n        <li key={keyExtractor(item)}>{renderItem(item)}</li>\n      ))}\n    </ul>\n  );\n}\n\n// 使用\ninterface User {\n  id: number;\n  name: string;\n}\n\n<List<User>\n  items={users}\n  renderItem={(user) => <span>{user.name}</span>}\n  keyExtractor={(user) => user.id}\n/>\n```\n\n### 条件类型\n\n```tsx\ntype ButtonVariant = 'primary' | 'secondary' | 'danger';\n\ninterface ButtonProps {\n  variant?: ButtonVariant;\n  size?: 'sm' | 'md' | 'lg';\n  disabled?: boolean;\n  onClick?: () => void;\n  children: React.ReactNode;\n}\n```\n\n## 最佳实践\n\n1. **严格模式**：启用 `strict: true` 配置\n2. **避免 any**：尽量使用具体类型\n3. **类型推断**：让 TypeScript 自动推断简单类型\n4. **接口优先**：使用 interface 定义对象形状\n5. **类型导出**：公共类型应该导出\n\n## 总结\n\nReact + TypeScript 的组合能够显著提高代码质量和开发效率。通过合理的类型定义，我们可以在编译时发现潜在问题，减少运行时错误。",
-    "date": "2024-01-15",
-    "updatedAt": "2024-01-20",
-    "category": "frontend",
-    "tags": [
-      "React",
-      "TypeScript",
-      "Frontend"
-    ],
-    "readingTime": 8,
-    "author": "Developer"
-  },
-  {
-    "id": "tailwind-css-complete-guide",
-    "title": "Tailwind CSS 实战指南：从入门到精通",
-    "slug": "tailwind-css-complete-guide",
-    "excerpt": "全面掌握 Tailwind CSS 实用工具类框架，学习如何快速构建现代化、响应式的用户界面。",
-    "content": "# Tailwind CSS 实战指南：从入门到精通\n\nTailwind CSS 是一个实用工具优先的 CSS 框架，它提供了低级实用类，让你能够快速构建自定义设计。\n\n## 什么是 Tailwind CSS？\n\nTailwind 不同于 Bootstrap 等组件优先的框架。它不提供预构建的组件，而是提供：\n\n- **实用工具类**：如 `flex`, `pt-4`, `text-center`\n- **高度可定制**：通过配置文件自定义设计系统\n- **响应式设计**：内置断点系统\n- **暗黑模式**：原生支持暗黑主题\n\n## 快速开始\n\n### 安装\n\n```bash\nnpm install -D tailwindcss postcss autoprefixer\nnpx tailwindcss init -p\n```\n\n### 配置\n\n```js\n// tailwind.config.js\nmodule.exports = {\n  content: ['./src/**/*.{js,jsx,ts,tsx}'],\n  theme: {\n    extend: {\n      colors: {\n        primary: '#3b82f6',\n        secondary: '#64748b',\n      },\n    },\n  },\n  plugins: [],\n}\n```\n\n### 引入基础样式\n\n```css\n/* index.css */\n@tailwind base;\n@tailwind components;\n@tailwind utilities;\n```\n\n## 核心概念\n\n### 布局工具\n\n```html\n<!-- Flexbox -->\n<div class=\"flex items-center justify-between\">\n  <div>左侧</div>\n  <div>右侧</div>\n</div>\n\n<!-- Grid -->\n<div class=\"grid grid-cols-3 gap-4\">\n  <div>Item 1</div>\n  <div>Item 2</div>\n  <div>Item 3</div>\n</div>\n\n<!-- 容器 -->\n<div class=\"container mx-auto px-4\">\n  居中内容\n</div>\n```\n\n### 间距系统\n\nTailwind 使用 0.25rem（4px）作为基础单位：\n\n| 类名 | 尺寸 |\n|------|------|\n| p-1 | 0.25rem (4px) |\n| p-2 | 0.5rem (8px) |\n| p-4 | 1rem (16px) |\n| p-8 | 2rem (32px) |\n\n```html\n<div class=\"p-4 m-2\">内边距 16px，外边距 8px</div>\n<div class=\"px-6 py-3\">水平 24px，垂直 12px</div>\n<div class=\"space-y-4\">子元素垂直间距 16px</div>\n```\n\n### 响应式设计\n\n```html\n<!-- 移动端优先 -->\n<div class=\"w-full md:w-1/2 lg:w-1/3\">\n  全宽 → 平板 50% → 桌面 33%\n</div>\n\n<!-- 文字大小 -->\n<h1 class=\"text-xl md:text-2xl lg:text-3xl\">\n  响应式标题\n</h1>\n\n<!-- 显示控制 -->\n<div class=\"hidden md:block\">\n  平板及以上显示\n</div>\n```\n\n断点默认值：\n- `sm`: 640px\n- `md`: 768px\n- `lg`: 1024px\n- `xl`: 1280px\n- `2xl`: 1536px\n\n## 高级技巧\n\n### 自定义组件\n\n使用 `@apply` 提取重复模式：\n\n```css\n@layer components {\n  .btn {\n    @apply px-4 py-2 rounded font-medium transition-colors;\n  }\n  \n  .btn-primary {\n    @apply btn bg-blue-500 text-white hover:bg-blue-600;\n  }\n  \n  .btn-secondary {\n    @apply btn bg-gray-200 text-gray-800 hover:bg-gray-300;\n  }\n}\n```\n\n### 暗黑模式\n\n```js\n// tailwind.config.js\nmodule.exports = {\n  darkMode: 'class', // 或 'media'\n  // ...\n}\n```\n\n```html\n<div class=\"bg-white dark:bg-gray-900\">\n  <h1 class=\"text-gray-900 dark:text-white\">\n    自适应标题\n  </h1>\n</div>\n```\n\n### 动画\n\n```html\n<!-- 内置动画 -->\n<div class=\"animate-pulse\">脉冲效果</div>\n<div class=\"animate-bounce\">弹跳效果</div>\n<div class=\"animate-spin\">旋转效果</div>\n\n<!-- 过渡效果 -->\n<div class=\"transition-all duration-300 hover:scale-105\">\n  悬停放大\n</div>\n```\n\n## 实战示例\n\n### 卡片组件\n\n```html\n<div class=\"max-w-sm rounded-lg overflow-hidden shadow-lg bg-white dark:bg-gray-800\">\n  <img class=\"w-full\" src=\"/img/card-top.jpg\" alt=\"Sunset\">\n  <div class=\"px-6 py-4\">\n    <div class=\"font-bold text-xl mb-2 text-gray-900 dark:text-white\">\n      卡片标题\n    </div>\n    <p class=\"text-gray-700 dark:text-gray-300 text-base\">\n      卡片描述内容...\n    </p>\n  </div>\n  <div class=\"px-6 pt-4 pb-2\">\n    <span class=\"inline-block bg-gray-200 dark:bg-gray-700 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 dark:text-gray-300 mr-2 mb-2\">\n      #标签\n    </span>\n  </div>\n</div>\n```\n\n### 导航栏\n\n```html\n<nav class=\"bg-white dark:bg-gray-900 shadow\">\n  <div class=\"max-w-7xl mx-auto px-4 sm:px-6 lg:px-8\">\n    <div class=\"flex justify-between h-16\">\n      <div class=\"flex items-center\">\n        <span class=\"text-xl font-bold\">Logo</span>\n      </div>\n      <div class=\"hidden md:flex items-center space-x-4\">\n        <a href=\"#\" class=\"text-gray-700 dark:text-gray-300 hover:text-blue-500\">首页</a>\n        <a href=\"#\" class=\"text-gray-700 dark:text-gray-300 hover:text-blue-500\">关于</a>\n      </div>\n    </div>\n  </div>\n</nav>\n```\n\n## 性能优化\n\n1. **JIT 模式**：只生成使用的 CSS\n2. **PurgeCSS**：自动移除未使用的样式\n3. **压缩**：生产环境自动压缩\n\n```js\n// tailwind.config.js\nmodule.exports = {\n  content: ['./src/**/*.{js,jsx,ts,tsx}'],\n  // 自动启用 JIT\n}\n```\n\n## 总结\n\nTailwind CSS 通过实用工具类的方式，让开发者能够快速构建自定义界面。它的响应式设计和暗黑模式支持，使得构建现代化应用变得更加简单。",
-    "date": "2024-01-10",
-    "updatedAt": "2024-01-12",
-    "category": "frontend",
-    "tags": [
-      "Tailwind CSS",
-      "CSS",
-      "Frontend"
-    ],
-    "readingTime": 10,
-    "author": "Developer"
-  },
-  {
-    "id": "docker-getting-started",
-    "title": "Docker 入门到实践：容器化你的应用",
-    "slug": "docker-getting-started",
-    "excerpt": "学习 Docker 容器技术，了解如何构建、运行和部署容器化应用，提升开发和部署效率。",
-    "content": "# Docker 入门到实践：容器化你的应用\n\nDocker 是一个开源的容器化平台，它让开发者能够将应用及其依赖打包到一个轻量级、可移植的容器中。\n\n## 什么是 Docker？\n\nDocker 解决了\"在我机器上能运行\"的问题：\n\n- **容器化**：应用和依赖一起打包\n- **一致性**：开发、测试、生产环境一致\n- **隔离性**：每个容器独立运行\n- **轻量级**：比虚拟机更高效\n\n## 核心概念\n\n### 镜像（Image）\n\n镜像是只读的模板，包含运行应用所需的代码、库、环境变量和配置文件。\n\n### 容器（Container）\n\n容器是镜像的运行实例，可以被创建、启动、停止、删除。\n\n### Dockerfile\n\nDockerfile 是构建镜像的脚本文件。\n\n## 安装 Docker\n\n### macOS\n\n```bash\nbrew install --cask docker\n```\n\n### Ubuntu\n\n```bash\nsudo apt-get update\nsudo apt-get install docker-ce docker-ce-cli containerd.io\n```\n\n## 基础命令\n\n### 镜像管理\n\n```bash\n# 搜索镜像\ndocker search nginx\n\n# 拉取镜像\ndocker pull nginx:latest\n\n# 查看本地镜像\ndocker images\n\n# 删除镜像\ndocker rmi nginx\n```\n\n### 容器操作\n\n```bash\n# 运行容器\ndocker run -d -p 80:80 --name my-nginx nginx\n\n# 查看运行中的容器\ndocker ps\n\n# 查看所有容器\ndocker ps -a\n\n# 停止容器\ndocker stop my-nginx\n\n# 启动容器\ndocker start my-nginx\n\n# 删除容器\ndocker rm my-nginx\n\n# 进入容器\ndocker exec -it my-nginx /bin/bash\n```\n\n## Dockerfile 编写\n\n### 基础示例\n\n```dockerfile\n# 基础镜像\nFROM node:18-alpine\n\n# 设置工作目录\nWORKDIR /app\n\n# 复制依赖文件\nCOPY package*.json ./\n\n# 安装依赖\nRUN npm ci --only=production\n\n# 复制应用代码\nCOPY . .\n\n# 暴露端口\nEXPOSE 3000\n\n# 启动命令\nCMD [\"node\", \"server.js\"]\n```\n\n### 多阶段构建\n\n```dockerfile\n# 构建阶段\nFROM node:18-alpine AS builder\nWORKDIR /app\nCOPY package*.json ./\nRUN npm ci\nCOPY . .\nRUN npm run build\n\n# 生产阶段\nFROM nginx:alpine\nCOPY --from=builder /app/dist /usr/share/nginx/html\nEXPOSE 80\n```\n\n## Docker Compose\n\n使用 Docker Compose 管理多容器应用：\n\n```yaml\n# docker-compose.yml\nversion: '3.8'\n\nservices:\n  web:\n    build: .\n    ports:\n      - \"3000:3000\"\n    environment:\n      - NODE_ENV=production\n      - DB_HOST=db\n    depends_on:\n      - db\n\n  db:\n    image: postgres:15-alpine\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    environment:\n      - POSTGRES_DB=myapp\n      - POSTGRES_USER=user\n      - POSTGRES_PASSWORD=password\n\n  redis:\n    image: redis:alpine\n    volumes:\n      - redis_data:/data\n\nvolumes:\n  postgres_data:\n  redis_data:\n```\n\n### Compose 命令\n\n```bash\n# 启动所有服务\ndocker-compose up -d\n\n# 查看日志\ndocker-compose logs -f\n\n# 停止服务\ndocker-compose down\n\n# 重建镜像\ndocker-compose up -d --build\n```\n\n## 最佳实践\n\n### 镜像优化\n\n1. **使用小体积基础镜像**：alpine 版本\n2. **多阶段构建**：分离构建和运行环境\n3. **层缓存优化**：将不常改变的指令放在前面\n4. **.dockerignore**：排除不需要的文件\n\n```\nnode_modules\n.git\n.env\n*.md\n```\n\n### 安全实践\n\n1. **不以 root 运行**：\n\n```dockerfile\nRUN addgroup -g 1001 -S nodejs\nRUN adduser -S nextjs -u 1001\nUSER nextjs\n```\n\n2. **扫描镜像漏洞**：\n\n```bash\ndocker scan myimage:latest\n```\n\n## 实战部署\n\n### 部署到云服务器\n\n```bash\n# 1. 构建镜像\ndocker build -t myapp:latest .\n\n# 2. 保存镜像\ndocker save myapp:latest > myapp.tar\n\n# 3. 传输到服务器\nscp myapp.tar user@server:/tmp/\n\n# 4. 在服务器加载镜像\ndocker load < /tmp/myapp.tar\n\n# 5. 运行\ndocker run -d -p 80:3000 --name myapp myapp:latest\n```\n\n## 总结\n\nDocker 简化了应用的打包和部署流程，确保环境一致性。配合 Docker Compose，可以轻松管理复杂的多容器应用。",
-    "date": "2024-01-05",
-    "updatedAt": "2024-01-08",
-    "category": "devops",
-    "tags": [
-      "Docker",
-      "DevOps",
-      "Container"
-    ],
-    "readingTime": 12,
-    "author": "Developer"
-  },
-  {
-    "id": "git-workflow-best-practices",
-    "title": "Git 工作流与最佳实践",
-    "slug": "git-workflow-best-practices",
-    "excerpt": "掌握 Git 版本控制系统的高级用法，了解主流 Git 工作流和团队协作最佳实践。",
-    "content": "# Git 工作流与最佳实践\n\nGit 是目前最流行的分布式版本控制系统。本文介绍 Git 的高级用法和团队协作最佳实践。\n\n## Git 基础回顾\n\n### 核心概念\n\n- **工作区（Working Directory）**：实际文件\n- **暂存区（Staging Area）**：准备提交的文件\n- **本地仓库（Repository）**：完整的项目历史\n- **远程仓库（Remote）**：共享的仓库\n\n### 常用命令\n\n```bash\n# 基础操作\ngit add <file>          # 添加到暂存区\ngit commit -m \"msg\"     # 提交更改\ngit push                # 推送到远程\ngit pull                # 拉取更新\n\n# 分支操作\ngit branch              # 列出分支\ngit branch <name>       # 创建分支\ngit checkout <name>     # 切换分支\ngit merge <name>        # 合并分支\n```\n\n## 分支策略\n\n### Git Flow\n\n经典的分支模型，适合发布周期明确的项目：\n\n```\nmain        ●────────────────●────────────────●\n             \\\\                /\ndevelop       ●────●────●────●────●────●────●\n                   \\\\    /\\\\    /\nfeature/a           ●────●    \\\\\nfeature/b                      ●────●\n```\n\n分支说明：\n- `main`：生产分支，只接受合并\n- `develop`：开发分支，集成所有功能\n- `feature/*`：功能分支，从 develop 创建\n- `release/*`：发布分支，准备新版本\n- `hotfix/*`：热修复分支，修复生产问题\n\n### GitHub Flow\n\n简化的工作流，适合持续部署：\n\n1. 从 `main` 创建功能分支\n2. 提交更改\n3. 创建 Pull Request\n4. 代码审查\n5. 合并到 `main`\n6. 自动部署\n\n### Trunk-Based Development\n\n主干开发，所有开发者频繁向主干提交：\n\n- 短生命周期的功能分支（< 1天）\n- 特性开关控制功能可见性\n- 持续集成，频繁合并\n\n## 提交规范\n\n### Conventional Commits\n\n规范的提交信息格式：\n\n```\n<type>(<scope>): <subject>\n\n<body>\n\n<footer>\n```\n\n类型说明：\n- `feat`：新功能\n- `fix`：修复\n- `docs`：文档\n- `style`：格式（不影响代码运行）\n- `refactor`：重构\n- `test`：测试\n- `chore`：构建/工具\n\n示例：\n\n```bash\ngit commit -m \"feat(auth): add OAuth2 login support\"\ngit commit -m \"fix(api): resolve null pointer exception\"\ngit commit -m \"docs(readme): update installation guide\"\n```\n\n## 高级技巧\n\n### 交互式 Rebase\n\n```bash\n# 整理最近 3 次提交\ngit rebase -i HEAD~3\n\n# 常用命令\npick    # 保留提交\nreword  # 修改提交信息\nsquash  # 合并到上一个提交\nfixup   # 合并并丢弃提交信息\ndrop    # 删除提交\n```\n\n### Stash 暂存\n\n```bash\n# 暂存当前更改\ngit stash push -m \"work in progress\"\n\n# 查看 stash 列表\ngit stash list\n\n# 恢复最近的 stash\ngit stash pop\n\n# 恢复指定 stash\ngit stash apply stash@{1}\n```\n\n### Cherry Pick\n\n```bash\n# 挑选特定提交到当前分支\ngit cherry-pick <commit-hash>\n\n# 挑选多个提交\ngit cherry-pick <hash1> <hash2>\n```\n\n### Bisect 二分查找\n\n用于定位引入 bug 的提交：\n\n```bash\ngit bisect start\ngit bisect bad          # 当前版本有问题\ngit bisect good v1.0    # v1.0 版本正常\n# Git 自动 checkout 中间版本\ngit bisect good/bad     # 标记是否正常\n# 重复直到找到问题提交\ngit bisect reset        # 结束查找\n```\n\n## 团队协作\n\n### Pull Request 流程\n\n1. **创建分支**：`git checkout -b feature/xxx`\n2. **提交更改**：遵循提交规范\n3. **推送分支**：`git push -u origin feature/xxx`\n4. **创建 PR**：填写详细描述\n5. **代码审查**：至少一人审查\n6. **解决冲突**：如有需要\n7. **合并分支**：使用 Squash 或 Merge\n\n### 代码审查清单\n\n- [ ] 代码符合项目规范\n- [ ] 有足够的测试覆盖\n- [ ] 文档已更新\n- [ ] 没有明显的性能问题\n- [ ] 安全性考虑到位\n\n### 冲突解决\n\n```bash\n# 拉取最新代码\ngit fetch origin\n\n# 尝试合并\ngit merge origin/main\n\n# 解决冲突后标记为已解决\ngit add <resolved-file>\n\n# 完成合并\ngit commit\n```\n\n## 钩子（Hooks）\n\n### 常用钩子配置\n\n```bash\n# pre-commit：提交前检查\n#!/bin/sh\nnpm run lint\nnpm run test\n\n# commit-msg：验证提交信息\n#!/bin/sh\ncommit_msg=$(cat $1)\nif ! echo \"$commit_msg\" | grep -qE \"^(feat|fix|docs|style|refactor|test|chore)(\\\\(.+\\\\))?: .+\"; then\n  echo \"提交信息格式错误！\"\n  exit 1\nfi\n```\n\n## 总结\n\n良好的 Git 工作流能够提高团队协作效率，减少冲突和错误。选择适合团队的工作流，并严格执行提交规范，是项目成功的重要保障。",
-    "date": "2024-01-01",
-    "updatedAt": "2024-01-03",
-    "category": "best-practices",
-    "tags": [
-      "Git",
-      "DevOps",
-      "Best Practices"
-    ],
-    "readingTime": 10,
-    "author": "Developer"
-  },
-  {
-    "id": "vscode-productivity-guide",
-    "title": "VS Code 效率提升指南",
-    "slug": "vscode-productivity-guide",
-    "excerpt": "发掘 VS Code 的强大功能，学习快捷键、插件和配置技巧，大幅提升编码效率。",
-    "content": "# VS Code 效率提升指南\n\nVisual Studio Code 是目前最流行的代码编辑器之一。本文介绍如何通过各种技巧提升使用效率。\n\n## 快捷键\n\n### 基础快捷键\n\n| 快捷键 | 功能 |\n|--------|------|\n| Cmd/Ctrl + P | 快速打开文件 |\n| Cmd/Ctrl + Shift + P | 命令面板 |\n| Cmd/Ctrl + , | 打开设置 |\n| Cmd/Ctrl + B | 切换侧边栏 |\n| Cmd/Ctrl + J | 切换面板 |\n\n### 编辑快捷键\n\n| 快捷键 | 功能 |\n|--------|------|\n| Cmd/Ctrl + D | 选中下一个相同词 |\n| Cmd/Ctrl + Shift + L | 选中所有相同词 |\n| Option/Alt + 点击 | 多光标 |\n| Option/Alt + ↑/↓ | 移动行 |\n| Option/Alt + Shift + ↑/↓ | 复制行 |\n| Cmd/Ctrl + / | 注释切换 |\n| Cmd/Ctrl + Shift + K | 删除行 |\n\n### 导航快捷键\n\n| 快捷键 | 功能 |\n|--------|------|\n| Cmd/Ctrl + G | 跳转到行 |\n| Cmd/Ctrl + Shift + O | 跳转到符号 |\n| Cmd/Ctrl + T | 工作区符号搜索 |\n| Cmd/Ctrl + - | 返回上一位置 |\n| Cmd/Ctrl + Shift + - | 前进 |\n\n## 推荐插件\n\n### 开发增强\n\n1. **ES7+ React/Redux/React-Native snippets**\n   - React 代码片段\n   - 快速生成组件模板\n\n2. **Auto Rename Tag**\n   - 自动重命名配对标签\n   - 修改开始标签，结束标签同步更新\n\n3. **Bracket Pair Colorizer**\n   - 括号配对着色\n   - 提高代码可读性\n\n4. **GitLens**\n   - 增强 Git 功能\n   - 显示代码作者、提交历史\n\n### 代码质量\n\n1. **ESLint**\n   - JavaScript/TypeScript 代码检查\n   - 自动修复问题\n\n2. **Prettier**\n   - 代码格式化\n   - 统一代码风格\n\n3. **Error Lens**\n   - 内联显示错误和警告\n   - 无需悬停查看\n\n### 主题和外观\n\n1. **Dracula Official**\n   - 流行的暗色主题\n   - 色彩舒适\n\n2. **Material Icon Theme**\n   - 文件图标主题\n   - 丰富的文件类型图标\n\n## 配置优化\n\n### settings.json\n\n```json\n{\n  // 编辑器\n  \"editor.fontSize\": 14,\n  \"editor.fontFamily\": \"Fira Code, JetBrains Mono, monospace\",\n  \"editor.fontLigatures\": true,\n  \"editor.tabSize\": 2,\n  \"editor.wordWrap\": \"on\",\n  \"editor.formatOnSave\": true,\n  \"editor.codeActionsOnSave\": {\n    \"source.fixAll.eslint\": true\n  },\n  \n  // 文件\n  \"files.autoSave\": \"afterDelay\",\n  \"files.autoSaveDelay\": 1000,\n  \"files.exclude\": {\n    \"**/node_modules\": true,\n    \"**/.git\": true,\n    \"**/dist\": true\n  },\n  \n  // 搜索\n  \"search.exclude\": {\n    \"**/node_modules\": true,\n    \"**/dist\": true,\n    \"**/.git\": true\n  },\n  \n  // Git\n  \"git.enableSmartCommit\": true,\n  \"git.confirmSync\": false,\n  \n  // 终端\n  \"terminal.integrated.fontSize\": 13,\n  \"terminal.integrated.shell.osx\": \"/bin/zsh\",\n  \n  // Emmet\n  \"emmet.includeLanguages\": {\n    \"javascript\": \"javascriptreact\",\n    \"typescript\": \"typescriptreact\"\n  }\n}\n```\n\n## 代码片段\n\n### 自定义代码片段\n\n```json\n// typescriptreact.json\n{\n  \"React Functional Component\": {\n    \"prefix\": \"rfc\",\n    \"body\": [\n      \"interface Props {\",\n      \"  $1\",\n      \"}\",\n      \"\",\n      \"export function Component({ $2 }: Props) {\",\n      \"  return (\",\n      \"    <div>\",\n      \"      $3\",\n      \"    </div>\",\n      \"  );\",\n      \"}\"\n    ],\n    \"description\": \"Create a React functional component\"\n  }\n}\n```\n\n## 调试配置\n\n### launch.json\n\n```json\n{\n  \"version\": \"0.2.0\",\n  \"configurations\": [\n    {\n      \"name\": \"Debug React App\",\n      \"type\": \"chrome\",\n      \"request\": \"launch\",\n      \"url\": \"http://localhost:3000\",\n      \"webRoot\": \"${workspaceFolder}/src\"\n    }\n  ]\n}\n```\n\n## 高级功能\n\n### 多根工作区\n\n```json\n// my-project.code-workspace\n{\n  \"folders\": [\n    { \"path\": \"frontend\" },\n    { \"path\": \"backend\" }\n  ]\n}\n```\n\n### 远程开发\n\n1. **Remote - SSH**：连接到远程服务器\n2. **Remote - Containers**：在容器内开发\n3. **Remote - WSL**：在 WSL 中开发\n\n## 总结\n\n熟练掌握 VS Code 的快捷键和插件，能够显著提升开发效率。",
-    "date": "2023-12-28",
-    "updatedAt": "2023-12-30",
-    "category": "tools",
-    "tags": [
-      "VS Code",
-      "Tools",
-      "Productivity"
-    ],
-    "readingTime": 6,
-    "author": "Developer"
-  },
-  {
-    "id": "nodejs-performance-optimization",
-    "title": "Node.js 性能优化实践",
-    "slug": "nodejs-performance-optimization",
-    "excerpt": "深入了解 Node.js 性能优化技巧，包括内存管理、异步处理、缓存策略等实战方案。",
-    "content": "# Node.js 性能优化实践\n\nNode.js 以其高性能和事件驱动模型著称，但不当的使用方式也会导致性能问题。本文介绍实用的优化技巧。\n\n## 性能分析工具\n\n### 内置工具\n\n```bash\n# Node.js 内置分析器\nnode --prof app.js\nnode --prof-process isolate-0x*.log > profile.txt\n\n# 性能钩子\nnode --perf-basic-prof app.js\n```\n\n### Clinic.js\n\n```bash\nnpm install -g clinic\n\n# 医生模式 - 全面诊断\nclinic doctor -- node app.js\n\n# 火焰图 - CPU 分析\nclinic flame -- node app.js\n```\n\n## 代码级优化\n\n### 1. 避免阻塞事件循环\n\n```javascript\n// 阻塞操作\napp.get('/slow', (req, res) => {\n  const result = heavyComputation();\n  res.json(result);\n});\n\n// 使用 worker_threads\nconst { Worker } = require('worker_threads');\n\napp.get('/fast', async (req, res) => {\n  const worker = new Worker('./worker.js');\n  worker.postMessage(data);\n  worker.on('message', (result) => {\n    res.json(result);\n  });\n});\n```\n\n### 2. 优化异步操作\n\n```javascript\n// 串行执行\nfor (const id of ids) {\n  await fetchUser(id);\n}\n\n// 并行执行\nawait Promise.all(ids.map(id => fetchUser(id)));\n\n// 控制并发数\nconst pLimit = require('p-limit');\nconst limit = pLimit(5);\nawait Promise.all(ids.map(id => limit(() => fetchUser(id))));\n```\n\n### 3. 使用流处理大数据\n\n```javascript\n// 内存中处理大文件\nconst data = fs.readFileSync('large-file.txt');\nprocessData(data);\n\n// 使用流\nconst readStream = fs.createReadStream('large-file.txt');\nconst writeStream = fs.createWriteStream('output.txt');\nreadStream.pipe(transformStream).pipe(writeStream);\n```\n\n## 内存优化\n\n### 避免内存泄漏\n\n```javascript\n// 事件监听器泄漏\nclass Emitter {\n  constructor() {\n    this.events = {};\n  }\n  \n  on(event, listener) {\n    if (!this.events[event]) {\n      this.events[event] = [];\n    }\n    this.events[event].push(listener);\n  }\n}\n\n// 限制监听器数量\nclass Emitter {\n  constructor() {\n    this.events = new Map();\n    this.maxListeners = 10;\n  }\n  \n  on(event, listener) {\n    const listeners = this.events.get(event) || [];\n    if (listeners.length >= this.maxListeners) {\n      listeners.shift();\n    }\n    listeners.push(listener);\n    this.events.set(event, listeners);\n  }\n}\n```\n\n## 缓存策略\n\n### 内存缓存\n\n```javascript\nconst NodeCache = require('node-cache');\nconst cache = new NodeCache({ stdTTL: 600 });\n\nasync function getUser(id) {\n  const cached = cache.get('user:' + id);\n  if (cached) return cached;\n  \n  const user = await db.users.findById(id);\n  cache.set('user:' + id, user);\n  return user;\n}\n```\n\n### Redis 缓存\n\n```javascript\nconst Redis = require('ioredis');\nconst redis = new Redis();\n\nasync function getCachedData(key, fetchFn, ttl = 3600) {\n  const cached = await redis.get(key);\n  if (cached) return JSON.parse(cached);\n  \n  const data = await fetchFn();\n  await redis.setex(key, ttl, JSON.stringify(data));\n  return data;\n}\n```\n\n## 集群部署\n\n```javascript\nconst cluster = require('cluster');\nconst os = require('os');\n\nif (cluster.isMaster) {\n  const numCPUs = os.cpus().length;\n  \n  for (let i = 0; i < numCPUs; i++) {\n    cluster.fork();\n  }\n  \n  cluster.on('exit', (worker) => {\n    console.log('Worker ' + worker.process.pid + ' died');\n    cluster.fork();\n  });\n} else {\n  require('./app.js');\n}\n```\n\n## 总结\n\nNode.js 性能优化是一个持续的过程。通过使用正确的工具进行分析，针对性地优化代码，可以显著提升应用性能。",
-    "date": "2023-12-20",
-    "updatedAt": "2023-12-25",
-    "category": "backend",
-    "tags": [
-      "Node.js",
-      "Backend",
-      "Performance"
-    ],
-    "readingTime": 15,
-    "author": "Developer"
+{
+  "posts": [
+    {
+      "id": "react-typescript-modern-web",
+      "title": "使用 React 和 TypeScript 构建现代 Web 应用",
+      "slug": "react-typescript-modern-web",
+      "excerpt": "学习如何使用 React 和 TypeScript 构建类型安全、可维护的现代 Web 应用程序，包括最佳实践和常见模式。",
+      "content": "# 使用 React 和 TypeScript 构建现代 Web 应用\n\nReact 和 TypeScript 的组合已经成为现代前端开发的标准配置。TypeScript 提供了静态类型检查，而 React 提供了灵活的组件化开发模式。\n\n## 为什么选择 TypeScript？\n\nTypeScript 带来了诸多好处：\n\n- **类型安全**：在编译时捕获错误\n- **智能提示**：更好的 IDE 支持\n- **可维护性**：代码更易理解和重构\n- **文档化**：类型即文档\n\n## 基础配置\n\n首先，创建一个新的 React + TypeScript 项目：\n\n```bash\nnpm create vite@latest my-app -- --template react-ts\n```\n\n## 组件定义\n\n### 函数组件\n\n```tsx\ninterface UserCardProps {\n  name: string;\n  email: string;\n  avatar?: string;\n}\n\nexport function UserCard({ name, email, avatar }: UserCardProps) {\n  return (\n    <div className=\"user-card\">\n      {avatar && <img src={avatar} alt={name} />}\n      <h3>{name}</h3>\n      <p>{email}</p>\n    </div>\n  );\n}\n```\n\n## 常用类型定义\n\n### useState 钩子\n\n```tsx\nconst [count, setCount] = useState<number>(0);\nconst [user, setUser] = useState<User | null>(null);\n```\n\n## 最佳实践\n\n1. **严格模式**：启用 strict: true 配置\n2. **避免 any**：尽量使用具体类型\n3. **类型推断**：让 TypeScript 自动推断简单类型\n\n## 总结\n\nReact + TypeScript 的组合能够显著提高代码质量和开发效率。",
+      "date": "2024-01-15",
+      "updatedAt": "2024-01-20",
+      "category": "frontend",
+      "tags": [
+        "React",
+        "TypeScript",
+        "Frontend"
+      ],
+      "readingTime": 8,
+      "author": "Developer"
+    },
+    {
+      "id": "tailwind-css-complete-guide",
+      "title": "Tailwind CSS 实战指南：从入门到精通",
+      "slug": "tailwind-css-complete-guide",
+      "excerpt": "全面掌握 Tailwind CSS 实用工具类框架，学习如何快速构建现代化、响应式的用户界面。",
+      "content": "# Tailwind CSS 实战指南：从入门到精通\n\nTailwind CSS 是一个实用工具优先的 CSS 框架，它提供了低级实用类，让你能够快速构建自定义设计。\n\n## 什么是 Tailwind CSS？\n\nTailwind 不同于 Bootstrap 等组件优先的框架。它不提供预构建的组件，而是提供：\n\n- **实用工具类**：如 `flex`, `pt-4`, `text-center`\n- **高度可定制**：通过配置文件自定义设计系统\n- **响应式设计**：内置断点系统\n- **暗黑模式**：原生支持暗黑主题\n\n## 快速开始\n\n### 安装\n\n```bash\nnpm install -D tailwindcss postcss autoprefixer\nnpx tailwindcss init -p\n```\n\n## 核心概念\n\n### 布局工具\n\n```html\n<!-- Flexbox -->\n<div class=\"flex items-center justify-between\">\n  <div>左侧</div>\n  <div>右侧</div>\n</div>\n```\n\n## 总结\n\nTailwind CSS 通过实用工具类的方式，让开发者能够快速构建自定义界面。",
+      "date": "2024-01-10",
+      "updatedAt": "2024-01-12",
+      "category": "frontend",
+      "tags": [
+        "Tailwind CSS",
+        "CSS",
+        "Frontend"
+      ],
+      "readingTime": 10,
+      "author": "Developer"
+    },
+    {
+      "id": "docker-getting-started",
+      "title": "Docker 入门到实践：容器化你的应用",
+      "slug": "docker-getting-started",
+      "excerpt": "学习 Docker 容器技术，了解如何构建、运行和部署容器化应用，提升开发和部署效率。",
+      "content": "# Docker 入门到实践：容器化你的应用\n\nDocker 是一个开源的容器化平台，它让开发者能够将应用及其依赖打包到一个轻量级、可移植的容器中。\n\n## 什么是 Docker？\n\nDocker 解决了\"在我机器上能运行\"的问题：\n\n- **容器化**：应用和依赖一起打包\n- **一致性**：开发、测试、生产环境一致\n- **隔离性**：每个容器独立运行\n\n## 基础命令\n\n```bash\n# 运行容器\ndocker run -d -p 80:80 --name my-nginx nginx\n\n# 查看运行中的容器\ndocker ps\n```\n\n## 总结\n\nDocker 简化了应用的打包和部署流程，确保环境一致性。",
+      "date": "2024-01-05",
+      "updatedAt": "2024-01-08",
+      "category": "devops",
+      "tags": [
+        "Docker",
+        "DevOps",
+        "Container"
+      ],
+      "readingTime": 12,
+      "author": "Developer"
+    },
+    {
+      "id": "git-workflow-best-practices",
+      "title": "Git 工作流与最佳实践",
+      "slug": "git-workflow-best-practices",
+      "excerpt": "掌握 Git 版本控制系统的高级用法，了解主流 Git 工作流和团队协作最佳实践。",
+      "content": "# Git 工作流与最佳实践\n\nGit 是目前最流行的分布式版本控制系统。本文介绍 Git 的高级用法和团队协作最佳实践。\n\n## 分支策略\n\n### Git Flow\n\n经典的分支模型，适合发布周期明确的项目。\n\n### GitHub Flow\n\n简化的工作流，适合持续部署。\n\n## 提交规范\n\n```bash\ngit commit -m \"feat(auth): add OAuth2 login support\"\ngit commit -m \"fix(api): resolve null pointer exception\"\n```\n\n## 总结\n\n良好的 Git 工作流能够提高团队协作效率。",
+      "date": "2024-01-01",
+      "updatedAt": "2024-01-03",
+      "category": "best-practices",
+      "tags": [
+        "Git",
+        "DevOps",
+        "Best Practices"
+      ],
+      "readingTime": 10,
+      "author": "Developer"
+    },
+    {
+      "id": "vscode-productivity-guide",
+      "title": "VS Code 效率提升指南",
+      "slug": "vscode-productivity-guide",
+      "excerpt": "发掘 VS Code 的强大功能，学习快捷键、插件和配置技巧，大幅提升编码效率。",
+      "content": "# VS Code 效率提升指南\n\nVisual Studio Code 是目前最流行的代码编辑器之一。\n\n## 快捷键\n\n| 快捷键 | 功能 |\n|--------|------|\n| Cmd/Ctrl + P | 快速打开文件 |\n| Cmd/Ctrl + Shift + P | 命令面板 |\n\n## 推荐插件\n\n- ESLint\n- Prettier\n- GitLens\n\n## 总结\n\n熟练掌握 VS Code 的快捷键和插件，能够显著提升开发效率。",
+      "date": "2023-12-28",
+      "updatedAt": "2023-12-30",
+      "category": "tools",
+      "tags": [
+        "VS Code",
+        "Tools",
+        "Productivity"
+      ],
+      "readingTime": 6,
+      "author": "Developer"
+    },
+    {
+      "id": "nodejs-performance-optimization",
+      "title": "Node.js 性能优化实践",
+      "slug": "nodejs-performance-optimization",
+      "excerpt": "深入了解 Node.js 性能优化技巧，包括内存管理、异步处理、缓存策略等实战方案。",
+      "content": "# Node.js 性能优化实践\n\nNode.js 以其高性能和事件驱动模型著称。\n\n## 性能分析工具\n\n```bash\nnpm install -g clinic\nclinic doctor -- node app.js\n```\n\n## 代码级优化\n\n### 避免阻塞事件循环\n\n```javascript\nconst { Worker } = require('worker_threads');\n```\n\n## 总结\n\nNode.js 性能优化是一个持续的过程。",
+      "date": "2023-12-20",
+      "updatedAt": "2023-12-25",
+      "category": "backend",
+      "tags": [
+        "Node.js",
+        "Backend",
+        "Performance"
+      ],
+      "readingTime": 15,
+      "author": "Developer"
+    }
+  ],
+  "categories": [
+    {
+      "id": "frontend",
+      "name": "前端开发",
+      "slug": "frontend",
+      "description": "HTML, CSS, JavaScript, React, Vue 等前端技术",
+      "order": 1,
+      "count": 2
+    },
+    {
+      "id": "backend",
+      "name": "后端开发",
+      "slug": "backend",
+      "description": "Node.js, Python, Java, 数据库等后端技术",
+      "order": 2,
+      "count": 1
+    },
+    {
+      "id": "devops",
+      "name": "DevOps",
+      "slug": "devops",
+      "description": "Docker, Kubernetes, CI/CD, 云原生技术",
+      "order": 3,
+      "count": 1
+    },
+    {
+      "id": "tools",
+      "name": "工具效率",
+      "slug": "tools",
+      "description": "开发工具、编辑器、效率提升技巧",
+      "order": 4,
+      "count": 1
+    },
+    {
+      "id": "best-practices",
+      "name": "最佳实践",
+      "slug": "best-practices",
+      "description": "代码规范、架构设计、性能优化",
+      "order": 5,
+      "count": 1
+    }
+  ],
+  "tags": [
+    {
+      "id": "nodejs",
+      "name": "Node.js",
+      "slug": "nodejs",
+      "color": "#339933",
+      "count": 1
+    },
+    {
+      "id": "backend",
+      "name": "后端",
+      "slug": "backend",
+      "color": "#8CC84B",
+      "count": 1
+    },
+    {
+      "id": "performance",
+      "name": "性能",
+      "slug": "performance",
+      "color": "#FF9500",
+      "count": 1
+    },
+    {
+      "id": "git",
+      "name": "Git",
+      "slug": "git",
+      "color": "#F05032",
+      "count": 1
+    },
+    {
+      "id": "devops",
+      "name": "DevOps",
+      "slug": "devops",
+      "color": "#FF6B6B",
+      "count": 2
+    },
+    {
+      "id": "best-practices",
+      "name": "最佳实践",
+      "slug": "best-practices",
+      "color": "#9B59B6",
+      "count": 1
+    },
+    {
+      "id": "docker",
+      "name": "Docker",
+      "slug": "docker",
+      "color": "#2496ED",
+      "count": 1
+    },
+    {
+      "id": "container",
+      "name": "容器",
+      "slug": "container",
+      "color": "#326CE5",
+      "count": 1
+    },
+    {
+      "id": "react",
+      "name": "React",
+      "slug": "react",
+      "color": "#61DAFB",
+      "count": 1
+    },
+    {
+      "id": "typescript",
+      "name": "TypeScript",
+      "slug": "typescript",
+      "color": "#3178C6",
+      "count": 1
+    },
+    {
+      "id": "frontend",
+      "name": "前端",
+      "slug": "frontend",
+      "color": "#42B883",
+      "count": 2
+    },
+    {
+      "id": "tailwind-css",
+      "name": "Tailwind CSS",
+      "slug": "tailwind-css",
+      "color": "#06B6D4",
+      "count": 1
+    },
+    {
+      "id": "css",
+      "name": "CSS",
+      "slug": "css",
+      "color": "#264DE4",
+      "count": 1
+    },
+    {
+      "id": "vscode",
+      "name": "VS Code",
+      "slug": "vscode",
+      "color": "#007ACC",
+      "count": 1
+    },
+    {
+      "id": "tools",
+      "name": "工具",
+      "slug": "tools",
+      "color": "#E74C3C",
+      "count": 1
+    },
+    {
+      "id": "productivity",
+      "name": "效率",
+      "slug": "productivity",
+      "color": "#27AE60",
+      "count": 1
+    }
+  ],
+  "labelsConfig": {
+    "React": {
+      "id": "react",
+      "name": "React",
+      "slug": "react",
+      "color": "#61DAFB"
+    },
+    "TypeScript": {
+      "id": "typescript",
+      "name": "TypeScript",
+      "slug": "typescript",
+      "color": "#3178C6"
+    },
+    "Frontend": {
+      "id": "frontend",
+      "name": "前端",
+      "slug": "frontend",
+      "color": "#42B883"
+    },
+    "Tailwind CSS": {
+      "id": "tailwind-css",
+      "name": "Tailwind CSS",
+      "slug": "tailwind-css",
+      "color": "#06B6D4"
+    },
+    "CSS": {
+      "id": "css",
+      "name": "CSS",
+      "slug": "css",
+      "color": "#264DE4"
+    },
+    "Docker": {
+      "id": "docker",
+      "name": "Docker",
+      "slug": "docker",
+      "color": "#2496ED"
+    },
+    "DevOps": {
+      "id": "devops",
+      "name": "DevOps",
+      "slug": "devops",
+      "color": "#FF6B6B"
+    },
+    "Container": {
+      "id": "container",
+      "name": "容器",
+      "slug": "container",
+      "color": "#326CE5"
+    },
+    "Git": {
+      "id": "git",
+      "name": "Git",
+      "slug": "git",
+      "color": "#F05032"
+    },
+    "Best Practices": {
+      "id": "best-practices",
+      "name": "最佳实践",
+      "slug": "best-practices",
+      "color": "#9B59B6"
+    },
+    "VS Code": {
+      "id": "vscode",
+      "name": "VS Code",
+      "slug": "vscode",
+      "color": "#007ACC"
+    },
+    "Tools": {
+      "id": "tools",
+      "name": "工具",
+      "slug": "tools",
+      "color": "#E74C3C"
+    },
+    "Productivity": {
+      "id": "productivity",
+      "name": "效率",
+      "slug": "productivity",
+      "color": "#27AE60"
+    },
+    "Node.js": {
+      "id": "nodejs",
+      "name": "Node.js",
+      "slug": "nodejs",
+      "color": "#339933"
+    },
+    "Backend": {
+      "id": "backend",
+      "name": "后端",
+      "slug": "backend",
+      "color": "#8CC84B"
+    },
+    "Performance": {
+      "id": "performance",
+      "name": "性能",
+      "slug": "performance",
+      "color": "#FF9500"
+    }
   }
-]
+}

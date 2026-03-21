@@ -1,15 +1,16 @@
 # DevBlog - 现代静态博客
 
-一个基于 React + TypeScript + Tailwind CSS 构建的现代化静态博客，支持从 `/posts` 目录自动读取 Markdown 文章。
+一个基于 React + TypeScript + Tailwind CSS 构建的现代化静态博客，支持从 `/posts` 目录按分类文件夹自动读取 Markdown 文章。
 
 ## 特性
 
 - 🎨 **现代设计** - 简洁美观的界面，支持响应式布局
 - 🌙 **暗黑模式** - 支持自动/手动切换暗黑模式
 - 📝 **Markdown 支持** - 完整的 Markdown 渲染，包括代码高亮
-- 📂 **文章自动同步** - 只需在 `/posts` 目录添加 `.md` 文件即可自动发布
+- 📂 **分类文件夹管理** - 文章按分类存放，如 `/posts/frontend/*.md`
+- 🏷️ **动态标签系统** - 支持自定义标签配置（名称、颜色）
+- 📁 **动态分类系统** - 通过创建文件夹和配置文件自动添加分类
 - 🔍 **搜索功能** - 前端实现的实时文章搜索
-- 🏷️ **分类标签** - 支持文章分类和标签筛选
 - 💬 **评论系统** - 集成 Giscus（基于 GitHub Discussions）
 - 🛠️ **开发工具** - 内置 JSON 格式化、Base64 编解码等实用工具
 - 🔗 **SEO 优化** - 完善的 meta 标签和 Open Graph 支持
@@ -52,130 +53,82 @@ npm run dev
 npm run build
 ```
 
-## 如何新增文章
+---
 
-### 方法一：直接在 `/posts` 目录添加 Markdown 文件（推荐）
+## 文章管理
 
-1. 在 `posts/` 目录下创建新的 `.md` 文件，例如 `my-new-post.md`
-2. 在文件头部添加 frontmatter 信息
-3. 提交并推送到 GitHub，自动触发部署
+### 目录结构
+
+```
+/posts/
+├── labels.json                 # 标签配置
+├── frontend/                   # 前端开发分类
+│   ├── frontend.json          # 分类配置
+│   └── react-guide.md         # 文章
+├── backend/                    # 后端开发分类
+│   ├── backend.json
+│   └── nodejs-guide.md
+└── ...
+```
+
+### 新增文章
+
+在对应分类文件夹下创建 Markdown 文件：
 
 ```markdown
 ---
 title: "文章标题"
 slug: "article-slug"
-excerpt: "文章摘要，显示在列表中"
+excerpt: "文章摘要"
 date: "2024-01-15"
 category: "frontend"
 tags: ["React", "TypeScript"]
 readingTime: 8
 ---
 
-# 文章标题
+# 文章正文
 
-正文内容，支持 Markdown 语法...
-
-## 二级标题
-
-- 列表项1
-- 列表项2
-
-\`\`\`javascript
-// 代码块
-const example = 'Hello World';
-\`\`\`
+支持完整的 Markdown 语法...
 ```
 
-### Frontmatter 字段说明
+### 新增分类
 
-| 字段 | 必填 | 说明 |
-|------|------|------|
-| `title` | ✅ | 文章标题 |
-| `slug` | ✅ | URL 友好的标识，如 `react-hooks-guide` |
-| `excerpt` | ✅ | 文章摘要，显示在列表中 |
-| `date` | ✅ | 发布日期，格式 `YYYY-MM-DD` |
-| `category` | ✅ | 分类 slug，见下方可用分类 |
-| `tags` | ✅ | 标签数组，如 `["React", "Hooks"]` |
-| `updatedAt` | ❌ | 更新日期（可选） |
-| `readingTime` | ❌ | 预计阅读时间（分钟），不填则自动计算 |
-| `cover` | ❌ | 封面图片路径（可选） |
-| `author` | ❌ | 作者名（可选，默认使用站点配置） |
+1. 创建分类文件夹：`mkdir posts/my-category`
+2. 创建分类配置文件 `posts/my-category/my-category.json`：
 
-### 可用分类
-
-| slug | 名称 |
-|------|------|
-| `frontend` | 前端开发 |
-| `backend` | 后端开发 |
-| `devops` | DevOps |
-| `tools` | 工具效率 |
-| `best-practices` | 最佳实践 |
-
-### 文章模板
-
-参考 `posts/TEMPLATE.md` 文件，包含完整的格式说明和示例。
-
-## 项目结构
-
-```
-├── posts/                      # 文章目录（Markdown 文件）
-│   ├── TEMPLATE.md            # 文章模板
-│   ├── react-typescript-modern-web.md
-│   └── ...
-├── scripts/
-│   └── build-posts.js         # Markdown 解析脚本
-├── src/
-│   ├── components/            # 组件
-│   ├── data/
-│   │   ├── config.ts          # 站点配置
-│   │   ├── posts.ts           # 文章数据入口
-│   │   └── posts.json         # 生成的文章数据（自动）
-│   └── ...
-├── .github/workflows/
-│   └── deploy.yml             # GitHub Actions 自动部署
-└── ...
-```
-
-## 如何配置评论系统
-
-本项目使用 [Giscus](https://giscus.app/) 作为评论系统，基于 GitHub Discussions。
-
-### 配置步骤
-
-1. **创建仓库**
-   - 创建一个新的 GitHub 仓库用于存储评论（如 `username/blog-comments`）
-   - 或者使用博客源码仓库
-
-2. **安装 Giscus**
-   - 访问 https://giscus.app/
-   - 输入你的仓库名称
-   - 选择 Discussions 分类
-   - 获取配置参数
-
-3. **修改配置**
-   - 打开 `src/data/config.ts`
-   - 更新 `comment` 部分：
-
-```typescript
-comment: {
-  provider: 'giscus',
-  repo: 'username/blog-comments',
-  repoId: 'R_kgDOG...',
-  category: 'Announcements',
-  categoryId: 'DIC_kwDOG...',
-  mapping: 'pathname',
-  reactionsEnabled: true,
-  emitMetadata: false,
-  theme: 'preferred_color_scheme',
-  crossorigin: 'anonymous',
+```json
+{
+  "id": "my-category",
+  "name": "我的分类",
+  "slug": "my-category",
+  "description": "分类描述",
+  "order": 6
 }
 ```
 
-4. **重新构建部署**
+3. 在该文件夹下添加 Markdown 文章
+4. 推送代码，自动部署
+
+### 标签配置
+
+编辑 `/posts/labels.json`：
+
+```json
+{
+  "React": {
+    "id": "react",
+    "name": "React",
+    "slug": "react",
+    "color": "#61DAFB"
+  }
+}
+```
+
+---
 
 ## 部署到 GitHub Pages
 
-### 自动部署（推荐）
+### 自动部署
 
 项目已配置 GitHub Actions 自动部署：
 
@@ -186,21 +139,20 @@ comment: {
 ### 部署触发条件
 
 以下文件变化会自动触发部署：
-- `posts/**` - 文章目录
+- `posts/**` - 文章、分类、标签配置
 - `src/**` - 源代码
 - `public/**` - 静态资源
-- `index.html`, `package.json`, `vite.config.ts` 等配置文件
+- `scripts/**` - 构建脚本
+- 配置文件
 
-### 手动部署
+---
 
-```bash
-# 构建
-npm run build
+## 项目文档
 
-# 部署到 gh-pages 分支（需要安装 gh-pages）
-npm install -D gh-pages
-npm run deploy
-```
+- [PROJECT_GUIDE.md](./PROJECT_GUIDE.md) - 项目文件功能详细说明
+- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - 项目结构说明
+
+---
 
 ## 自定义配置
 
@@ -219,35 +171,13 @@ export const siteConfig: SiteConfig = {
 };
 ```
 
-### 导航链接
+### 评论系统
 
-编辑 `src/data/config.ts` 中的 `navLinks`：
+1. 访问 https://giscus.app/
+2. 获取配置参数
+3. 编辑 `src/data/config.ts` 中的 `comment` 部分
 
-```typescript
-export const navLinks = [
-  { label: '首页', href: '/' },
-  { label: '分类', href: '/categories' },
-  { label: '工具箱', href: '/tools' },
-  { label: '关于', href: '/about' },
-];
-```
-
-### 分类
-
-编辑 `src/data/config.ts` 中的 `categories`：
-
-```typescript
-export const categories: Category[] = [
-  {
-    id: '1',
-    name: '前端开发',
-    slug: 'frontend',
-    description: '前端技术文章',
-    count: 0,
-  },
-  // ...
-];
-```
+---
 
 ## 浏览器支持
 
@@ -259,11 +189,3 @@ export const categories: Category[] = [
 ## 许可证
 
 MIT License
-
-## 致谢
-
-- [React](https://react.dev/)
-- [Vite](https://vitejs.dev/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [shadcn/ui](https://ui.shadcn.com/)
-- [Giscus](https://giscus.app/)

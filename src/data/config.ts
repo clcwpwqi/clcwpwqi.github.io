@@ -2,7 +2,7 @@
  * 站点配置文件
  * 修改此文件以自定义博客信息
  */
-import type { SiteConfig, Category, Tool } from '@/types';
+import type { SiteConfig, Tool } from '@/types';
 
 // 站点基本信息配置
 export const siteConfig: SiteConfig = {
@@ -39,45 +39,6 @@ export const navLinks = [
   { label: '分类', href: '/categories' },
   { label: '工具箱', href: '/tools' },
   { label: '关于', href: '/about' },
-];
-
-// 分类配置
-export const categories: Category[] = [
-  {
-    id: '1',
-    name: '前端开发',
-    slug: 'frontend',
-    description: 'HTML, CSS, JavaScript, React, Vue 等前端技术',
-    count: 0,
-  },
-  {
-    id: '2',
-    name: '后端开发',
-    slug: 'backend',
-    description: 'Node.js, Python, Java, 数据库等后端技术',
-    count: 0,
-  },
-  {
-    id: '3',
-    name: 'DevOps',
-    slug: 'devops',
-    description: 'Docker, Kubernetes, CI/CD, 云原生技术',
-    count: 0,
-  },
-  {
-    id: '4',
-    name: '工具效率',
-    slug: 'tools',
-    description: '开发工具、编辑器、效率提升技巧',
-    count: 0,
-  },
-  {
-    id: '5',
-    name: '最佳实践',
-    slug: 'best-practices',
-    description: '代码规范、架构设计、性能优化',
-    count: 0,
-  },
 ];
 
 // 工具箱配置
@@ -133,3 +94,6 @@ export const socialLinks = {
   email: `mailto:${siteConfig.email}`,
   rss: '/rss.xml',
 };
+
+// 注意：分类和标签配置现在从 /posts 目录动态加载
+// 详见 /posts/labels.json 和各分类文件夹下的 [分类名].json
