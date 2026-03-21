@@ -3,7 +3,7 @@
  */
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Telegram, Mail, Rss, Heart } from 'lucide-react';
+import { Github, Twitter, Mail, Rss, Heart } from 'lucide-react';
 import { siteConfig, socialLinks } from '@/data/config';
 
 export const Footer: React.FC = () => {
@@ -37,15 +37,15 @@ export const Footer: React.FC = () => {
               >
                 <Github className="w-5 h-5" />
               </a>
-              {socialLinks.telegram && (
+              {socialLinks.twitter && (
                 <a
-                  href={socialLinks.telegram}
+                  href={socialLinks.twitter}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-500 dark:text-gray-400 hover:text-blue-400 transition-colors"
-                  aria-label="Telegram"
+                  aria-label="Twitter"
                 >
-                  <Telegram className="w-5 h-5" />
+                  <Twitter className="w-5 h-5" />
                 </a>
               )}
               <a

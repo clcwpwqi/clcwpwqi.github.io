@@ -11,7 +11,7 @@ export const siteConfig: SiteConfig = {
   author: 'clcwpwqi',
   email: 'clcwpwqi@outlook.com',
   github: 'https://github.com/clcwpwqi',
-  telegram: 'https://t.me/clcwpwqi',
+  Telegram: 'https://t.me/clcwpwqi',
   avatar: '/images/avatar.png',
   url: 'https://clcwpwqi.github.io',
   
@@ -89,7 +89,7 @@ export const tools: Tool[] = [
 // 社交链接配置
 export const socialLinks = {
   github: siteConfig.github,
-  telegram: siteConfig.telegram,
+  twitter: siteConfig.Telegram,
   email: `mailto:${siteConfig.email}`,
   rss: '/rss.xml',
 };

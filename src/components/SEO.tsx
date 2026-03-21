@@ -54,12 +54,12 @@ export const SEO: React.FC<SEOProps> = ({
       <meta property="og:image" content={fullImage} />
       <meta property="og:site_name" content={siteConfig.title} />
 
-      {/* Telegram Card */}
-      <meta name="telegram:card" content="summary_large_image" />
-      <meta name="telegram:title" content={fullTitle} />
-      <meta name="telegram:description" content={fullDescription} />
-      <meta name="telegram:image" content={fullImage} />
-      <meta name="telegram:creator" content={siteConfig.telegram?.replace('https://t.me/', '')} />
+      {/* Twitter Card */}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content={fullTitle} />
+      <meta name="twitter:description" content={fullDescription} />
+      <meta name="twitter:image" content={fullImage} />
+      <meta name="twitter:creator" content={siteConfig.twitter?.replace('https://twitter.com/', '@')} />
 
       {/* Canonical URL */}
       <link rel="canonical" href={fullUrl} />

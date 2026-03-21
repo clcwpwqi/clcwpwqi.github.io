@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { 
   Mail, 
   Github, 
-  Telegram, 
+  Twitter, 
   Code,
   Heart,
   Coffee
@@ -51,7 +51,7 @@ export const AboutPage: React.FC = () => {
               {siteConfig.author}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              开发者，热爱开源，喜欢分享技术文章和开发经验
+              全栈开发者，热爱开源，喜欢分享技术文章和开发经验
             </p>
           </motion.div>
         </div>
@@ -189,15 +189,15 @@ export const AboutPage: React.FC = () => {
                     <Github className="w-5 h-5 mr-3" />
                     GitHub
                   </a>
-                  {siteConfig.telegram && (
+                  {siteConfig.twitter && (
                     <a
-                      href={siteConfig.telegram}
+                      href={siteConfig.twitter}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-400 transition-colors"
                     >
-                      <Telegram className="w-5 h-5 mr-3" />
-                      Telegram
+                      <Twitter className="w-5 h-5 mr-3" />
+                      Twitter
                     </a>
                   )}
                   <a
