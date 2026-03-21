@@ -1,0 +1,7 @@
+{
+  "id": "Magisk",
+  "name": "Magisk",
+  "slug": "Magisk",
+  "description": "Magisk模块类开发，同样适用于KSU、AP",
+  "order": 6
+}

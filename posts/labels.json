@@ -97,8 +97,14 @@
   },
   "CMS-2026": {
     "id": "CMS-2026",
-    "name": "CMS-2026 算法",
+    "name": "CMS-2026",
     "slug": "CMS-2026",
+    "color": "#8CC84B"
+  },
+  "Magisk": {
+    "id": "Magisk",
+    "name": "Magisk",
+    "slug": "Magisk",
     "color": "#8CC84B"
   },
   "Performance": {
