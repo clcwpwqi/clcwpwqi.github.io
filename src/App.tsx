@@ -1,8 +1,8 @@
 /**
  * 主应用组件
  */
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Header } from '@/components/Header';
@@ -17,6 +17,28 @@ import { AboutPage } from '@/pages/AboutPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 import './App.css';
 
+// 路由恢复组件（用于处理 GitHub Pages 的 404 重定向）
+function RouteRestorer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    // 检查 URL 中是否有 redirect 参数
+    const params = new URLSearchParams(location.search);
+    const redirectPath = params.get('redirect');
+
+    if (redirectPath) {
+      // 清除 URL 中的 redirect 参数，并跳转到原始路径
+      const cleanUrl = window.location.origin + redirectPath + location.hash;
+      window.history.replaceState(null, '', cleanUrl);
+      // 使用 React Router 进行跳转
+      navigate(redirectPath, { replace: true });
+    }
+  }, [location, navigate]);
+
+  return null;
+}
+
 function App() {
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -24,6 +46,8 @@ function App() {
     <HelmetProvider>
       <ThemeProvider>
         <Router>
+          {/* 路由恢复组件必须放在 Router 内部、Routes 之前 */}
+          <RouteRestorer />
           <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
             <Header onSearchClick={() => setSearchOpen(true)} />
             

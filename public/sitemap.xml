@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://username.github.io/</loc>
+    <loc>https://clcwpwqi.github.io/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://username.github.io/categories</loc>
+    <loc>https://clcwpwqi.github.io/categories</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://username.github.io/tools</loc>
+    <loc>https://clcwpwqi.github.io/tools</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://username.github.io/about</loc>
+    <loc>https://clcwpwqi.github.io/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://username.github.io/post/react-typescript-modern-web</loc>
+    <loc>https://clcwpwqi.github.io/post/react-typescript-modern-web</loc>
     <lastmod>2024-01-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://username.github.io/post/tailwind-css-complete-guide</loc>
+    <loc>https://clcwpwqi.github.io/post/tailwind-css-complete-guide</loc>
     <lastmod>2024-01-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://username.github.io/post/docker-getting-started</loc>
+    <loc>https://clcwpwqi.github.io/post/docker-getting-started</loc>
     <lastmod>2024-01-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://username.github.io/post/git-workflow-best-practices</loc>
+    <loc>https://clcwpwqi.github.io/post/git-workflow-best-practices</loc>
     <lastmod>2024-01-01</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://username.github.io/post/vscode-productivity-guide</loc>
+    <loc>https://clcwpwqi.github.io/post/vscode-productivity-guide</loc>
     <lastmod>2023-12-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://username.github.io/post/nodejs-performance-optimization</loc>
+    <loc>https://clcwpwqi.github.io/post/nodejs-performance-optimization</loc>
     <lastmod>2023-12-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

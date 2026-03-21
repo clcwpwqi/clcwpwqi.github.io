@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
-    <script type="text/javascript">
-      // 获取当前路径并存入 session，然后跳转回首页
-      var l = window.location;
-      l.replace(
-        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
-        l.pathname.split('/').slice(0, 1).join('/') + '/?p=/' +
-        l.pathname.slice(1).split('/').slice(0).join('/').replace(/&/g, '~and~') +
-        (l.search ? '&q=' + l.search.slice(1).replace(/&/g, '~and~') : '') +
-        l.hash
-      );
+    <script>
+        // 获取当前访问的完整路径（例如 /posts/hello）
+        var originalPath = window.location.pathname;
+
+        // 将路径作为参数传给首页，保留查询参数和哈希
+        var redirectUrl = '/' + (originalPath === '/' ? '' : '?redirect=' + encodeURIComponent(originalPath)) + window.location.search + window.location.hash;
+
+        // 执行重定向
+        window.location.replace(redirectUrl);
     </script>
-  </head>
-  <body></body>
+</head>
+<body>
+    <p>Redirecting...</p>
+</body>
 </html>
