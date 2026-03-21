@@ -3,7 +3,7 @@ title: "CMS-2026 Magisk"
 slug: "cms-2026-ma"
 excerpt: "Magisk 模块实现"
 date: "2026-3-21"
-category: "magisk"
+category: "Magisk"
 tags: ["Magisk", "CMS-2026"]
 readingTime: 10
 ---
