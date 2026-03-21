@@ -95,7 +95,7 @@ export interface SiteConfig {
   author: string;
   email: string;
   github: string;
-  telegram: string;
+  twitter?: string;
   avatar: string;
   url: string;
   comment: CommentConfig;
