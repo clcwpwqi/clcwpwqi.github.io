@@ -65,6 +65,12 @@
     "slug": "vscode",
     "color": "#007ACC"
   },
+  "Chrome": {
+    "id": "chrome",
+    "name": "Chrome",
+    "slug": "chrome",
+    "color": "#007ACC"
+  },
   "Tools": {
     "id": "tools",
     "name": "工具",
