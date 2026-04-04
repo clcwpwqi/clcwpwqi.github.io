@@ -44,7 +44,7 @@
         "value": "@clcwpwqi",
         "url": "https://t.me/clcwpwqi",
         "icon": "Send",
-        "show": true
+        "show": false
       },
       {
         "type": "wechat",
@@ -52,7 +52,7 @@
         "value": "clcwpwqi",
         "url": "http://weixin.qq.com/r/mp/axbK0jrExGe7rX6x90N5",
         "icon": "MessageSquare",
-        "show": true
+        "show": false
       }
     ]
   },
