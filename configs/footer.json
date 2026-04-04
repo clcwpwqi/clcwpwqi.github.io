@@ -28,7 +28,7 @@
     "enabled": true,
     "items": [
       { "type": "github", "show": true },
-      { "type": "twitter", "show": true },
+      { "type": "telegram", "show": true },
       { "type": "email", "show": true },
       { "type": "rss", "show": true }
     ]

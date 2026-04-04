@@ -5,8 +5,8 @@
     "subtitle": "全栈开发者，热爱开源，喜欢分享技术文章和开发经验"
   },
   "profile": {
-    "name": "Developer",
-    "role": "全栈开发者",
+    "name": "clcwpwqi",
+    "role": "开发者",
     "bio": "我是一名热爱技术的全栈开发者，拥有多年的 Web 开发经验。专注于前端开发，同时也熟悉后端技术和 DevOps 实践。\n\n创建这个博客的初衷是记录学习过程中的点滴，分享技术心得，同时也希望能够帮助到其他开发者。我相信知识的价值在于分享，通过写作可以更好地理解和巩固所学的内容。",
     "avatar": "/images/avatar.png",
     "skills": ["React", "TypeScript", "Node.js", "Next.js", "Tailwind CSS", "Docker", "Git", "Linux"]
@@ -17,40 +17,40 @@
       {
         "type": "github",
         "label": "GitHub",
-        "value": "username",
-        "url": "https://github.com/username",
+        "value": "clcwpwqi",
+        "url": "https://github.com/clcwpwqi",
         "icon": "Github",
         "show": true
       },
       {
         "type": "twitter",
         "label": "Twitter",
-        "value": "@username",
-        "url": "https://twitter.com/username",
+        "value": "@clcwpwqi",
+        "url": "https://twitter.com/clcwpwqi",
         "icon": "Twitter",
         "show": true
       },
       {
         "type": "email",
         "label": "邮箱",
-        "value": "developer@example.com",
-        "url": "mailto:developer@example.com",
+        "value": "clcwpwqi@hotmail.com",
+        "url": "mailto:clcwpwqi@hotmail.com",
         "icon": "Mail",
         "show": true
       },
       {
         "type": "telegram",
         "label": "Telegram",
-        "value": "@username",
-        "url": "https://t.me/username",
+        "value": "@clcwpwqi",
+        "url": "https://t.me/clcwpwqi",
         "icon": "Send",
         "show": false
       },
       {
         "type": "wechat",
         "label": "微信公众号",
-        "value": "公众号名称",
-        "url": "",
+        "value": "clcwpwqi",
+        "url": "http://weixin.qq.com/r/mp/axbK0jrExGe7rX6x90N5",
         "icon": "MessageSquare",
         "show": false
       }
@@ -77,7 +77,7 @@
     ],
     "donate": {
       "_comment": "捐赠配置（可选）",
-      "enabled": false,
+      "enabled": true,
       "title": "请我喝杯咖啡",
       "description": "如果我的文章帮助到了你，可以考虑请我喝杯咖啡",
       "methods": [
