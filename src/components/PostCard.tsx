@@ -1,19 +1,25 @@
 /**
  * 文章卡片组件
  */
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, Clock, Tag, ArrowRight } from 'lucide-react';
 import type { Post } from '@/types';
 import { formatDate, getRelativeTime } from '@/utils/helpers';
-// import { cn } from '@/lib/utils';
+import { getCategoryBySlug } from '@/data/posts';
 
 interface PostCardProps {
   post: Post;
   variant?: 'default' | 'compact' | 'featured';
 }
 
-export const PostCard: React.FC<PostCardProps> = ({ post, variant = 'default' }) => {
+export const PostCard = ({ post, variant = 'default' }: PostCardProps) => {
+  // 获取分类名称
+  const category = getCategoryBySlug(post.category);
+  const categoryName = category?.name || post.category;
+
+  // 封面图片处理
+  const coverImage = post.cover;
+
   if (variant === 'compact') {
     return (
       <article className="group">
@@ -44,16 +50,24 @@ export const PostCard: React.FC<PostCardProps> = ({ post, variant = 'default' })
     return (
       <article className="group relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300">
         <Link to={`/post/${post.slug}`} className="block">
-          {/* Cover Image Placeholder */}
-          <div className="aspect-[16/9] bg-gradient-to-br from-blue-500 to-purple-600 relative overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center text-white/30 text-6xl font-bold">
-              {post.title.charAt(0)}
-            </div>
+          {/* Cover Image */}
+          <div className="aspect-[16/9] relative overflow-hidden">
+            {coverImage ? (
+              <img
+                src={coverImage}
+                alt={post.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+                <span className="text-white/30 text-6xl font-bold">{post.title.charAt(0)}</span>
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6">
               <div className="flex items-center space-x-2 mb-3">
                 <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-xs font-medium text-white">
-                  {post.category}
+                  {categoryName}
                 </span>
               </div>
               <h3 className="text-xl md:text-2xl font-bold text-white line-clamp-2">
@@ -92,14 +106,22 @@ export const PostCard: React.FC<PostCardProps> = ({ post, variant = 'default' })
   return (
     <article className="group bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 dark:border-gray-700">
       <Link to={`/post/${post.slug}`} className="block">
-        {/* Cover Image Placeholder */}
-        <div className="aspect-[16/9] bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 relative overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center text-gray-400 dark:text-gray-500 text-4xl font-bold">
-            {post.title.charAt(0)}
-          </div>
+        {/* Cover Image */}
+        <div className="aspect-[16/9] relative overflow-hidden">
+          {coverImage ? (
+            <img
+              src={coverImage}
+              alt={post.title}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+              <span className="text-gray-400 dark:text-gray-500 text-4xl font-bold">{post.title.charAt(0)}</span>
+            </div>
+          )}
           <div className="absolute top-4 left-4">
             <span className="px-3 py-1 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-full text-xs font-medium text-gray-700 dark:text-gray-300">
-              {post.category}
+              {categoryName}
             </span>
           </div>
         </div>

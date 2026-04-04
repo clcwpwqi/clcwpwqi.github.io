@@ -65,12 +65,6 @@
     "slug": "vscode",
     "color": "#007ACC"
   },
-  "Chrome": {
-    "id": "chrome",
-    "name": "Chrome",
-    "slug": "chrome",
-    "color": "#007ACC"
-  },
   "Tools": {
     "id": "tools",
     "name": "工具",
@@ -93,24 +87,6 @@
     "id": "backend",
     "name": "后端",
     "slug": "backend",
-    "color": "#8CC84B"
-  },
-  "HTML": {
-    "id": "html",
-    "name": "HTML",
-    "slug": "HTML",
-    "color": "#8CC84B"
-  },
-  "CMS-2026": {
-    "id": "CMS-2026",
-    "name": "CMS-2026",
-    "slug": "CMS-2026",
-    "color": "#8CC84B"
-  },
-  "Magisk": {
-    "id": "Magisk",
-    "name": "Magisk",
-    "slug": "Magisk",
     "color": "#8CC84B"
   },
   "Performance": {

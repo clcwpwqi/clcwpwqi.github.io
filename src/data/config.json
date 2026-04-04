@@ -1,0 +1,347 @@
+{
+  "about": {
+    "hero": {
+      "title": "关于我",
+      "subtitle": "全栈开发者，热爱开源，喜欢分享技术文章和开发经验"
+    },
+    "profile": {
+      "name": "Developer",
+      "role": "全栈开发者",
+      "bio": "我是一名热爱技术的全栈开发者，拥有多年的 Web 开发经验。专注于前端开发，同时也熟悉后端技术和 DevOps 实践。\n\n创建这个博客的初衷是记录学习过程中的点滴，分享技术心得，同时也希望能够帮助到其他开发者。我相信知识的价值在于分享，通过写作可以更好地理解和巩固所学的内容。",
+      "avatar": "/images/avatar.png",
+      "skills": [
+        "React",
+        "TypeScript",
+        "Node.js",
+        "Next.js",
+        "Tailwind CSS",
+        "Docker",
+        "Git",
+        "Linux"
+      ]
+    },
+    "contacts": {
+      "items": [
+        {
+          "type": "github",
+          "label": "GitHub",
+          "value": "username",
+          "url": "https://github.com/username",
+          "icon": "Github",
+          "show": true
+        },
+        {
+          "type": "twitter",
+          "label": "Twitter",
+          "value": "@username",
+          "url": "https://twitter.com/username",
+          "icon": "Twitter",
+          "show": true
+        },
+        {
+          "type": "email",
+          "label": "邮箱",
+          "value": "developer@example.com",
+          "url": "mailto:developer@example.com",
+          "icon": "Mail",
+          "show": true
+        },
+        {
+          "type": "telegram",
+          "label": "Telegram",
+          "value": "@username",
+          "url": "https://t.me/username",
+          "icon": "Send",
+          "show": false
+        },
+        {
+          "type": "wechat",
+          "label": "微信公众号",
+          "value": "公众号名称",
+          "url": "",
+          "icon": "MessageSquare",
+          "show": false
+        }
+      ]
+    },
+    "support": {
+      "enabled": true,
+      "title": "支持我",
+      "description": "如果我的文章对你有帮助，欢迎通过以下方式支持我：",
+      "methods": [
+        {
+          "icon": "Heart",
+          "text": "在 GitHub 上 Star 这个项目"
+        },
+        {
+          "icon": "Share2",
+          "text": "分享文章给更多开发者"
+        },
+        {
+          "icon": "MessageCircle",
+          "text": "在评论区留下你的反馈"
+        }
+      ],
+      "donate": {
+        "enabled": false,
+        "title": "请我喝杯咖啡",
+        "description": "如果我的文章帮助到了你，可以考虑请我喝杯咖啡",
+        "methods": [
+          {
+            "name": "支付宝",
+            "image": "/images/donate-alipay.png"
+          },
+          {
+            "name": "微信",
+            "image": "/images/donate-wechat.png"
+          }
+        ]
+      }
+    },
+    "blog": {
+      "enabled": true,
+      "title": "关于博客",
+      "content": "{title} 是一个基于 React + TypeScript + Tailwind CSS 构建的静态博客。博客采用纯前端架构，部署在 GitHub Pages 上，无需后端服务器即可运行。\n\n博客的主要功能包括：文章展示、分类标签、搜索功能、暗黑模式、响应式设计等。同时还提供了一系列实用的开发工具。\n\n如果你对这个博客的源码感兴趣，可以在 GitHub 上找到它，欢迎 Star 和 Fork。"
+    },
+    "stats": {
+      "enabled": true
+    }
+  },
+  "footer": {
+    "brand": {
+      "showLogo": true,
+      "showDescription": true
+    },
+    "links": {
+      "enabled": true,
+      "title": "快速链接",
+      "items": [
+        {
+          "label": "首页",
+          "href": "/"
+        },
+        {
+          "label": "分类",
+          "href": "/categories"
+        },
+        {
+          "label": "工具箱",
+          "href": "/tools"
+        },
+        {
+          "label": "关于",
+          "href": "/about"
+        }
+      ]
+    },
+    "contact": {
+      "enabled": true,
+      "title": "联系方式",
+      "showEmail": true,
+      "showGithub": true,
+      "showTwitter": true
+    },
+    "social": {
+      "enabled": true,
+      "items": [
+        {
+          "type": "github",
+          "show": true
+        },
+        {
+          "type": "twitter",
+          "show": true
+        },
+        {
+          "type": "email",
+          "show": true
+        },
+        {
+          "type": "rss",
+          "show": true
+        }
+      ]
+    },
+    "copyright": {
+      "enabled": true,
+      "showYear": true,
+      "customText": "",
+      "showCredit": true
+    }
+  },
+  "homepage": {
+    "hero": {
+      "title": "探索技术的",
+      "highlight": "无限可能",
+      "subtitle": "分享前端、后端、DevOps 等技术文章，提供实用的开发工具，助力开发者提升效率。",
+      "buttons": [
+        {
+          "label": "浏览文章",
+          "href": "#latest",
+          "variant": "primary",
+          "icon": "Sparkles"
+        },
+        {
+          "label": "开发工具",
+          "href": "/tools",
+          "variant": "secondary",
+          "icon": "TrendingUp"
+        }
+      ]
+    },
+    "featured": {
+      "enabled": true,
+      "title": "精选文章",
+      "posts": [
+        "react-typescript-modern-web",
+        "tailwind-css-complete-guide",
+        "docker-getting-started"
+      ]
+    },
+    "latest": {
+      "title": "最新文章",
+      "showCount": 6
+    }
+  },
+  "navigation": {
+    "items": [
+      {
+        "label": "首页",
+        "href": "/",
+        "show": true
+      },
+      {
+        "label": "分类",
+        "href": "/categories",
+        "show": true
+      },
+      {
+        "label": "工具箱",
+        "href": "/tools",
+        "show": true
+      },
+      {
+        "label": "关于",
+        "href": "/about",
+        "show": true
+      }
+    ],
+    "search": {
+      "enabled": true
+    },
+    "themeToggle": {
+      "enabled": true
+    }
+  },
+  "site": {
+    "title": "DevBlog",
+    "description": "一个简洁、现代的开发者博客，分享技术文章与实用工具",
+    "author": "Developer",
+    "email": "developer@example.com",
+    "github": "https://github.com/username",
+    "twitter": "https://twitter.com/username",
+    "logo": "D",
+    "url": "https://username.github.io",
+    "favicon": "/favicon.ico",
+    "avatar": {
+      "src": "/images/avatar.png",
+      "width": 200,
+      "height": 200,
+      "alt": "博主头像"
+    },
+    "comment": {
+      "provider": "giscus",
+      "repo": "username/blog-comments",
+      "repoId": "",
+      "category": "Announcements",
+      "categoryId": "",
+      "mapping": "pathname",
+      "reactionsEnabled": true,
+      "emitMetadata": false,
+      "theme": "preferred_color_scheme",
+      "crossorigin": "anonymous"
+    },
+    "analytics": {
+      "provider": "",
+      "id": ""
+    }
+  },
+  "tools": {
+    "title": "开发者工具箱",
+    "subtitle": "实用的纯前端开发工具，无需后端服务，数据完全在本地处理，安全高效",
+    "tools": [
+      {
+        "id": "json-formatter",
+        "name": "JSON 格式化",
+        "description": "格式化、验证、压缩 JSON 数据",
+        "icon": "Braces",
+        "component": "JsonFormatter",
+        "enabled": true,
+        "color": "from-blue-500 to-cyan-500"
+      },
+      {
+        "id": "base64",
+        "name": "Base64 编解码",
+        "description": "Base64 编码和解码工具",
+        "icon": "Code",
+        "component": "Base64Tool",
+        "enabled": true,
+        "color": "from-green-500 to-emerald-500"
+      },
+      {
+        "id": "timestamp",
+        "name": "时间戳转换",
+        "description": "Unix 时间戳与日期时间互转",
+        "icon": "Clock",
+        "component": "TimestampTool",
+        "enabled": true,
+        "color": "from-purple-500 to-pink-500"
+      },
+      {
+        "id": "text-diff",
+        "name": "文本对比",
+        "description": "比较两段文本的差异",
+        "icon": "GitCompare",
+        "component": "TextDiffTool",
+        "enabled": true,
+        "color": "from-orange-500 to-red-500"
+      },
+      {
+        "id": "url-encoder",
+        "name": "URL 编解码",
+        "description": "URL 编码和解码工具",
+        "icon": "Link",
+        "component": "UrlEncoderTool",
+        "enabled": true,
+        "color": "from-indigo-500 to-blue-500"
+      },
+      {
+        "id": "color-converter",
+        "name": "颜色转换器",
+        "description": "HEX、RGB、HSL 颜色格式互转",
+        "icon": "Palette",
+        "component": "ColorConverterTool",
+        "enabled": true,
+        "color": "from-pink-500 to-rose-500"
+      },
+      {
+        "id": "qr-code",
+        "name": "二维码生成",
+        "description": "生成文本或链接的二维码",
+        "icon": "QrCode",
+        "component": "QrCodeTool",
+        "enabled": false,
+        "color": "from-teal-500 to-emerald-500"
+      },
+      {
+        "id": "password-generator",
+        "name": "密码生成器",
+        "description": "生成安全的随机密码",
+        "icon": "Key",
+        "component": "PasswordGeneratorTool",
+        "enabled": false,
+        "color": "from-amber-500 to-orange-500"
+      }
+    ]
+  }
+}

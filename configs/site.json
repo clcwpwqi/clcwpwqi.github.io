@@ -1,0 +1,36 @@
+{
+  "_comment": "站点基础配置 - 配置博客名称、描述、作者等信息",
+  "title": "DevBlog",
+  "description": "一个简洁、现代的开发者博客，分享技术文章与实用工具",
+  "author": "Developer",
+  "email": "developer@example.com",
+  "github": "https://github.com/username",
+  "twitter": "https://twitter.com/username",
+  "logo": "D",
+  "url": "https://username.github.io",
+  "favicon": "/favicon.ico",
+  "avatar": {
+    "src": "/images/avatar.png",
+    "width": 200,
+    "height": 200,
+    "alt": "博主头像"
+  },
+  "comment": {
+    "_comment": "Giscus 评论系统配置 - 访问 https://giscus.app/ 获取",
+    "provider": "giscus",
+    "repo": "username/blog-comments",
+    "repoId": "",
+    "category": "Announcements",
+    "categoryId": "",
+    "mapping": "pathname",
+    "reactionsEnabled": true,
+    "emitMetadata": false,
+    "theme": "preferred_color_scheme",
+    "crossorigin": "anonymous"
+  },
+  "analytics": {
+    "_comment": "网站统计配置（可选）",
+    "provider": "",
+    "id": ""
+  }
+}

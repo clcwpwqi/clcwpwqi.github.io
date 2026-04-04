@@ -11,7 +11,11 @@ import {
   GitCompare, 
   Link, 
   Palette,
-  X
+  X,
+  Hash,
+  FileJson,
+  Type,
+  Calculator
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { JsonFormatter } from '@/components/tools/JsonFormatter';
@@ -21,6 +25,22 @@ import { TextDiffTool } from '@/components/tools/TextDiffTool';
 import { UrlEncoderTool } from '@/components/tools/UrlEncoderTool';
 import { ColorConverterTool } from '@/components/tools/ColorConverterTool';
 import { cn } from '@/lib/utils';
+import { toolsConfig, enabledTools } from '@/data/config';
+
+// 图标映射
+const toolIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Braces,
+  Code,
+  Clock,
+  GitCompare,
+  Link,
+  Palette,
+  Hash,
+  FileJson,
+  Type,
+  Calculator,
+  Wrench,
+};
 
 interface Tool {
   id: string;
@@ -31,56 +51,25 @@ interface Tool {
   color: string;
 }
 
-const tools: Tool[] = [
-  {
-    id: 'json-formatter',
-    name: 'JSON 格式化',
-    description: '格式化、验证、压缩 JSON 数据',
-    icon: Braces,
-    component: JsonFormatter,
-    color: 'from-blue-500 to-cyan-500',
-  },
-  {
-    id: 'base64',
-    name: 'Base64 编解码',
-    description: 'Base64 编码和解码工具',
-    icon: Code,
-    component: Base64Tool,
-    color: 'from-green-500 to-emerald-500',
-  },
-  {
-    id: 'timestamp',
-    name: '时间戳转换',
-    description: 'Unix 时间戳与日期时间互转',
-    icon: Clock,
-    component: TimestampTool,
-    color: 'from-purple-500 to-pink-500',
-  },
-  {
-    id: 'text-diff',
-    name: '文本对比',
-    description: '比较两段文本的差异',
-    icon: GitCompare,
-    component: TextDiffTool,
-    color: 'from-orange-500 to-red-500',
-  },
-  {
-    id: 'url-encoder',
-    name: 'URL 编解码',
-    description: 'URL 编码和解码工具',
-    icon: Link,
-    component: UrlEncoderTool,
-    color: 'from-indigo-500 to-blue-500',
-  },
-  {
-    id: 'color-converter',
-    name: '颜色转换器',
-    description: 'HEX、RGB、HSL 颜色格式互转',
-    icon: Palette,
-    component: ColorConverterTool,
-    color: 'from-pink-500 to-rose-500',
-  },
-];
+// 组件映射
+const componentMap: Record<string, React.ComponentType> = {
+  JsonFormatter,
+  Base64Tool,
+  TimestampTool,
+  TextDiffTool,
+  UrlEncoderTool,
+  ColorConverterTool,
+};
+
+// 从配置生成工具列表
+const tools: Tool[] = enabledTools.map(tool => ({
+  id: tool.id,
+  name: tool.name,
+  description: tool.description,
+  icon: toolIconMap[tool.icon] || Wrench,
+  component: componentMap[tool.component] || JsonFormatter,
+  color: tool.color,
+}));
 
 export const ToolsPage: React.FC = () => {
   const [activeTool, setActiveTool] = useState<Tool | null>(null);
@@ -113,10 +102,10 @@ export const ToolsPage: React.FC = () => {
           >
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
               <Wrench className="w-8 h-8 mr-3 text-blue-500" />
-              开发者工具箱
+              {toolsConfig.title}
             </h1>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              实用的纯前端开发工具，无需后端服务，数据完全在本地处理，安全高效
+              {toolsConfig.subtitle}
             </p>
           </motion.div>
         </div>

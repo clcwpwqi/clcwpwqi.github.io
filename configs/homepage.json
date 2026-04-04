@@ -1,0 +1,36 @@
+{
+  "_comment": "首页配置 - 配置首页标题、副标题、精选文章等",
+  "hero": {
+    "title": "探索技术的",
+    "highlight": "无限可能",
+    "subtitle": "分享前端、后端、DevOps 等技术文章，提供实用的开发工具，助力开发者提升效率。",
+    "buttons": [
+      {
+        "label": "浏览文章",
+        "href": "#latest",
+        "variant": "primary",
+        "icon": "Sparkles"
+      },
+      {
+        "label": "开发工具",
+        "href": "/tools",
+        "variant": "secondary",
+        "icon": "TrendingUp"
+      }
+    ]
+  },
+  "featured": {
+    "_comment": "精选文章配置 - 填写文章 slug 列表",
+    "enabled": true,
+    "title": "精选文章",
+    "posts": [
+      "react-typescript-modern-web",
+      "tailwind-css-complete-guide",
+      "docker-getting-started"
+    ]
+  },
+  "latest": {
+    "title": "最新文章",
+    "showCount": 6
+  }
+}

@@ -4,11 +4,21 @@
 import { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, TrendingUp, Tag } from 'lucide-react';
+import { Sparkles, TrendingUp, Tag, ArrowRight, Wrench, BookOpen } from 'lucide-react';
 import { PostCard } from '@/components/PostCard';
 import { TagCloud } from '@/components/TagCloud';
 import { SEO } from '@/components/SEO';
 import { posts, categories, tags, getPostsByCategory, getPostsByTag } from '@/data/posts';
+import { homepageConfig } from '@/data/config';
+
+// 图标映射
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Sparkles,
+  TrendingUp,
+  ArrowRight,
+  Wrench,
+  BookOpen,
+};
 
 export const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -30,11 +40,19 @@ export const HomePage = () => {
     return result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
   }, [activeTag, activeCategory]);
 
-  // 精选文章（最新的3篇）
+  // 精选文章（从配置中读取）
   const featuredPosts = useMemo(() => {
-    return posts
-      .slice()
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    if (!homepageConfig.featured.enabled || !homepageConfig.featured.posts?.length) {
+      // 如果未启用或没有配置，返回最新的3篇
+      return posts
+        .slice()
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 3);
+    }
+    // 根据配置的slug获取文章
+    return homepageConfig.featured.posts
+      .map(slug => posts.find(p => p.slug === slug))
+      .filter((p): p is NonNullable<typeof p> => p !== undefined)
       .slice(0, 3);
   }, []);
 
@@ -71,42 +89,45 @@ export const HomePage = () => {
             className="text-center"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-              探索技术的
+              {homepageConfig.hero.title}
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                无限可能
+                {homepageConfig.hero.highlight}
               </span>
             </h1>
             <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
-              分享前端、后端、DevOps 等技术文章，提供实用的开发工具，
-              助力开发者提升效率。
+              {homepageConfig.hero.subtitle}
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <a
-                href="#latest"
-                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-full font-medium hover:bg-blue-700 transition-colors"
-              >
-                <Sparkles className="w-5 h-5 mr-2" />
-                浏览文章
-              </a>
-              <a
-                href="/tools"
-                className="inline-flex items-center px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full font-medium border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
-                <TrendingUp className="w-5 h-5 mr-2" />
-                开发工具
-              </a>
+              {homepageConfig.hero.buttons?.map((button, index) => {
+                const IconComponent = iconMap[button.icon] || Sparkles;
+                const isPrimary = button.variant === 'primary';
+                return (
+                  <a
+                    key={index}
+                    href={button.href}
+                    className={`inline-flex items-center px-6 py-3 rounded-full font-medium transition-colors ${
+                      isPrimary
+                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <IconComponent className="w-5 h-5 mr-2" />
+                    {button.label}
+                  </a>
+                );
+              })}
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Featured Posts */}
-      {!activeTag && !activeCategory && (
+      {!activeTag && !activeCategory && homepageConfig.featured.enabled && featuredPosts.length > 0 && (
         <section className="py-12 bg-white dark:bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
               <Sparkles className="w-6 h-6 mr-2 text-yellow-500" />
-              精选文章
+              {homepageConfig.featured.title}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {featuredPosts.map((post, index) => (
@@ -132,7 +153,7 @@ export const HomePage = () => {
             <div className="flex-1">
               <div className="flex items-center justify-between mb-8">
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  {activeTag ? `标签: ${activeTag}` : activeCategory ? '分类文章' : '最新文章'}
+                  {activeTag ? `标签: ${activeTag}` : activeCategory ? '分类文章' : homepageConfig.latest.title}
                 </h2>
                 {(activeTag || activeCategory) && (
                   <button

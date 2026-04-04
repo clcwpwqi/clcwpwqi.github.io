@@ -59,6 +59,7 @@ export interface Tool {
   description: string;
   icon: string;
   component: string;
+  color?: string;
 }
 
 // 主题类型
@@ -88,6 +89,14 @@ export interface CommentConfig {
   crossorigin?: string;
 }
 
+// 头像配置类型
+export interface AvatarConfig {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+}
+
 // 站点配置类型
 export interface SiteConfig {
   title: string;
@@ -96,9 +105,15 @@ export interface SiteConfig {
   email: string;
   github: string;
   twitter?: string;
-  avatar: string;
+  logo?: string;
+  avatar?: string | AvatarConfig;
   url: string;
+  favicon?: string;
   comment: CommentConfig;
+  analytics?: {
+    provider?: string;
+    id?: string;
+  };
 }
 
 // 文章数据输出类型
@@ -107,4 +122,22 @@ export interface PostsData {
   categories: Category[];
   tags: Tag[];
   labelsConfig: Record<string, LabelConfig>;
+}
+
+// 联系方式类型
+export interface ContactItem {
+  type: string;
+  label: string;
+  value: string;
+  url: string;
+  icon: string;
+  show: boolean;
+}
+
+// 首页 Hero 按钮类型
+export interface HeroButton {
+  label: string;
+  href: string;
+  variant: 'primary' | 'secondary';
+  icon: string;
 }
