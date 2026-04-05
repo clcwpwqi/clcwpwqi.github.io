@@ -1,7 +1,7 @@
 /**
  * 关于与联系页面
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Mail, 
@@ -15,7 +15,9 @@ import {
   Rss,
   Star,
   Share2,
-  MessageCircle
+  MessageCircle,
+  Send,
+  Check
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { siteConfig, aboutConfig } from '@/data/config';
@@ -29,6 +31,8 @@ const contactIconMap: Record<string, React.ComponentType<{ className?: string }>
   Globe,
   Linkedin,
   Rss,
+  Send,
+  MessageCircle,
 };
 
 const supportIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -40,6 +44,8 @@ const supportIconMap: Record<string, React.ComponentType<{ className?: string }>
 };
 
 export const AboutPage: React.FC = () => {
+  const [copied, setCopied] = useState<string | null>(null);
+  
   const stats = {
     posts: posts.length,
     categories: new Set(posts.map((p) => p.category)).size,
@@ -54,6 +60,14 @@ export const AboutPage: React.FC = () => {
   
   // 从配置获取支持方式
   const supportMethods = aboutConfig.support.methods || [];
+  
+  // 处理复制操作
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(text);
+      setTimeout(() => setCopied(null), 2000);
+    });
+  };
 
   return (
     <>
@@ -238,12 +252,34 @@ export const AboutPage: React.FC = () => {
                   <div className="space-y-4">
                     {enabledContacts.map((contact, index) => {
                       const IconComponent = contactIconMap[contact.icon] || Globe;
+                      
+                      // 处理复制操作（微信公众号）
+                      if (contact.action === 'copy' && contact.copyText) {
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handleCopy(contact.copyText!)}
+                            className="flex items-center text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors w-full text-left relative"
+                            title={contact.tooltip || `点击复制: ${contact.copyText}`}
+                          >
+                            <IconComponent className="w-5 h-5 mr-3" />
+                            {contact.label}
+                            {copied === contact.copyText && (
+                              <span className="ml-2 inline-flex items-center text-green-500 text-sm">
+                                <Check className="w-4 h-4 mr-1" />
+                                已复制
+                              </span>
+                            )}
+                          </button>
+                        );
+                      }
+                      
                       return (
                         <a
                           key={index}
                           href={contact.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          target={contact.url?.startsWith('http') ? '_blank' : undefined}
+                          rel={contact.url?.startsWith('http') ? 'noopener noreferrer' : undefined}
                           className="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                         >
                           <IconComponent className="w-5 h-5 mr-3" />
@@ -271,17 +307,51 @@ export const AboutPage: React.FC = () => {
                     {aboutConfig.support.description}
                   </p>
                   {supportMethods.length > 0 && (
-                    <ul className="space-y-2 text-sm">
+                    <div className="space-y-3 mt-4">
                       {supportMethods.map((method, index) => {
-                        const IconComponent = supportIconMap[method.icon] || Coffee;
+                        const IconComponent = supportIconMap[method.icon] || Heart;
+                        
+                        // 如果有图片（微信/支付宝二维码）
+                        if (method.image) {
+                          return (
+                            <div key={index} className="flex flex-col items-center">
+                              <span className="flex items-center text-sm mb-2">
+                                <IconComponent className="w-4 h-4 mr-2" />
+                                {method.text}
+                              </span>
+                              <img 
+                                src={method.image} 
+                                alt={method.text}
+                                className="w-32 h-32 rounded-lg object-cover"
+                              />
+                            </div>
+                          );
+                        }
+                        
+                        // 如果有URL（爱发电）
+                        if (method.url) {
+                          return (
+                            <a
+                              key={index}
+                              href={method.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center text-sm hover:text-blue-200 transition-colors"
+                            >
+                              <IconComponent className="w-4 h-4 mr-2" />
+                              {method.text}
+                            </a>
+                          );
+                        }
+                        
                         return (
-                          <li key={index} className="flex items-center">
+                          <div key={index} className="flex items-center text-sm">
                             <IconComponent className="w-4 h-4 mr-2" />
                             {method.text}
-                          </li>
+                          </div>
                         );
                       })}
-                    </ul>
+                    </div>
                   )}
                 </motion.div>
               )}

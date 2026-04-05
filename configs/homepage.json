@@ -1,5 +1,5 @@
 {
-  "_comment": "首页配置 - 配置首页标题、副标题、精选文章等",
+  "_comment": "首页配置文件 | 编辑教程见 homepage.md",
   "hero": {
     "title": "探索技术的",
     "highlight": "无限可能",
@@ -15,19 +15,14 @@
         "label": "开发工具",
         "href": "/tools",
         "variant": "secondary",
-        "icon": "TrendingUp"
+        "icon": "Wrench"
       }
     ]
   },
   "featured": {
-    "_comment": "精选文章配置 - 填写文章 slug 列表",
     "enabled": true,
     "title": "精选文章",
-    "posts": [
-      "react-typescript-modern-web",
-      "tailwind-css-complete-guide",
-      "docker-getting-started"
-    ]
+    "posts": []
   },
   "latest": {
     "title": "最新文章",

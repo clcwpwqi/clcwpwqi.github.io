@@ -6,7 +6,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Sun, Moon, Search } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useScrolled } from '@/hooks/useScrollPosition';
-import { navLinks, siteConfig } from '@/data/config';
+import { navLinks, navigationConfig } from '@/data/config';
 import { cn } from '@/lib/utils';
 
 interface HeaderProps {
@@ -53,10 +53,12 @@ export const Header = ({ onSearchClick }: HeaderProps) => {
               to="/" 
               className="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
-                {siteConfig.logo || siteConfig.title.charAt(0)}
-              </span>
-              <span>{siteConfig.title}</span>
+              {navigationConfig.brand?.showLogo !== false && (
+                <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
+                  {navigationConfig.brand?.logo || 'C'}
+                </span>
+              )}
+              <span>{navigationConfig.brand?.name || 'clc\'blog'}</span>
             </Link>
 
             {/* Desktop Navigation */}

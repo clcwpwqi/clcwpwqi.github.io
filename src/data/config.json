@@ -2,12 +2,12 @@
   "about": {
     "hero": {
       "title": "关于我",
-      "subtitle": "全栈开发者，热爱开源，喜欢分享技术文章和开发经验"
+      "subtitle": "热爱技术，喜欢分享"
     },
     "profile": {
-      "name": "Developer",
+      "name": "clcwpwqi",
       "role": "全栈开发者",
-      "bio": "我是一名热爱技术的全栈开发者，拥有多年的 Web 开发经验。专注于前端开发，同时也熟悉后端技术和 DevOps 实践。\n\n创建这个博客的初衷是记录学习过程中的点滴，分享技术心得，同时也希望能够帮助到其他开发者。我相信知识的价值在于分享，通过写作可以更好地理解和巩固所学的内容。",
+      "bio": "热爱开源，喜欢分享技术文章和开发经验。专注于前端开发，同时也熟悉后端技术和 DevOps 实践。",
       "avatar": "/images/avatar.png",
       "skills": [
         "React",
@@ -20,47 +20,42 @@
         "Linux"
       ]
     },
+    "stats": {
+      "enabled": true
+    },
+    "blog": {
+      "enabled": true,
+      "title": "关于博客",
+      "content": "clc'blog 是一个基于 React + TypeScript + Tailwind CSS 构建的静态博客。博客采用纯前端架构，部署在 GitHub Pages 上，无需后端服务器即可运行。\n\n博客的主要功能包括：文章展示、分类标签、搜索功能、暗黑模式、响应式设计等。同时还提供了一系列实用的开发工具。\n\n如果你对这个博客的源码感兴趣，可以在 GitHub 上找到它，欢迎 Star 和 Fork。"
+    },
     "contacts": {
+      "title": "联系方式",
       "items": [
         {
-          "type": "github",
           "label": "GitHub",
-          "value": "username",
-          "url": "https://github.com/username",
+          "url": "https://github.com/clcwpwqi",
           "icon": "Github",
           "show": true
         },
         {
-          "type": "twitter",
-          "label": "Twitter",
-          "value": "@username",
-          "url": "https://twitter.com/username",
-          "icon": "Twitter",
+          "label": "微信公众号",
+          "url": "#wechat",
+          "icon": "MessageCircle",
+          "show": true,
+          "action": "copy",
+          "copyText": "clcwpwqi"
+        },
+        {
+          "label": "Telegram",
+          "url": "https://t.me/clcwpwqi",
+          "icon": "Send",
           "show": true
         },
         {
-          "type": "email",
-          "label": "邮箱",
-          "value": "developer@example.com",
-          "url": "mailto:developer@example.com",
+          "label": "Email",
+          "url": "mailto:clcwpwqi@outlook.com",
           "icon": "Mail",
           "show": true
-        },
-        {
-          "type": "telegram",
-          "label": "Telegram",
-          "value": "@username",
-          "url": "https://t.me/username",
-          "icon": "Send",
-          "show": false
-        },
-        {
-          "type": "wechat",
-          "label": "微信公众号",
-          "value": "公众号名称",
-          "url": "",
-          "icon": "MessageSquare",
-          "show": false
         }
       ]
     },
@@ -70,103 +65,104 @@
       "description": "如果我的文章对你有帮助，欢迎通过以下方式支持我：",
       "methods": [
         {
+          "text": "微信打赏",
           "icon": "Heart",
-          "text": "在 GitHub 上 Star 这个项目"
+          "image": "/images/wechat-pay.png"
         },
         {
-          "icon": "Share2",
-          "text": "分享文章给更多开发者"
+          "text": "支付宝打赏",
+          "icon": "Heart",
+          "image": "/images/alipay.png"
         },
         {
-          "icon": "MessageCircle",
-          "text": "在评论区留下你的反馈"
+          "text": "爱发电",
+          "icon": "Heart",
+          "url": "https://ifdian.net/a/clcwpwqi"
         }
-      ],
-      "donate": {
-        "enabled": false,
-        "title": "请我喝杯咖啡",
-        "description": "如果我的文章帮助到了你，可以考虑请我喝杯咖啡",
-        "methods": [
-          {
-            "name": "支付宝",
-            "image": "/images/donate-alipay.png"
-          },
-          {
-            "name": "微信",
-            "image": "/images/donate-wechat.png"
-          }
-        ]
-      }
-    },
-    "blog": {
-      "enabled": true,
-      "title": "关于博客",
-      "content": "{title} 是一个基于 React + TypeScript + Tailwind CSS 构建的静态博客。博客采用纯前端架构，部署在 GitHub Pages 上，无需后端服务器即可运行。\n\n博客的主要功能包括：文章展示、分类标签、搜索功能、暗黑模式、响应式设计等。同时还提供了一系列实用的开发工具。\n\n如果你对这个博客的源码感兴趣，可以在 GitHub 上找到它，欢迎 Star 和 Fork。"
-    },
-    "stats": {
-      "enabled": true
+      ]
     }
   },
   "footer": {
     "brand": {
       "showLogo": true,
-      "showDescription": true
+      "logo": "C",
+      "name": "clc'blog",
+      "description": "一个简洁、现代的开发者博客，分享技术文章与实用工具"
     },
-    "links": {
-      "enabled": true,
-      "title": "快速链接",
-      "items": [
-        {
-          "label": "首页",
-          "href": "/"
-        },
-        {
-          "label": "分类",
-          "href": "/categories"
-        },
-        {
-          "label": "工具箱",
-          "href": "/tools"
-        },
-        {
-          "label": "关于",
-          "href": "/about"
-        }
-      ]
-    },
-    "contact": {
-      "enabled": true,
+    "socialLinks": [
+      {
+        "name": "GitHub",
+        "url": "https://github.com/clcwpwqi",
+        "icon": "Github",
+        "show": true
+      },
+      {
+        "name": "微信公众号",
+        "url": "#wechat",
+        "icon": "MessageCircle",
+        "show": true,
+        "action": "copy",
+        "copyText": "clcwpwqi",
+        "tooltip": "点击复制微信号，在微信中搜索添加"
+      },
+      {
+        "name": "Telegram",
+        "url": "https://t.me/clcwpwqi",
+        "icon": "Send",
+        "show": true
+      },
+      {
+        "name": "Email",
+        "url": "mailto:clcwpwqi@outlook.com",
+        "icon": "Mail",
+        "show": true
+      }
+    ],
+    "quickLinks": [
+      {
+        "label": "首页",
+        "href": "/",
+        "show": true
+      },
+      {
+        "label": "分类",
+        "href": "/categories",
+        "show": true
+      },
+      {
+        "label": "工具箱",
+        "href": "/tools",
+        "show": true
+      },
+      {
+        "label": "关于",
+        "href": "/about",
+        "show": true
+      }
+    ],
+    "contactInfo": {
+      "show": true,
       "title": "联系方式",
-      "showEmail": true,
-      "showGithub": true,
-      "showTwitter": true
-    },
-    "social": {
-      "enabled": true,
       "items": [
         {
-          "type": "github",
+          "label": "作者：clcwpwqi",
           "show": true
         },
         {
-          "type": "twitter",
-          "show": true
-        },
-        {
-          "type": "email",
-          "show": true
-        },
-        {
-          "type": "rss",
+          "label": "clcwpwqi@outlook.com",
+          "url": "mailto:clcwpwqi@outlook.com",
           "show": true
         }
       ]
     },
     "copyright": {
-      "enabled": true,
-      "showYear": true,
-      "customText": "",
-      "showCredit": true
+      "show": true,
+      "startYear": 2024,
+      "text": "clc'blog. All rights reserved."
+    },
+    "madeWith": {
+      "show": true,
+      "text": "Made with React & Tailwind CSS"
     }
   },
   "homepage": {
@@ -185,18 +181,14 @@
           "label": "开发工具",
           "href": "/tools",
           "variant": "secondary",
-          "icon": "TrendingUp"
+          "icon": "Wrench"
         }
       ]
     },
     "featured": {
       "enabled": true,
       "title": "精选文章",
-      "posts": [
-        "react-typescript-modern-web",
-        "tailwind-css-complete-guide",
-        "docker-getting-started"
-      ]
+      "posts": []
     },
     "latest": {
       "title": "最新文章",
@@ -204,6 +196,11 @@
     }
   },
   "navigation": {
+    "brand": {
+      "showLogo": true,
+      "logo": "C",
+      "name": "clc'blog"
+    },
     "items": [
       {
         "label": "首页",
@@ -234,36 +231,32 @@
     }
   },
   "site": {
-    "title": "DevBlog",
+    "title": "clc'blog",
     "description": "一个简洁、现代的开发者博客，分享技术文章与实用工具",
-    "author": "Developer",
-    "email": "developer@example.com",
-    "github": "https://github.com/username",
-    "twitter": "https://twitter.com/username",
-    "logo": "D",
-    "url": "https://username.github.io",
-    "favicon": "/favicon.ico",
+    "author": "clcwpwqi",
+    "email": "clcwpwqi@outlook.com",
+    "github": "https://github.com/clcwpwqi",
+    "twitter": "",
+    "telegram": "@clcwpwqi",
+    "wechat": "clcwpwqi",
+    "logo": "C",
     "avatar": {
       "src": "/images/avatar.png",
       "width": 200,
-      "height": 200,
-      "alt": "博主头像"
+      "height": 200
     },
+    "url": "https://clcwpwqi.github.io",
     "comment": {
       "provider": "giscus",
-      "repo": "username/blog-comments",
-      "repoId": "",
+      "repo": "clcwpwqi/clcwpwqi.github.io",
+      "repoId": "R_kgDORslu9w",
       "category": "Announcements",
-      "categoryId": "",
+      "categoryId": "DIC_kwDORslu984C45V0",
       "mapping": "pathname",
       "reactionsEnabled": true,
       "emitMetadata": false,
       "theme": "preferred_color_scheme",
       "crossorigin": "anonymous"
-    },
-    "analytics": {
-      "provider": "",
-      "id": ""
     }
   },
   "tools": {

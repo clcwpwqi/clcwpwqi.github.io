@@ -42,14 +42,24 @@ const configs = configData as {
       avatar: string;
       skills: string[];
     };
+    stats: {
+      enabled: boolean;
+    };
+    blog: {
+      enabled: boolean;
+      title: string;
+      content: string;
+    };
     contacts: {
+      title: string;
       items: Array<{
-        type: string;
         label: string;
-        value: string;
         url: string;
         icon: string;
         show: boolean;
+        action?: string;
+        copyText?: string;
+        tooltip?: string;
       }>;
     };
     support: {
@@ -57,26 +67,11 @@ const configs = configData as {
       title: string;
       description: string;
       methods: Array<{
-        icon: string;
         text: string;
+        icon: string;
+        image?: string;
+        url?: string;
       }>;
-      donate?: {
-        enabled: boolean;
-        title: string;
-        description: string;
-        methods: Array<{
-          name: string;
-          image: string;
-        }>;
-      };
-    };
-    blog: {
-      enabled: boolean;
-      title: string;
-      content: string;
-    };
-    stats: {
-      enabled: boolean;
     };
   };
   tools: {
@@ -86,33 +81,50 @@ const configs = configData as {
   };
   footer: {
     brand: {
-      showLogo: boolean;
-      showDescription: boolean;
+      showLogo?: boolean;
+      logo?: string;
+      name?: string;
+      description?: string;
     };
-    links: {
-      enabled: boolean;
+    socialLinks: Array<{
+      name: string;
+      url: string;
+      icon: string;
+      show: boolean;
+      action?: string;
+      copyText?: string;
+      tooltip?: string;
+    }>;
+    quickLinks: Array<{
+      label: string;
+      href: string;
+      show: boolean;
+    }>;
+    contactInfo: {
+      show: boolean;
       title: string;
-      items: Array<{ label: string; href: string }>;
-    };
-    contact: {
-      enabled: boolean;
-      title: string;
-      showEmail: boolean;
-      showGithub: boolean;
-      showTwitter: boolean;
-    };
-    social: {
-      enabled: boolean;
-      items: Array<{ type: string; show: boolean }>;
+      items: Array<{
+        label: string;
+        url?: string;
+        show: boolean;
+      }>;
     };
     copyright: {
-      enabled: boolean;
-      showYear: boolean;
-      customText: string;
-      showCredit: boolean;
+      show: boolean;
+      startYear?: number;
+      text?: string;
+    };
+    madeWith: {
+      show: boolean;
+      text?: string;
     };
   };
   navigation: {
+    brand?: {
+      showLogo?: boolean;
+      logo?: string;
+      name?: string;
+    };
     items: Array<NavLink & { show: boolean }>;
     search: { enabled: boolean };
     themeToggle: { enabled: boolean };
@@ -172,7 +184,16 @@ export const aboutConfig = configs.about || {
     avatar: '/images/avatar.png',
     skills: []
   },
+  stats: {
+    enabled: true
+  },
+  blog: {
+    enabled: true,
+    title: '关于博客',
+    content: ''
+  },
   contacts: {
+    title: '联系方式',
     items: []
   },
   support: {
@@ -180,14 +201,6 @@ export const aboutConfig = configs.about || {
     title: '支持我',
     description: '',
     methods: []
-  },
-  blog: {
-    enabled: true,
-    title: '关于博客',
-    content: ''
-  },
-  stats: {
-    enabled: true
   }
 };
 
@@ -205,29 +218,25 @@ export const enabledTools = toolsConfig.tools?.filter(t => t.enabled) || [];
 export const footerConfig = configs.footer || {
   brand: {
     showLogo: true,
-    showDescription: true
+    logo: 'D',
+    name: 'DevBlog',
+    description: '一个简洁、现代的开发者博客'
   },
-  links: {
-    enabled: true,
-    title: '快速链接',
-    items: []
-  },
-  contact: {
-    enabled: true,
+  socialLinks: [],
+  quickLinks: [],
+  contactInfo: {
+    show: true,
     title: '联系方式',
-    showEmail: true,
-    showGithub: true,
-    showTwitter: true
-  },
-  social: {
-    enabled: true,
     items: []
   },
   copyright: {
-    enabled: true,
-    showYear: true,
-    customText: '',
-    showCredit: true
+    show: true,
+    startYear: 2024,
+    text: 'DevBlog. All rights reserved.'
+  },
+  madeWith: {
+    show: true,
+    text: 'Made with'
   }
 };
 

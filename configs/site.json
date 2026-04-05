@@ -1,22 +1,21 @@
 {
-  "_comment": "站点基础配置 - 配置博客名称、描述、作者等信息",
+  "_comment": "站点基础配置文件 | 编辑教程见 site.md",
   "title": "clc'blog",
   "description": "一个简洁、现代的开发者博客，分享技术文章与实用工具",
   "author": "clcwpwqi",
   "email": "clcwpwqi@outlook.com",
   "github": "https://github.com/clcwpwqi",
-  "twitter": "https://twitter.com/clcwpwqi",
+  "twitter": "",
+  "telegram": "@clcwpwqi",
+  "wechat": "clcwpwqi",
   "logo": "C",
-  "url": "https://clcwpwqi.github.io",
-  "favicon": "/favicon.ico",
   "avatar": {
     "src": "/images/avatar.png",
     "width": 200,
-    "height": 200,
-    "alt": "博主头像"
+    "height": 200
   },
+  "url": "https://clcwpwqi.github.io",
   "comment": {
-    "_comment": "Giscus 评论系统配置 - 访问 https://giscus.app/ 获取",
     "provider": "giscus",
     "repo": "clcwpwqi/clcwpwqi.github.io",
     "repoId": "R_kgDORslu9w",
@@ -27,10 +26,5 @@
     "emitMetadata": false,
     "theme": "preferred_color_scheme",
     "crossorigin": "anonymous"
-  },
-  "analytics": {
-    "_comment": "网站统计配置（可选）",
-    "provider": "",
-    "id": ""
   }
 }

@@ -2,7 +2,7 @@
  * 主应用组件
  */
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { Header } from '@/components/Header';
@@ -20,14 +20,21 @@ import './App.css';
 // 处理 404 重定向的路由组件
 function RedirectHandler() {
   const navigate = useNavigate();
+  const location = useLocation();
   
   useEffect(() => {
-    const redirectPath = sessionStorage.getItem('redirectPath');
-    if (redirectPath) {
-      sessionStorage.removeItem('redirectPath');
-      navigate(redirectPath, { replace: true });
+    // 检查是否是首页，且是否有重定向路径
+    if (location.pathname === '/') {
+      const redirectPath = sessionStorage.getItem('spa_redirect_path');
+      if (redirectPath) {
+        sessionStorage.removeItem('spa_redirect_path');
+        // 使用 setTimeout 确保导航在组件挂载后执行
+        setTimeout(() => {
+          navigate(redirectPath, { replace: true });
+        }, 0);
+      }
     }
-  }, [navigate]);
+  }, [navigate, location]);
   
   return null;
 }
@@ -39,9 +46,12 @@ function AppContent() {
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors">
       <Header onSearchClick={() => setSearchOpen(true)} />
       
+      {/* 全局重定向处理器 */}
+      <RedirectHandler />
+      
       <main>
         <Routes>
-          <Route path="/" element={<><RedirectHandler /><HomePage /></>} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/post/:slug" element={<PostPage />} />
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/tools" element={<ToolsPage />} />

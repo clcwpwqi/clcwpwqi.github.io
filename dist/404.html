@@ -4,15 +4,19 @@
   <meta charset="utf-8">
   <title>Redirecting...</title>
   <script>
-    // SPA 路由重定向脚本
-    // 将 404 请求重定向到 index.html，保留原始路径
+    // GitHub Pages SPA 重定向处理
+    // 将当前路径保存到 sessionStorage，然后重定向到首页
     (function() {
-      var segment = 0; // 如果部署在子目录，改为子目录的层级数
       var location = window.location;
       var pathname = location.pathname;
+      var search = location.search;
+      var hash = location.hash;
       
-      // 保存原始路径到 sessionStorage
-      sessionStorage.setItem('redirectPath', pathname + location.search + location.hash);
+      // 保存完整路径（包括查询参数和哈希）
+      var fullPath = pathname + search + hash;
+      
+      // 存储到 sessionStorage
+      sessionStorage.setItem('spa_redirect_path', fullPath);
       
       // 重定向到首页
       location.replace(location.origin + '/');

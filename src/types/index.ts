@@ -94,7 +94,7 @@ export interface AvatarConfig {
   src: string;
   width: number;
   height: number;
-  alt: string;
+  alt?: string;
 }
 
 // 站点配置类型
@@ -105,6 +105,8 @@ export interface SiteConfig {
   email: string;
   github: string;
   twitter?: string;
+  telegram?: string;
+  wechat?: string;
   logo?: string;
   avatar?: string | AvatarConfig;
   url: string;
