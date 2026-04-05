@@ -158,17 +158,14 @@ export const AboutPage: React.FC = () => {
                 </h2>
                 <div className="prose dark:prose-invert max-w-none">
                   <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    我是一名热爱技术的全栈开发者，拥有多年的 Web 开发经验。
-                    专注于前端开发，同时也熟悉后端技术和 DevOps 实践。
+                    本人技术涉猎主要包括：
+                    C++、Python、Shell、HTML、Linux 及 Android 开发
                   </p>
                   <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-                    创建这个博客的初衷是记录学习过程中的点滴，分享技术心得，
-                    同时也希望能够帮助到其他开发者。我相信知识的价值在于分享，
-                    通过写作可以更好地理解和巩固所学的内容。
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-                    在工作之余，我喜欢研究新技术，参与开源项目，
-                    也热衷于探索各种开发工具来提升效率。
+                    设备环境：
+                    Windows 11 
+                    Ubuntu 22.04
+                    Android 16 XiaomiHyperOS 3
                   </p>
                 </div>
               </motion.div>
