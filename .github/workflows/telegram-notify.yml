@@ -1,0 +1,25 @@
+name: Telegram Notification
+
+on:
+  push:
+    branches:
+      - main  # 或者你想要监听的分支
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Message
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          # 关键参数：指定话题 ID
+          thread_id: ${{ secrets.TELEGRAM_THREAD_ID }}
+          message: |
+            New push to Github!
+            ```commit
+            ${{ github.event.commits[0].message }}
+            ```By `${{ github.actor }}` in repo `${{ github.repository }}`
+
+            See changes: [${{ github.event.commits[0].message }}](https://github.com/${{ github.repository }}/commit/${{ github.sha }})github.sha }}
