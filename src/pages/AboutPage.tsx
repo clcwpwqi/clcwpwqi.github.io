@@ -165,7 +165,7 @@ export const AboutPage: React.FC = () => {
                     设备环境：
                     Windows 11 
                     Ubuntu 22.04
-                    Android 16 XiaomiHyperOS 3
+                    Android 16
                   </p>
                 </div>
               </motion.div>
@@ -264,7 +264,7 @@ export const AboutPage: React.FC = () => {
                             {copied === contact.copyText && (
                               <span className="ml-2 inline-flex items-center text-green-500 text-sm">
                                 <Check className="w-4 h-4 mr-1" />
-                                已复制
+                                已复制微信公众号名称
                               </span>
                             )}
                           </button>
