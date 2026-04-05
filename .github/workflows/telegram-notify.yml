@@ -15,7 +15,7 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           # 关键参数：指定话题 ID
-          thread_id: ${{ secrets.TELEGRAM_THREAD_ID }}
+          message_thread_id: ${{ secrets.TELEGRAM_THREAD_ID }}
           message: |
             New push to Github!
             ```commit
