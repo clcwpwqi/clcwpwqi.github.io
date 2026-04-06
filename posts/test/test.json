@@ -1,0 +1,7 @@
+{
+  "id": "test",
+  "name": "测试内容",
+  "slug": "test",
+  "description": "测试用 For test",
+  "order": 999
+}

@@ -23,6 +23,12 @@
     "slug": "tailwind-css",
     "color": "#06B6D4"
   },
+  "Test": {
+    "id": "test",
+    "name": "Test",
+    "slug": "test",
+    "color": "#264DE4"
+  },
   "CSS": {
     "id": "css",
     "name": "CSS",
@@ -34,6 +40,12 @@
     "name": "Docker",
     "slug": "docker",
     "color": "#2496ED"
+  },
+  "Markdown": {
+    "id": "markdown",
+    "name": "Markdown",
+    "slug": "markdown",
+    "color": "#264DE4"
   },
   "DevOps": {
     "id": "devops",
