@@ -10,47 +10,39 @@
 {
   "brand": {
     "showLogo": true,
-    "logo": "C",
-    "name": "我的博客",
-    "description": "这是一个技术博客",
-    "icon": "/images/top.png"
+    "showDescription": true
   },
-  "socialLinks": [
-    {
-      "name": "GitHub",
-      "url": "https://github.com/username",
-      "icon": "Github",
-      "show": true
-    },
-    {
-      "name": "Email",
-      "url": "mailto:email@example.com",
-      "icon": "Mail",
-      "show": true
-    }
-  ],
-  "quickLinks": [
-    { "label": "首页", "href": "/", "show": true },
-    { "label": "分类", "href": "/categories", "show": true },
-    { "label": "工具箱", "href": "/tools", "show": true },
-    { "label": "关于", "href": "/about", "show": true }
-  ],
-  "contactInfo": {
-    "show": true,
-    "title": "联系方式",
+  "links": {
+    "enabled": true,
+    "title": "快速链接",
     "items": [
-      { "label": "作者：用户名", "show": true },
-      { "label": "email@example.com", "url": "mailto:email@example.com", "show": true }
+      { "label": "首页", "href": "/" },
+      { "label": "分类", "href": "/categories" },
+      { "label": "工具箱", "href": "/tools" },
+      { "label": "关于", "href": "/about" }
+    ]
+  },
+  "contact": {
+    "enabled": true,
+    "title": "联系方式",
+    "showEmail": true,
+    "showGithub": true,
+    "showTwitter": true
+  },
+  "social": {
+    "enabled": true,
+    "items": [
+      { "type": "github", "show": true },
+      { "type": "twitter", "show": true },
+      { "type": "email", "show": true },
+      { "type": "rss", "show": true }
     ]
   },
   "copyright": {
-    "show": true,
-    "startYear": 2024,
-    "text": "我的博客. All rights reserved."
-  },
-  "madeWith": {
-    "show": true,
-    "text": "Made with React & Tailwind CSS"
+    "enabled": true,
+    "showYear": true,
+    "customText": "",
+    "showCredit": true
   }
 }
 ```
@@ -63,21 +55,15 @@
 {
   "brand": {
     "showLogo": true,
-    "logo": "C",
-    "name": "我的博客",
-    "description": "这是一个技术博客",
-    "icon": "/images/top.png"
+    "showDescription": true
   }
 }
 ```
 
 | 字段 | 说明 |
 |------|------|
-| `showLogo` | 是否显示品牌区域 |
-| `logo` | 字母 Logo（icon 未设置时显示） |
-| `name` | 博客名称 |
-| `description` | 博客描述 |
-| `icon` | 自定义图标路径（可选，建议 64×64px PNG 透明背景） |
+| `showLogo` | 是否显示 Logo |
+| `showDescription` | 是否显示博客描述 |
 
 ### 快速链接
 

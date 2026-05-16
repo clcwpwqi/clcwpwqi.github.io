@@ -4,8 +4,7 @@
     "showLogo": true,
     "logo": "C",
     "name": "clc'blog",
-    "description": "一个简洁、现代的开发者博客，分享技术文章与实用工具",
-    "icon": "/images/top.png"
+    "description": "一个简洁、现代的开发者博客，分享技术文章与实用工具"
   },
   "socialLinks": [
     {

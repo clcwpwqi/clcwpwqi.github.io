@@ -8,12 +8,6 @@
 
 ```json
 {
-  "brand": {
-    "showLogo": true,
-    "logo": "C",
-    "name": "我的博客",
-    "icon": "/images/top.png"
-  },
   "items": [
     {
       "label": "首页",
@@ -46,33 +40,6 @@
 ```
 
 ## 配置项说明
-
-### Brand 区域
-
-```json
-{
-  "brand": {
-    "showLogo": true,
-    "logo": "C",
-    "name": "我的博客",
-    "icon": "/images/top.png"
-  }
-}
-```
-
-| 字段 | 说明 | 示例 |
-|------|------|------|
-| `showLogo` | 是否显示品牌区域 | `true` |
-| `logo` | 字母 Logo（当 icon 未设置或图片加载失败时显示） | `"C"` |
-| `name` | 博客名称 | `"我的博客"` |
-| `icon` | 自定义图标路径（可选） | `"/images/top.png"` |
-
-**图标要求**：
-- 格式：PNG（支持透明背景）
-- 尺寸：64×64 像素
-- 大小：建议 ≤20KB
-- 如果设置了 `icon`，顶栏将显示图片而非字母 Logo
-- 图片加载失败时自动回退为字母 Logo
 
 ### 导航链接
 

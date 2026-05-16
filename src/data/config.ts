@@ -73,11 +73,6 @@ const configs = configData as {
         url?: string;
       }>;
     };
-    authorTags?: {
-      enabled: boolean;
-      title: string;
-      tags: string[];
-    };
   };
   tools: {
     title: string;
@@ -90,7 +85,6 @@ const configs = configData as {
       logo?: string;
       name?: string;
       description?: string;
-      icon?: string;
     };
     socialLinks: Array<{
       name: string;
@@ -130,7 +124,6 @@ const configs = configData as {
       showLogo?: boolean;
       logo?: string;
       name?: string;
-      icon?: string;
     };
     items: Array<NavLink & { show: boolean }>;
     search: { enabled: boolean };
@@ -208,11 +201,6 @@ export const aboutConfig = configs.about || {
     title: '支持我',
     description: '',
     methods: []
-  },
-  authorTags: {
-    enabled: true,
-    title: '作者标签',
-    tags: []
   }
 };
 

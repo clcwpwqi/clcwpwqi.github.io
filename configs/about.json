@@ -72,7 +72,7 @@
       {
         "text": "支付宝打赏",
         "icon": "Heart",
-        "image": "/images/alipay.jpg"
+        "image": "/images/alipay.png"
       },
       {
         "text": "爱发电",
@@ -80,10 +80,5 @@
         "url": "https://ifdian.net/a/clcwpwqi"
       }
     ]
-  },
-  "authorTags": {
-    "enabled": true,
-    "title": "作者标签",
-    "tags": []
   }
 }

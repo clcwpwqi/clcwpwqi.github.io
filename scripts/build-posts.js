@@ -8,8 +8,7 @@
  *   ├── labels.json              # 标签配置
  *   ├── frontend/                # 分类文件夹
  *   │   ├── frontend.json        # 分类配置
- *   │   ├── article-1.md         # 文章
- *   │   └── article-1.png        # 同名封面图片（可选）
+ *   │   └── article-1.md         # 文章
  *   └── ...
  */
 
@@ -121,27 +120,6 @@ async function loadCategoryConfig(categoryDir, categoryName) {
 }
 
 /**
- * 检查文章同目录下是否有同名 .png 封面图
- * @param {string} mdFilePath - Markdown 文件路径
- * @param {string} slug - 文章 slug
- * @returns {string|null} - 封面图路径或 null
- */
-function findCoverImage(mdFilePath, slug) {
-  const dir = path.dirname(mdFilePath);
-  const coverPath = path.join(dir, `${slug}.png`);
-  // 检查文件是否存在
-  try {
-    fs.accessSync(coverPath);
-    // 返回相对于 posts 目录的路径，最终映射为 /posts/xxx/xxx.png
-    const postsBase = path.join(process.cwd(), 'posts');
-    const relativePath = path.relative(postsBase, coverPath);
-    return `/posts/${relativePath.replace(/\\/g, '/')}`;
-  } catch {
-    return null;
-  }
-}
-
-/**
  * 读取并解析所有文章
  */
 async function buildPosts() {
@@ -196,19 +174,6 @@ async function buildPosts() {
         continue;
       }
       
-      // 封面图片处理：
-      // 1. 优先使用 frontmatter 中指定的 cover
-      // 2. 其次查找同目录下的同名 .png 文件 (如 test-md.md → test-md.png)
-      // 3. 如果都没有，则不设封面（前端会显示文章首字母作为默认封面）
-      let coverImage = frontmatter.cover || null;
-      if (!coverImage) {
-        const autoCover = findCoverImage(filepath, frontmatter.slug);
-        if (autoCover) {
-          coverImage = autoCover;
-          console.log(`   🖼️  自动匹配封面: ${autoCover}`);
-        }
-      }
-      
       // 收集标签
       const tags = Array.isArray(frontmatter.tags) ? frontmatter.tags : [];
       tags.forEach(tag => {
@@ -235,7 +200,7 @@ async function buildPosts() {
         updatedAt: frontmatter.updatedAt,
         category: frontmatter.category || categoryName,
         tags: tags,
-        cover: coverImage || '',
+        cover: frontmatter.cover,
         readingTime: frontmatter.readingTime || calculateReadingTime(content),
         author: frontmatter.author || 'Developer',
       };
