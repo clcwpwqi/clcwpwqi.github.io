@@ -67,12 +67,12 @@
       {
         "text": "微信打赏",
         "icon": "Heart",
-        "image": "images/wechat-pay.png"
+        "image": "/public/images/wechat-pay.png"
       },
       {
         "text": "支付宝打赏",
         "icon": "Heart",
-        "image": "images/alipay.jpg"
+        "image": "/public/images/alipay.jpg"
       },
       {
         "text": "爱发电",
