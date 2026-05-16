@@ -1,0 +1,55 @@
+{
+  "categories": [
+    {
+      "id": "frontend",
+      "name": "前端开发",
+      "slug": "frontend",
+      "description": "前端开发相关的技术文章",
+      "order": 1
+    }
+  ],
+  "articles": [
+    {
+      "id": "react-18-features",
+      "title": "React 18 新特性全解析",
+      "slug": "react-18-features",
+      "excerpt": "深入解读 React 18 的并发渲染、自动批处理、Suspense 等新特性",
+      "date": "2024-01-15",
+      "category": "frontend",
+      "tags": [
+        "React",
+        "TypeScript"
+      ],
+      "readingTime": "8",
+      "cover": null,
+      "content": "# React 18 新特性全解析\n\nReact 18 带来了许多令人兴奋的新特性，本文将逐一介绍。\n\n## 并发渲染（Concurrent Rendering）\n\nReact 18 引入了并发渲染能力，允许 React 同时准备多个版本的 UI。\n\n```tsx\nimport { startTransition } from 'react';\n\n// 紧急更新\nsetInputValue(input);\n\n// 标记为非紧急更新\nstartTransition(() => {\n  setSearchQuery(input);\n});\n```\n\n## 自动批处理\n\nReact 18 会自动对所有更新进行批处理，无论它们发生在哪里。\n\n## Suspense 改进\n\n现在 Suspense 可以在服务器端渲染中使用了。\n\n```tsx\n<Suspense fallback={<Loading />}>\n  <SomeComponent />\n</Suspense>\n```\n\n## 总结\n\nReact 18 的这些新特性将帮助我们构建更好的用户界面。",
+      "categorySlug": "frontend"
+    }
+  ],
+  "labels": {
+    "React": {
+      "id": "react",
+      "name": "React",
+      "slug": "react",
+      "color": "#61DAFB"
+    },
+    "TypeScript": {
+      "id": "typescript",
+      "name": "TypeScript",
+      "slug": "typescript",
+      "color": "#3178C6"
+    },
+    "Vite": {
+      "id": "vite",
+      "name": "Vite",
+      "slug": "vite",
+      "color": "#646CFF"
+    },
+    "TailwindCSS": {
+      "id": "tailwindcss",
+      "name": "TailwindCSS",
+      "slug": "tailwindcss",
+      "color": "#06B6D4"
+    }
+  }
+}

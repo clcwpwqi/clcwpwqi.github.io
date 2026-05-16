@@ -1,0 +1,5 @@
+{
+  "hero": { "title": "探索技术的", "highlight": "无限可能", "subtitle": "记录前端开发、系统设计和技术探索的实践与思考" },
+  "featured": { "enabled": true, "title": "精选文章", "posts": [] },
+  "latest": { "title": "最新文章" }
+}

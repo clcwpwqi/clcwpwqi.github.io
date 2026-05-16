@@ -1,0 +1,7 @@
+{
+  "brand": { "logo": "C", "logoImage": "/images/top.png", "name": "clc'blog", "description": "探索技术的无限可能" },
+  "socialLinks": [
+    { "name": "GitHub", "url": "https://github.com/clcwpwqi", "icon": "Github", "show": true }
+  ],
+  "copyright": { "text": "© 2024 clc'blog. All rights reserved." }
+}

@@ -1,0 +1,18 @@
+{
+  "title": "clc'blog",
+  "description": "探索技术的无限可能",
+  "author": "clcwpwqi",
+  "email": "clcwpwqi@outlook.com",
+  "github": "https://github.com/clcwpwqi",
+  "telegram": "@clcwpwqi",
+  "wechat": "clcwpwqi",
+  "logo": "C",
+  "avatar": { "src": "/images/avatar.png", "width": 200, "height": 200, "alt": "头像" },
+  "comment": {
+    "provider": "giscus",
+    "repo": "clcwpwqi/clcwpwqi.github.io",
+    "repoId": "R_kgDORslu9w",
+    "category": "Announcements",
+    "categoryId": "DIC_kwDORslu984C45V0"
+  }
+}

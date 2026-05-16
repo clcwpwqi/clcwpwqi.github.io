@@ -1,0 +1,11 @@
+{
+  "brand": { "showLogo": true, "logo": "C", "logoImage": "/images/top.png", "name": "clc'blog" },
+  "items": [
+    { "label": "首页", "href": "/", "icon": "Home", "show": true },
+    { "label": "分类", "href": "/categories", "icon": "FolderOpen", "show": true },
+    { "label": "工具箱", "href": "/tools", "icon": "Wrench", "show": true },
+    { "label": "关于", "href": "/about", "icon": "User", "show": true }
+  ],
+  "search": { "enabled": true },
+  "themeToggle": { "enabled": true }
+}

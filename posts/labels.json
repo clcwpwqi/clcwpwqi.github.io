@@ -1,0 +1,6 @@
+{
+  "React": { "id": "react", "name": "React", "slug": "react", "color": "#61DAFB" },
+  "TypeScript": { "id": "typescript", "name": "TypeScript", "slug": "typescript", "color": "#3178C6" },
+  "Vite": { "id": "vite", "name": "Vite", "slug": "vite", "color": "#646CFF" },
+  "TailwindCSS": { "id": "tailwindcss", "name": "TailwindCSS", "slug": "tailwindcss", "color": "#06B6D4" }
+}

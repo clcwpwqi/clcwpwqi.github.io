@@ -1,0 +1,60 @@
+{
+  "title": "开发者工具箱",
+  "subtitle": "实用的前端开发工具集合",
+  "tools": [
+    {
+      "id": "json-formatter",
+      "name": "JSON 格式化",
+      "description": "格式化、压缩和校验 JSON 数据",
+      "icon": "Braces",
+      "component": "JsonFormatter",
+      "color": "from-blue-500 to-cyan-500",
+      "show": true
+    },
+    {
+      "id": "base64-converter",
+      "name": "Base64 转换",
+      "description": "Base64 编码与解码",
+      "icon": "ArrowLeftRight",
+      "component": "Base64Converter",
+      "color": "from-purple-500 to-pink-500",
+      "show": true
+    },
+    {
+      "id": "timestamp-converter",
+      "name": "时间戳转换",
+      "description": "Unix 时间戳与日期互转",
+      "icon": "Clock",
+      "component": "TimestampConverter",
+      "color": "from-green-500 to-emerald-500",
+      "show": true
+    },
+    {
+      "id": "text-diff",
+      "name": "文本对比",
+      "description": "对比两段文本的差异",
+      "icon": "FileDiff",
+      "component": "TextDiff",
+      "color": "from-orange-500 to-red-500",
+      "show": true
+    },
+    {
+      "id": "url-codec",
+      "name": "URL 编解码",
+      "description": "URL 编码与解码工具",
+      "icon": "Link",
+      "component": "UrlCodec",
+      "color": "from-indigo-500 to-violet-500",
+      "show": true
+    },
+    {
+      "id": "color-converter",
+      "name": "颜色转换",
+      "description": "HEX / RGB / HSL 颜色格式互转",
+      "icon": "Palette",
+      "component": "ColorConverter",
+      "color": "from-pink-500 to-rose-500",
+      "show": true
+    }
+  ]
+}
