@@ -8,7 +8,7 @@
     "name": "clcwpwqi",
     "role": "青年开发者",
     "bio": "分享技术文章和开发经验。主要擅长C++ Python HTML Shell Linux 和 Andorid 开发。",
-    "avatar": "/images/avatar.png",
+    "avatar": "/public/images/avatar.png",
     "skills": [
       "C++",
       "Python",
@@ -67,12 +67,12 @@
       {
         "text": "微信打赏",
         "icon": "Heart",
-        "image": "/images/wechat-pay.png"
+        "image": "/public/images/wechat-pay.png"
       },
       {
         "text": "支付宝打赏",
         "icon": "Heart",
-        "image": "/images/alipay.png"
+        "image": "/public/images/alipay.jpg"
       },
       {
         "text": "爱发电",
