@@ -62,14 +62,27 @@ const componentMap: Record<string, React.ComponentType> = {
 };
 
 // 从配置生成工具列表
-const tools: Tool[] = enabledTools.map(tool => ({
-  id: tool.id,
-  name: tool.name,
-  description: tool.description,
-  icon: toolIconMap[tool.icon] || Wrench,
-  component: componentMap[tool.component] || JsonFormatter,
-  color: tool.color,
-}));
+const tools: Tool[] = enabledTools.map(tool => {
+  // 处理图标名称映射
+  let iconName = tool.icon;
+  // 如果图标名称在映射中不存在，尝试一些常见变体
+  if (!toolIconMap[iconName]) {
+    // 尝试首字母大写
+    const capitalized = iconName.charAt(0).toUpperCase() + iconName.slice(1);
+    if (toolIconMap[capitalized]) {
+      iconName = capitalized;
+    }
+  }
+  
+  return {
+    id: tool.id,
+    name: tool.name,
+    description: tool.description,
+    icon: toolIconMap[iconName] || Wrench,
+    component: componentMap[tool.component] || JsonFormatter,
+    color: tool.color,
+  };
+});
 
 export const ToolsPage: React.FC = () => {
   const [activeTool, setActiveTool] = useState<Tool | null>(null);

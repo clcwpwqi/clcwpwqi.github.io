@@ -6,10 +6,14 @@ import type { Post, Category, Tag, PostsData } from '@/types';
 import postsData from './posts.json';
 
 // 类型断言确保数据格式正确
-const data = postsData as PostsData;
+const data = (postsData as unknown) as PostsData;
 
 // 导出数据
-export const posts: Post[] = data.posts || [];
+// 清理 posts 数据，将 null cover 转换为 undefined
+export const posts: Post[] = (data.posts || []).map(p => ({
+  ...p,
+  cover: p.cover || undefined
+}));
 export const categories: Category[] = data.categories || [];
 export const tags: Tag[] = data.tags || [];
 export const labelsConfig = data.labelsConfig || {};

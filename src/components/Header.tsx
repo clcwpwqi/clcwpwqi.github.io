@@ -18,6 +18,9 @@ export const Header = ({ onSearchClick }: HeaderProps) => {
   const location = useLocation();
   const scrolled = useScrolled(50);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [logoError, setLogoError] = useState(false);
+
+  const brand = navigationConfig.brand;
 
   // 关闭移动端菜单当路由变化
   useEffect(() => {
@@ -53,12 +56,24 @@ export const Header = ({ onSearchClick }: HeaderProps) => {
               to="/" 
               className="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              {navigationConfig.brand?.showLogo !== false && (
-                <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
-                  {navigationConfig.brand?.logo || 'C'}
+              {brand?.showLogo !== false && (
+                <span className="w-8 h-8 flex items-center justify-center overflow-hidden rounded-lg">
+                  {brand?.logoImage && !logoError ? (
+                    <img 
+                      src={brand!.logoImage} 
+                      alt="Logo"
+                      className="w-full h-full object-contain"
+                      loading="eager"
+                      onError={() => setLogoError(true)}
+                    />
+                  ) : (
+                    <span className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
+                      {brand?.logo || 'C'}
+                    </span>
+                  )}
                 </span>
               )}
-              <span>{navigationConfig.brand?.name || 'clc\'blog'}</span>
+              <span>{brand?.name || 'clc\'blog'}</span>
             </Link>
 
             {/* Desktop Navigation */}
@@ -120,17 +135,15 @@ export const Header = ({ onSearchClick }: HeaderProps) => {
         </div>
       </header>
 
-      {/* Mobile Menu - 独立层级确保背景效果 */}
+      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed inset-0 z-40">
-          {/* 背景遮罩 */}
           <div 
             className="absolute inset-0 bg-black/20 dark:bg-black/40"
             onClick={() => setMobileMenuOpen(false)}
           />
-          {/* 菜单内容 */}
           <div
-            className="absolute top-16 left-0 right-0 bottom-0 bg-white dark:bg-gray-900 overflow-y-auto"
+            className="absolute top-16 left-0 right-0 bottom-0 overflow-y-auto"
             style={{
               backgroundColor: isDark ? 'rgba(17, 24, 39, 0.98)' : 'rgba(255, 255, 255, 0.98)',
               backdropFilter: 'blur(12px)',

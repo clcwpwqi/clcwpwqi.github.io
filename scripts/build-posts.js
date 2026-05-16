@@ -9,6 +9,7 @@
  *   ├── frontend/                # 分类文件夹
  *   │   ├── frontend.json        # 分类配置
  *   │   └── article-1.md         # 文章
+ *   │   └── article-1.png        # 文章头图（同名图片）
  *   └── ...
  */
 
@@ -19,7 +20,40 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const POSTS_DIR = path.join(__dirname, '..', 'posts');
+const PUBLIC_POSTS_DIR = path.join(__dirname, '..', 'public', 'posts');
 const OUTPUT_DIR = path.join(__dirname, '..', 'src', 'data');
+
+/**
+ * 检查文章是否有同名图片作为头图
+ * @param {string} categoryDir - 分类目录
+ * @param {string} filename - 文章文件名（不含扩展名）
+ * @returns {string|null} - 图片路径或null
+ */
+async function checkArticleCover(categoryDir, filename) {
+  const imageExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
+  for (const ext of imageExtensions) {
+    const sourcePath = path.join(categoryDir, filename + ext);
+    try {
+      await fs.access(sourcePath);
+      // 确保 public/posts/ 目录存在
+      const targetDir = path.join(PUBLIC_POSTS_DIR, categoryName);
+      await fs.mkdir(targetDir, { recursive: true });
+      // 复制图片到 public/posts/ 目录（确保Vite能访问）
+      const targetPath = path.join(targetDir, filename + ext);
+      await fs.copyFile(sourcePath, targetPath);
+      // 返回相对于public目录的路径
+      return `/posts/${categoryName}/${filename}${ext}`;
+    } catch (err) {
+      // 图片不存在或复制失败，继续检查
+      if (err.code === 'ENOENT') {
+        // 图片不存在，继续下一个扩展名
+      } else {
+        console.warn(`   ⚠️  复制图片失败 ${filename}${ext}:`, err.message);
+      }
+    }
+  }
+  return null;
+}
 
 /**
  * 解析 frontmatter
@@ -190,6 +224,18 @@ async function buildPosts() {
         }
       });
       
+      // 获取文章文件名（不含扩展名）
+      const filenameWithoutExt = filename.replace(/\.md$/, '');
+      
+      // 检查是否有同名图片作为头图（优先级：frontmatter.cover > 同名图片 > null）
+      let coverImage = frontmatter.cover || null;
+      if (!coverImage) {
+        coverImage = await checkArticleCover(categoryDir, filenameWithoutExt);
+        if (coverImage) {
+          console.log(`   🖼️  发现头图: ${filenameWithoutExt}.png`);
+        }
+      }
+      
       const post = {
         id: frontmatter.slug,
         title: frontmatter.title,
@@ -200,7 +246,7 @@ async function buildPosts() {
         updatedAt: frontmatter.updatedAt,
         category: frontmatter.category || categoryName,
         tags: tags,
-        cover: frontmatter.cover,
+        cover: coverImage,
         readingTime: frontmatter.readingTime || calculateReadingTime(content),
         author: frontmatter.author || 'Developer',
       };

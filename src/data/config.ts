@@ -83,6 +83,7 @@ const configs = configData as {
     brand: {
       showLogo?: boolean;
       logo?: string;
+      logoImage?: string;
       name?: string;
       description?: string;
     };
@@ -241,11 +242,26 @@ export const footerConfig = configs.footer || {
 };
 
 // 导航配置
-export const navigationConfig = configs.navigation || {
+interface BrandConfig {
+  showLogo?: boolean;
+  logo?: string;
+  logoImage?: string;
+  name?: string;
+  description?: string;
+}
+
+interface NavigationConfigWithBrand {
+  brand?: BrandConfig;
+  items: Array<{ label: string; href: string; icon?: string; show: boolean }>;
+  search: { enabled: boolean };
+  themeToggle: { enabled: boolean };
+}
+
+export const navigationConfig: NavigationConfigWithBrand = (configs.navigation || {
   items: [],
   search: { enabled: true },
   themeToggle: { enabled: true }
-};
+}) as NavigationConfigWithBrand;
 
 // 显示的导航链接
 export const navLinks = navigationConfig.items?.filter(item => item.show) || [];

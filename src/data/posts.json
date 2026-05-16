@@ -14,6 +14,7 @@
         "TypeScript",
         "Frontend"
       ],
+      "cover": null,
       "readingTime": 8,
       "author": "Developer"
     },
@@ -31,6 +32,7 @@
         "CSS",
         "Frontend"
       ],
+      "cover": null,
       "readingTime": 10,
       "author": "Developer"
     },
@@ -48,6 +50,7 @@
         "DevOps",
         "Container"
       ],
+      "cover": null,
       "readingTime": 12,
       "author": "Developer"
     },
@@ -65,6 +68,7 @@
         "DevOps",
         "Best Practices"
       ],
+      "cover": null,
       "readingTime": 10,
       "author": "Developer"
     },
@@ -82,6 +86,7 @@
         "Tools",
         "Productivity"
       ],
+      "cover": null,
       "readingTime": 6,
       "author": "Developer"
     },
@@ -99,6 +104,7 @@
         "Backend",
         "Performance"
       ],
+      "cover": null,
       "readingTime": 15,
       "author": "Developer"
     }

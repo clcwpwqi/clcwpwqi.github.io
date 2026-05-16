@@ -126,6 +126,15 @@ export interface PostsData {
   labelsConfig: Record<string, LabelConfig>;
 }
 
+// 品牌配置类型
+export interface BrandConfig {
+  showLogo?: boolean;
+  logo?: string;
+  logoImage?: string;
+  name?: string;
+  description?: string;
+}
+
 // 联系方式类型
 export interface ContactItem {
   type: string;
@@ -134,6 +143,46 @@ export interface ContactItem {
   url: string;
   icon: string;
   show: boolean;
+  action?: 'link' | 'copy';
+  copyText?: string;
+}
+
+// 导航配置类型
+export interface NavigationConfig {
+  brand?: BrandConfig;
+  items: Array<NavLink & { show: boolean; icon?: string }>;
+  search: { enabled: boolean };
+  themeToggle: { enabled: boolean };
+}
+
+// 页脚配置类型
+export interface FooterConfig {
+  brand?: BrandConfig;
+  socialLinks?: Array<{
+    name: string;
+    url: string;
+    icon: string;
+    show: boolean;
+  }>;
+  quickLinks?: Array<{
+    label: string;
+    href: string;
+    show: boolean;
+  }>;
+  contactInfo?: {
+    enabled: boolean;
+    email?: string;
+    wechat?: string;
+    telegram?: string;
+  };
+  copyright?: {
+    enabled: boolean;
+    text?: string;
+  };
+  madeWith?: {
+    enabled: boolean;
+    text?: string;
+  };
 }
 
 // 首页 Hero 按钮类型

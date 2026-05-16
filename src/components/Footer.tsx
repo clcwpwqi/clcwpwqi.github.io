@@ -28,6 +28,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
   const [copied, setCopied] = useState(false);
+  const [logoError, setLogoError] = useState(false);
   
   const { brand, socialLinks, quickLinks, contactInfo, copyright, madeWith } = footerConfig;
 
@@ -56,8 +57,19 @@ export const Footer = () => {
                 to="/" 
                 className="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white mb-4"
               >
-                <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
-                  {brand?.logo || siteConfig.logo || siteConfig.title.charAt(0)}
+                <span className="w-8 h-8 flex items-center justify-center overflow-hidden rounded-lg">
+                  {(brand as any)?.logoImage && !logoError ? (
+                    <img 
+                      src={(brand as any).logoImage} 
+                      alt="Logo"
+                      className="w-full h-full object-contain"
+                      onError={() => setLogoError(true)}
+                    />
+                  ) : (
+                    <span className="w-full h-full bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
+                      {brand?.logo || siteConfig.logo || siteConfig.title.charAt(0)}
+                    </span>
+                  )}
                 </span>
                 <span>{brand?.name || siteConfig.title}</span>
               </Link>

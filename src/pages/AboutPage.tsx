@@ -1,7 +1,7 @@
 /**
  * 关于与联系页面
  */
-import React, { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Mail, 
@@ -17,51 +17,51 @@ import {
   Share2,
   MessageCircle,
   Send,
-  Check
+  Check,
+  Copy,
+  Tag
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { siteConfig, aboutConfig } from '@/data/config';
 import { posts } from '@/data/posts';
+import aboutContentData from '@/data/about-content.json';
 
-// 图标映射
+// 联系方式图标映射
 const contactIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Mail,
-  Github,
-  Twitter,
-  Globe,
-  Linkedin,
-  Rss,
-  Send,
-  MessageCircle,
+  Mail, Github, Twitter, Globe, Linkedin, Rss, Send, MessageCircle,
 };
 
+// 支持方式图标映射
 const supportIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-  Coffee,
-  Heart,
-  Star,
-  Share2,
-  MessageCircle,
+  Coffee, Heart, Star, Share2, MessageCircle,
 };
 
-export const AboutPage: React.FC = () => {
+export const AboutPage = () => {
   const [copied, setCopied] = useState<string | null>(null);
   
-  const stats = {
+  const stats = useMemo(() => ({
     posts: posts.length,
     categories: new Set(posts.map((p) => p.category)).size,
     tags: new Set(posts.flatMap((p) => p.tags)).size,
-  };
+  }), []);
 
-  // 从配置获取技能列表
-  const skills = aboutConfig.profile.skills || [];
-  
-  // 从配置获取启用的联系方式
+  // 从配置获取
+  const profile = aboutConfig.profile;
   const enabledContacts = aboutConfig.contacts.items?.filter(item => item.show) || [];
-  
-  // 从配置获取支持方式
   const supportMethods = aboutConfig.support.methods || [];
   
-  // 处理复制操作
+  // 从 about-content.json 获取动态内容
+  const aboutMeContent = (aboutContentData as Record<string, any>)['about-me'];
+  const aboutBlogContent = (aboutContentData as Record<string, any>)['about-blog'];
+  const skillsContent = (aboutContentData as Record<string, any>)['skills'];
+  const authorTagsContent = (aboutContentData as Record<string, any>)['author-tags'];
+  
+  // 技能列表（优先使用配置文件，回退到 about-content.json）
+  const skills = profile.skills?.length ? profile.skills : (skillsContent?.skills || []);
+  
+  // 作者标签
+  const authorTags = authorTagsContent?.tags || [];
+
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(text);
@@ -73,7 +73,7 @@ export const AboutPage: React.FC = () => {
     <>
       <SEO
         title="关于"
-        description={`关于 ${siteConfig.author} 和 ${siteConfig.title} 博客`}
+        description={`关于 ${siteConfig.author} 和 ${siteConfig.title}`}
         url="/about"
       />
 
@@ -86,28 +86,48 @@ export const AboutPage: React.FC = () => {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-3xl font-bold overflow-hidden">
-              {aboutConfig.profile.avatar ? (
+            {/* 头像 */}
+            <div className="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              {profile.avatar ? (
                 <img 
-                  src={aboutConfig.profile.avatar} 
-                  alt={aboutConfig.profile.name}
+                  src={profile.avatar} 
+                  alt={profile.name}
                   className="w-full h-full object-cover"
+                  loading="eager"
                 />
               ) : (
-                aboutConfig.profile.name?.charAt(0) || siteConfig.author?.charAt(0) || 'D'
+                <span className="text-white text-3xl font-bold">
+                  {(profile.name || siteConfig.author).charAt(0)}
+                </span>
               )}
             </div>
+            
+            {/* 名称 */}
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-              {aboutConfig.profile.name || siteConfig.author}
+              {profile.name || siteConfig.author}
             </h1>
-            {aboutConfig.profile.role && (
+            
+            {/* 角色 */}
+            {profile.role && (
               <p className="text-lg text-blue-600 dark:text-blue-400 mb-4">
-                {aboutConfig.profile.role}
+                {profile.role}
               </p>
             )}
-            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-              {aboutConfig.profile.bio || aboutConfig.hero.subtitle}
-            </p>
+            
+            {/* 作者标签（新增栏目） */}
+            {authorTags.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-2 mb-6">
+                {authorTags.map((tag: string, index: number) => (
+                  <span 
+                    key={index}
+                    className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700"
+                  >
+                    <Tag className="w-3 h-3 mr-1" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </motion.div>
         </div>
       </section>
@@ -118,21 +138,15 @@ export const AboutPage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-3 gap-8 text-center">
               <div>
-                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                  {stats.posts}
-                </div>
+                <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{stats.posts}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">文章</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-                  {stats.categories}
-                </div>
+                <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{stats.categories}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">分类</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">
-                  {stats.tags}
-                </div>
+                <div className="text-3xl font-bold text-pink-600 dark:text-pink-400">{stats.tags}</div>
                 <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">标签</div>
               </div>
             </div>
@@ -140,37 +154,33 @@ export const AboutPage: React.FC = () => {
         </section>
       )}
 
-      {/* About Content */}
+      {/* Main Content */}
       <section className="py-12 bg-gray-50 dark:bg-gray-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
+            {/* Left Content */}
             <div className="lg:col-span-2 space-y-8">
-              {/* About */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm"
-              >
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  {aboutConfig.hero.title}
-                </h2>
-                <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    本人技术涉猎主要包括：
-                    C++、Python、Shell、HTML、Linux 及 Android 开发
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-                    设备环境：
-                    Windows 11 
-                    Ubuntu 22.04
-                    Android 16
-                  </p>
-                </div>
-              </motion.div>
+              
+              {/* 关于我 */}
+              {aboutMeContent && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm"
+                >
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    {aboutMeContent.title || '关于我'}
+                  </h2>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line">
+                      {aboutMeContent.content}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
 
-              {/* Skills */}
+              {/* 技术栈 */}
               {skills.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -180,10 +190,10 @@ export const AboutPage: React.FC = () => {
                 >
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
                     <Code className="w-6 h-6 mr-2 text-blue-500" />
-                    技术栈
+                    {skillsContent?.title || '技术栈'}
                   </h2>
                   <div className="flex flex-wrap gap-2">
-                    {skills.map((skill) => (
+                    {skills.map((skill: string) => (
                       <span
                         key={skill}
                         className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium"
@@ -195,8 +205,8 @@ export const AboutPage: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* About Blog */}
-              {aboutConfig.blog.enabled && (
+              {/* 关于博客 */}
+              {aboutBlogContent && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -204,38 +214,21 @@ export const AboutPage: React.FC = () => {
                   className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm"
                 >
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {aboutConfig.blog.title}
+                    {aboutBlogContent.title || '关于博客'}
                   </h2>
                   <div className="prose dark:prose-invert max-w-none">
-                    {aboutConfig.blog.content ? (
-                      <p className="text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line">
-                        {aboutConfig.blog.content}
-                      </p>
-                    ) : (
-                      <>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                          {siteConfig.title} 是一个基于 React + TypeScript + Tailwind CSS
-                          构建的静态博客。博客采用纯前端架构，部署在 GitHub Pages 上，
-                          无需后端服务器即可运行。
-                        </p>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-                          博客的主要功能包括：文章展示、分类标签、搜索功能、
-                          暗黑模式、响应式设计等。同时还提供了一系列实用的开发工具。
-                        </p>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-                          如果你对这个博客的源码感兴趣，可以在 GitHub 上找到它，
-                          欢迎 Star 和 Fork。
-                        </p>
-                      </>
-                    )}
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line">
+                      {aboutBlogContent.content}
+                    </p>
                   </div>
                 </motion.div>
               )}
             </div>
 
-            {/* Sidebar */}
+            {/* Right Sidebar */}
             <div className="space-y-8">
-              {/* Contact Info */}
+              
+              {/* 联系方式 */}
               {enabledContacts.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -249,23 +242,21 @@ export const AboutPage: React.FC = () => {
                   <div className="space-y-4">
                     {enabledContacts.map((contact, index) => {
                       const IconComponent = contactIconMap[contact.icon] || Globe;
+                      const isCopy = contact.action === 'copy';
                       
-                      // 处理复制操作（微信公众号）
-                      if (contact.action === 'copy' && contact.copyText) {
+                      if (isCopy) {
                         return (
                           <button
                             key={index}
-                            onClick={() => handleCopy(contact.copyText!)}
-                            className="flex items-center text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors w-full text-left relative"
-                            title={contact.tooltip || `点击复制: ${contact.copyText}`}
+                            onClick={() => handleCopy(contact.copyText || contact.label)}
+                            className="w-full flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-left"
                           >
-                            <IconComponent className="w-5 h-5 mr-3" />
-                            {contact.label}
-                            {copied === contact.copyText && (
-                              <span className="ml-2 inline-flex items-center text-green-500 text-sm">
-                                <Check className="w-4 h-4 mr-1" />
-                                已复制微信公众号名称
-                              </span>
+                            <IconComponent className="w-5 h-5 mr-3 flex-shrink-0" />
+                            <span className="flex-1">{contact.label}</span>
+                            {copied === (contact.copyText || contact.label) ? (
+                              <Check className="w-4 h-4 text-green-500" />
+                            ) : (
+                              <Copy className="w-4 h-4 text-gray-400" />
                             )}
                           </button>
                         );
@@ -275,11 +266,11 @@ export const AboutPage: React.FC = () => {
                         <a
                           key={index}
                           href={contact.url}
-                          target={contact.url?.startsWith('http') ? '_blank' : undefined}
-                          rel={contact.url?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                         >
-                          <IconComponent className="w-5 h-5 mr-3" />
+                          <IconComponent className="w-5 h-5 mr-3 flex-shrink-0" />
                           {contact.label}
                         </a>
                       );
@@ -288,7 +279,7 @@ export const AboutPage: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* Support */}
+              {/* 支持我 */}
               {aboutConfig.support.enabled && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -304,47 +295,36 @@ export const AboutPage: React.FC = () => {
                     {aboutConfig.support.description}
                   </p>
                   {supportMethods.length > 0 && (
-                    <div className="space-y-3 mt-4">
+                    <div className="space-y-3">
                       {supportMethods.map((method, index) => {
-                        const IconComponent = supportIconMap[method.icon] || Heart;
-                        
-                        // 如果有图片（微信/支付宝二维码）
-                        if (method.image) {
-                          return (
-                            <div key={index} className="flex flex-col items-center">
-                              <span className="flex items-center text-sm mb-2">
-                                <IconComponent className="w-4 h-4 mr-2" />
-                                {method.text}
-                              </span>
+                        const IconComponent = supportIconMap[method.icon] || Coffee;
+                        return (
+                          <div key={index} className="flex flex-col">
+                            <div className="flex items-center text-sm mb-1">
+                              <IconComponent className="w-4 h-4 mr-2" />
+                              {method.text}
+                            </div>
+                            {method.image && (
                               <img 
                                 src={method.image} 
                                 alt={method.text}
-                                className="w-32 h-32 rounded-lg object-cover"
+                                className="w-32 h-32 rounded-lg object-cover mx-auto"
+                                loading="lazy"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).style.display = 'none';
+                                }}
                               />
-                            </div>
-                          );
-                        }
-                        
-                        // 如果有URL（爱发电）
-                        if (method.url) {
-                          return (
-                            <a
-                              key={index}
-                              href={method.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center text-sm hover:text-blue-200 transition-colors"
-                            >
-                              <IconComponent className="w-4 h-4 mr-2" />
-                              {method.text}
-                            </a>
-                          );
-                        }
-                        
-                        return (
-                          <div key={index} className="flex items-center text-sm">
-                            <IconComponent className="w-4 h-4 mr-2" />
-                            {method.text}
+                            )}
+                            {method.url && (
+                              <a 
+                                href={method.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-sm text-blue-200 hover:text-white underline"
+                              >
+                                点击支持
+                              </a>
+                            )}
                           </div>
                         );
                       })}
