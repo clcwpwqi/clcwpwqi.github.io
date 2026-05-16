@@ -1,0 +1,84 @@
+{
+  "_comment": "关于页面配置文件 | 编辑教程见 about.md",
+  "hero": {
+    "title": "关于我",
+    "subtitle": "热爱技术，喜欢分享"
+  },
+  "profile": {
+    "name": "clcwpwqi",
+    "role": "全栈开发者",
+    "bio": "分享技术文章和开发经验。主要擅长C++ Python HTML Shell Linux 和 Andorid 开发。",
+    "avatar": "/images/avatar.png",
+    "skills": [
+      "C++",
+      "Python",
+      "Node.js",
+      "HTML",
+      "Android",
+      "Docker",
+      "Git",
+      "Linux"
+    ]
+  },
+  "stats": {
+    "enabled": true
+  },
+  "blog": {
+    "enabled": true,
+    "title": "关于博客",
+    "content": "clc'blog 是一个基于 React + TypeScript + Tailwind CSS 构建的静态博客。博客采用纯前端架构，部署在 GitHub Pages 上，无需后端服务器即可运行。\n\n博客的主要功能包括：文章展示、分类标签、搜索功能、暗黑模式、响应式设计等。同时还提供了一系列实用的开发工具。\n\n如果你对这个博客的源码感兴趣，可以在 GitHub 上找到它，欢迎 Star 和 Fork。"
+  },
+  "contacts": {
+    "title": "联系方式",
+    "items": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/clcwpwqi",
+        "icon": "Github",
+        "show": true
+      },
+      {
+        "label": "微信公众号",
+        "url": "#wechat",
+        "icon": "MessageCircle",
+        "show": true,
+        "action": "copy",
+        "copyText": "clcwpwqi"
+      },
+      {
+        "label": "Telegram",
+        "url": "https://t.me/clcwpwqi",
+        "icon": "Send",
+        "show": true
+      },
+      {
+        "label": "Email",
+        "url": "mailto:clcwpwqi@outlook.com",
+        "icon": "Mail",
+        "show": true
+      }
+    ]
+  },
+  "support": {
+    "enabled": true,
+    "title": "支持我",
+    "description": "如果我的文章对你有帮助，欢迎通过以下方式支持我：",
+    "methods": [
+      {
+        "text": "微信打赏",
+        "icon": "Heart",
+        "image": "/images/wechat-pay.png"
+      },
+      {
+        "text": "支付宝打赏",
+        "icon": "Heart",
+        "image": "/images/alipay.png"
+      },
+      {
+        "text": "爱发电",
+        "icon": "Heart",
+        "url": "https://ifdian.net/a/clcwpwqi"
+      }
+    ]
+  }
+}

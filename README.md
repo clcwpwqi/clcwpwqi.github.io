@@ -1,131 +1,191 @@
-# clc'blog - 静态博客项目
+# DevBlog - 现代静态博客
 
-基于 React 18 + TypeScript + Vite + Tailwind CSS 的个人博客，可部署到 GitHub Pages。
+一个基于 React + TypeScript + Tailwind CSS 构建的现代化静态博客，支持从 `/posts` 目录按分类文件夹自动读取 Markdown 文章。
+
+## 特性
+
+- 🎨 **现代设计** - 简洁美观的界面，支持响应式布局
+- 🌙 **暗黑模式** - 支持自动/手动切换暗黑模式
+- 📝 **Markdown 支持** - 完整的 Markdown 渲染，包括代码高亮
+- 📂 **分类文件夹管理** - 文章按分类存放，如 `/posts/frontend/*.md`
+- 🏷️ **动态标签系统** - 支持自定义标签配置（名称、颜色）
+- 📁 **动态分类系统** - 通过创建文件夹和配置文件自动添加分类
+- 🔍 **搜索功能** - 前端实现的实时文章搜索
+- 💬 **评论系统** - 集成 Giscus（基于 GitHub Discussions）
+- 🛠️ **开发工具** - 内置 JSON 格式化、Base64 编解码等实用工具
+- 🔗 **SEO 优化** - 完善的 meta 标签和 Open Graph 支持
+- ⚡ **自动部署** - GitHub Actions 自动构建部署
+
+## 技术栈
+
+- **框架**: React 18 + TypeScript
+- **构建**: Vite
+- **样式**: Tailwind CSS
+- **路由**: React Router
+- **Markdown**: react-markdown + highlight.js
+- **动画**: Framer Motion
+- **图标**: Lucide React
 
 ## 快速开始
 
+### 1. 克隆项目
+
 ```bash
-# 安装依赖
+git clone https://github.com/username/devblog.git
+cd devblog
+```
+
+### 2. 安装依赖
+
+```bash
 npm install
+```
 
-# 开发模式
+### 3. 启动开发服务器
+
+```bash
 npm run dev
+```
 
-# 构建生产版本
+### 4. 构建生产版本
+
+```bash
 npm run build
-
-# 预览构建结果
-npm run preview
 ```
 
-## 项目结构
+---
+
+## 文章管理
+
+### 目录结构
 
 ```
-├── .github/workflows/deploy.yml  # GitHub Actions 自动部署
-├── configs/                      # 所有配置文件
-│   ├── site.json                 # 站点基本信息
-│   ├── navigation.json           # 导航栏配置
-│   ├── homepage.json             # 首页配置
-│   ├── about.json                # 关于页配置
-│   ├── footer.json               # 页脚配置
-│   ├── tools.json                # 工具箱配置
-│   └── about/                    # 关于页 Markdown 内容
-├── posts/                        # 文章目录
-│   ├── labels.json               # 标签配置
-│   └── frontend/                 # 分类文件夹
-│       ├── frontend.json         # 分类配置
-│       └── article.md            # 文章（Markdown）
-├── public/images/                # 全局图片
-├── scripts/                      # 构建脚本
-├── src/                          # 源代码
-│   ├── components/               # 组件
-│   ├── pages/                    # 页面
-│   ├── data/                     # 数据层
-│   ├── types/                    # 类型定义
-│   └── utils/                    # 工具函数
-└── package.json
+/posts/
+├── labels.json                 # 标签配置
+├── frontend/                   # 前端开发分类
+│   ├── frontend.json          # 分类配置
+│   └── react-guide.md         # 文章
+├── backend/                    # 后端开发分类
+│   ├── backend.json
+│   └── nodejs-guide.md
+└── ...
 ```
 
-## 如何新增文章
+### 新增文章
 
-1. 在 `posts/` 下找到或创建分类文件夹（如 `posts/frontend/`）
-2. 创建 `[分类名].json` 分类配置（如果该分类是新的）：
-   ```json
-   { "id": "frontend", "name": "前端开发", "slug": "frontend", "description": "描述", "order": 1 }
-   ```
-3. 创建文章 `.md` 文件，包含 frontmatter：
-   ```yaml
-   ---
-   title: "文章标题"
-   slug: "article-slug"
-   excerpt: "摘要"
-   date: "2024-01-15"
-   category: "frontend"
-   tags: ["React", "TypeScript"]
-   readingTime: 8
-   ---
+在对应分类文件夹下创建 Markdown 文件：
 
-   文章内容...
-   ```
-4. 可选：放置同名图片 `article-slug.png` 作为文章头图
+```markdown
+---
+title: "文章标题"
+slug: "article-slug"
+excerpt: "文章摘要"
+date: "2024-01-15"
+category: "frontend"
+tags: ["React", "TypeScript"]
+readingTime: 8
+---
 
-## 如何新增分类和标签
+# 文章正文
+
+支持完整的 Markdown 语法...
+```
 
 ### 新增分类
-在 `posts/` 下创建新文件夹，添加 `[分类名].json` 配置文件。
 
-### 新增标签
-在 `posts/labels.json` 中添加标签：
+1. 创建分类文件夹：`mkdir posts/my-category`
+2. 创建分类配置文件 `posts/my-category/my-category.json`：
+
 ```json
 {
-  "Vue": { "id": "vue", "name": "Vue", "slug": "vue", "color": "#42B883" }
+  "id": "my-category",
+  "name": "我的分类",
+  "slug": "my-category",
+  "description": "分类描述",
+  "order": 6
 }
 ```
-未在 labels.json 中定义的标签会使用默认蓝色 `#3B82F6`。
 
-## 如何配置评论系统（Giscus）
+3. 在该文件夹下添加 Markdown 文章
+4. 推送代码，自动部署
 
-在 `configs/site.json` 中配置：
+### 标签配置
+
+编辑 `/posts/labels.json`：
 
 ```json
 {
-  "comment": {
-    "provider": "giscus",
-    "repo": "你的GitHub用户名/仓库名",
-    "repoId": "仓库ID（从 https://giscus.app/zh-CN 获取）",
-    "category": "讨论分类名称",
-    "categoryId": "分类ID"
+  "React": {
+    "id": "react",
+    "name": "React",
+    "slug": "react",
+    "color": "#61DAFB"
   }
 }
 ```
 
-获取配置值的步骤：
-1. 访问 https://giscus.app/zh-CN
-2. 输入你的仓库信息
-3. 选择讨论分类
-4. 复制生成的配置值
+---
 
-## 图片规范
+## 部署到 GitHub Pages
 
-| 图片类型 | 路径 | 推荐尺寸 | 格式 |
-|---------|------|---------|------|
-| 顶栏图标 | `public/images/top.png` | 64×64 | PNG |
-| 作者头像 | `public/images/avatar.png` | 200×200 | PNG |
-| 微信打赏码 | `public/images/wechat-pay.png` | 200×200 | PNG |
-| 支付宝打赏码 | `public/images/alipay.png` | 200×200 | PNG |
-| 文章头图 | `posts/[分类]/[文章名].png` | 800×450 | JPG/PNG/WebP |
+### 自动部署
 
-文章头图优先级：`frontmatter.cover` > 同名图片 > 无头图
+项目已配置 GitHub Actions 自动部署：
 
-## 配置文件说明
+1. 在仓库设置中启用 GitHub Pages
+2. 选择 "GitHub Actions" 作为源
+3. 推送代码到 `main` 分支，自动触发构建部署
 
-所有自定义内容通过 `/configs/` 下的 JSON 文件管理，修改后运行 `npm run dev` 或 `npm run build` 即可生效。
+### 部署触发条件
 
-## GitHub Pages 部署
+以下文件变化会自动触发部署：
+- `posts/**` - 文章、分类、标签配置
+- `src/**` - 源代码
+- `public/**` - 静态资源
+- `scripts/**` - 构建脚本
+- 配置文件
 
-1. 将代码推送到 GitHub 仓库
-2. 确保分支名为 `main`
-3. 在仓库 Settings → Pages 中启用 GitHub Actions 部署
-4. 每次 push 到 main 分支会自动构建部署
+---
 
-项目使用 `HashRouter`，无需 404.html 重定向方案。
+## 项目文档
+
+- [PROJECT_GUIDE.md](./PROJECT_GUIDE.md) - 项目文件功能详细说明
+- [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md) - 项目结构说明
+
+---
+
+## 自定义配置
+
+### 站点信息
+
+编辑 `src/data/config.ts`：
+
+```typescript
+export const siteConfig: SiteConfig = {
+  title: '你的博客名称',
+  description: '博客描述',
+  author: '作者名',
+  email: 'your@email.com',
+  github: 'https://github.com/username',
+  // ...
+};
+```
+
+### 评论系统
+
+1. 访问 https://giscus.app/
+2. 获取配置参数
+3. 编辑 `src/data/config.ts` 中的 `comment` 部分
+
+---
+
+## 浏览器支持
+
+- Chrome / Edge (最新版)
+- Firefox (最新版)
+- Safari (最新版)
+- 移动端浏览器
+
+## 许可证
+
+MIT License

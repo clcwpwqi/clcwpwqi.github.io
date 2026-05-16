@@ -1,0 +1,44 @@
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter, useNavigate, useLocation } from 'react-router-dom';;
+
+// 导入代码高亮样式
+import 'highlight.js/styles/github.css'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+)
+function RouteRestorer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  React.useEffect(() => {
+    // 检查 URL 中是否有 redirect 参数
+    const params = new URLSearchParams(location.search);
+    const redirectPath = params.get('redirect');
+
+    if (redirectPath) {
+      // 清除 URL 中的 redirect 参数，并跳转到原始路径
+      const cleanUrl = window.location.origin + redirectPath + location.hash;
+      window.history.replaceState(null, '', cleanUrl);
+      // 使用 React Router 进行跳转
+      navigate(redirectPath, { replace: true });
+    }
+  }, [location, navigate]);
+
+  return null;
+}
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <RouteRestorer />
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
+);

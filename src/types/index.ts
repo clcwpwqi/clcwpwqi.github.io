@@ -1,127 +1,145 @@
+/**
+ * 博客项目类型定义
+ */
+
+// 文章类型
+export interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  date: string;
+  updatedAt?: string;
+  category: string;
+  tags: string[];
+  cover?: string;
+  readingTime: number;
+  author?: string;
+}
+
+// 分类类型
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  order?: number;
+  count?: number;
+}
+
+// 标签类型
+export interface Tag {
+  id: string;
+  name: string;
+  slug: string;
+  color?: string;
+  count?: number;
+}
+
+// 标签配置类型
+export interface LabelConfig {
+  id: string;
+  name: string;
+  slug: string;
+  color: string;
+}
+
+// 导航链接类型
+export interface NavLink {
+  label: string;
+  href: string;
+  icon?: string;
+}
+
+// 工具类型
+export interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  component: string;
+  color?: string;
+}
+
+// 主题类型
+export type Theme = 'light' | 'dark' | 'system';
+
+// SEO 类型
+export interface SEO {
+  title: string;
+  description: string;
+  keywords?: string[];
+  image?: string;
+  url?: string;
+  type?: string;
+}
+
+// 评论配置类型
+export interface CommentConfig {
+  provider: 'giscus' | 'utterances';
+  repo: string;
+  repoId?: string;
+  category?: string;
+  categoryId?: string;
+  mapping?: string;
+  reactionsEnabled?: boolean;
+  emitMetadata?: boolean;
+  theme?: string;
+  crossorigin?: string;
+}
+
+// 头像配置类型
+export interface AvatarConfig {
+  src: string;
+  width: number;
+  height: number;
+  alt?: string;
+}
+
+// 站点配置类型
 export interface SiteConfig {
   title: string;
   description: string;
   author: string;
   email: string;
   github: string;
-  telegram: string;
-  wechat: string;
-  logo: string;
-  avatar: { src: string; width: number; height: number; alt: string };
-  comment: {
-    provider: string;
-    repo: string;
-    repoId: string;
-    category: string;
-    categoryId: string;
+  twitter?: string;
+  telegram?: string;
+  wechat?: string;
+  logo?: string;
+  avatar?: string | AvatarConfig;
+  url: string;
+  favicon?: string;
+  comment: CommentConfig;
+  analytics?: {
+    provider?: string;
+    id?: string;
   };
 }
 
-export interface NavItem {
+// 文章数据输出类型
+export interface PostsData {
+  posts: Post[];
+  categories: Category[];
+  tags: Tag[];
+  labelsConfig: Record<string, LabelConfig>;
+}
+
+// 联系方式类型
+export interface ContactItem {
+  type: string;
+  label: string;
+  value: string;
+  url: string;
+  icon: string;
+  show: boolean;
+}
+
+// 首页 Hero 按钮类型
+export interface HeroButton {
   label: string;
   href: string;
+  variant: 'primary' | 'secondary';
   icon: string;
-  show: boolean;
-}
-
-export interface NavigationConfig {
-  brand: { showLogo: boolean; logo: string; logoImage: string; name: string };
-  items: NavItem[];
-  search: { enabled: boolean };
-  themeToggle: { enabled: boolean };
-}
-
-export interface HomepageConfig {
-  hero: { title: string; highlight: string; subtitle: string };
-  featured: { enabled: boolean; title: string; posts: string[] };
-  latest: { title: string };
-}
-
-export interface ContactItem {
-  label: string;
-  url?: string;
-  icon: string;
-  show: boolean;
-  action: 'link' | 'copy';
-  copyText?: string;
-  text?: string;
-}
-
-export interface SupportMethod {
-  text: string;
-  icon: string;
-  image: string;
-}
-
-export interface AboutConfig {
-  hero: { title: string; subtitle: string };
-  profile: { name: string; role: string; bio: string; avatar: string; skills: string[] };
-  stats: { enabled: boolean };
-  blog: { enabled: boolean; title: string; content: string };
-  contacts: { enabled: boolean; items: ContactItem[] };
-  support: { enabled: boolean; title: string; description: string; methods: SupportMethod[] };
-}
-
-export interface FooterConfig {
-  brand: { logo: string; logoImage: string; name: string; description: string };
-  socialLinks: { name: string; url: string; icon: string; show: boolean }[];
-  copyright: { text: string };
-}
-
-export interface ToolConfig {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  component: string;
-  color: string;
-  show: boolean;
-}
-
-export interface ToolsConfig {
-  title: string;
-  subtitle: string;
-  tools: ToolConfig[];
-}
-
-export interface CategoryConfig {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  order: number;
-}
-
-export interface Article {
-  id: string;
-  title: string;
-  slug: string;
-  excerpt: string;
-  date: string;
-  category: string;
-  tags: string[];
-  readingTime: number;
-  cover: string | null;
-  content: string;
-  categorySlug: string;
-}
-
-export interface LabelConfig {
-  [key: string]: { id: string; name: string; slug: string; color: string };
-}
-
-export interface PostsData {
-  categories: CategoryConfig[];
-  articles: Article[];
-  labels: LabelConfig;
-}
-
-export interface AllConfig {
-  site: SiteConfig;
-  navigation: NavigationConfig;
-  homepage: HomepageConfig;
-  about: AboutConfig;
-  footer: FooterConfig;
-  tools: ToolsConfig;
-  aboutContent: Record<string, string>;
 }

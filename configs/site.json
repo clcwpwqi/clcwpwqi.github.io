@@ -1,18 +1,30 @@
 {
+  "_comment": "站点基础配置文件 | 编辑教程见 site.md",
   "title": "clc'blog",
-  "description": "探索技术的无限可能",
+  "description": "一个简洁、现代的开发者博客，分享技术文章与实用工具",
   "author": "clcwpwqi",
   "email": "clcwpwqi@outlook.com",
   "github": "https://github.com/clcwpwqi",
+  "twitter": "",
   "telegram": "@clcwpwqi",
   "wechat": "clcwpwqi",
   "logo": "C",
-  "avatar": { "src": "/images/avatar.png", "width": 200, "height": 200, "alt": "头像" },
+  "avatar": {
+    "src": "/images/avatar.png",
+    "width": 200,
+    "height": 200
+  },
+  "url": "https://clcwpwqi.github.io",
   "comment": {
     "provider": "giscus",
     "repo": "clcwpwqi/clcwpwqi.github.io",
     "repoId": "R_kgDORslu9w",
     "category": "Announcements",
-    "categoryId": "DIC_kwDORslu984C45V0"
+    "categoryId": "DIC_kwDORslu984C45V0",
+    "mapping": "pathname",
+    "reactionsEnabled": true,
+    "emitMetadata": false,
+    "theme": "preferred_color_scheme",
+    "crossorigin": "anonymous"
   }
 }

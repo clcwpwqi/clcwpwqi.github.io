@@ -1,111 +1,162 @@
-import { useState } from 'react';
-import { Menu, X, Search } from 'lucide-react';
+/**
+ * 顶部导航组件
+ */
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { getConfig } from '../data';
-import ThemeToggle from './ThemeToggle';
-import { getIcon } from '../utils/icons';
+import { Menu, X, Sun, Moon, Search } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
+import { useScrolled } from '@/hooks/useScrollPosition';
+import { navLinks, navigationConfig } from '@/data/config';
+import { cn } from '@/lib/utils';
 
-export default function Header() {
-  const config = getConfig();
-  const nav = config.navigation;
-  const [mobileOpen, setMobileOpen] = useState(false);
+interface HeaderProps {
+  onSearchClick?: () => void;
+}
+
+export const Header = ({ onSearchClick }: HeaderProps) => {
+  const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
+  const scrolled = useScrolled(50);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const visibleItems = nav.items.filter(item => item.show);
+  // 关闭移动端菜单当路由变化
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // 阻止滚动当菜单打开
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-gray-200/50 dark:border-gray-800/50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand */}
-          <Link to="/" className="flex items-center gap-2">
-            {nav.brand.showLogo && nav.brand.logoImage ? (
-              <img
-                src={nav.brand.logoImage}
-                alt={nav.brand.name}
-                className="w-8 h-8 object-contain"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                }}
-              />
-            ) : (
-              <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">
-                {nav.brand.logo}
-              </span>
-            )}
-            <span className="font-bold text-lg hidden sm:inline">{nav.brand.name}</span>
-          </Link>
+    <>
+      <header
+        className={cn(
+          'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
+          scrolled
+            ? 'bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-sm'
+            : 'bg-transparent'
+        )}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            >
+              {navigationConfig.brand?.showLogo !== false && (
+                <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
+                  {navigationConfig.brand?.logo || 'C'}
+                </span>
+              )}
+              <span>{navigationConfig.brand?.name || 'clc\'blog'}</span>
+            </Link>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {visibleItems.map(item => {
-              const IconComponent = getIcon(item.icon);
-              const isActive = location.hash === `#${item.href}` || (item.href === '/' && (location.hash === '' || location.hash === '#/'));
-              return (
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center space-x-1">
+              {navLinks.map((link) => (
                 <Link
-                  key={item.href}
-                  to={item.href}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400'
-                      : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-                  }`}
+                  key={link.href}
+                  to={link.href}
+                  className={cn(
+                    'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                    location.pathname === link.href
+                      ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  )}
                 >
-                  <IconComponent className="w-4 h-4" />
-                  {item.label}
+                  {link.label}
                 </Link>
-              );
-            })}
-          </nav>
+              ))}
+            </nav>
 
-          {/* Actions */}
-          <div className="flex items-center gap-2">
-            {nav.search?.enabled && (
-              <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800" title="搜索">
+            {/* Right Actions */}
+            <div className="flex items-center space-x-2">
+              {/* Search Button */}
+              <button
+                onClick={onSearchClick}
+                className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="搜索"
+              >
                 <Search className="w-5 h-5" />
               </button>
-            )}
-            {nav.themeToggle?.enabled && <ThemeToggle />}
-            <button
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-              onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="菜单"
-            >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+
+              {/* Theme Toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label={isDark ? '切换到亮色模式' : '切换到暗色模式'}
+              >
+                {isDark ? (
+                  <Sun className="w-5 h-5" />
+                ) : (
+                  <Moon className="w-5 h-5" />
+                )}
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label={mobileMenuOpen ? '关闭菜单' : '打开菜单'}
+              >
+                {mobileMenuOpen ? (
+                  <X className="w-5 h-5" />
+                ) : (
+                  <Menu className="w-5 h-5" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden glass border-t border-gray-200/50 dark:border-gray-800/50"
+      {/* Mobile Menu - 独立层级确保背景效果 */}
+      {mobileMenuOpen && (
+        <div className="md:hidden fixed inset-0 z-40">
+          {/* 背景遮罩 */}
+          <div 
+            className="absolute inset-0 bg-black/20 dark:bg-black/40"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          {/* 菜单内容 */}
+          <div
+            className="absolute top-16 left-0 right-0 bottom-0 bg-white dark:bg-gray-900 overflow-y-auto"
+            style={{
+              backgroundColor: isDark ? 'rgba(17, 24, 39, 0.98)' : 'rgba(255, 255, 255, 0.98)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)'
+            }}
           >
-            <nav className="px-4 py-3 space-y-1">
-              {visibleItems.map(item => {
-                const IconComponent = getIcon(item.icon);
-                return (
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                  >
-                    <IconComponent className="w-5 h-5" />
-                    {item.label}
-                  </Link>
-                );
-              })}
+            <nav className="flex flex-col p-4 space-y-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className={cn(
+                    'px-4 py-3 rounded-lg text-base font-medium transition-colors',
+                    location.pathname === link.href
+                      ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  )}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
+          </div>
+        </div>
+      )}
+    </>
   );
-}
+};

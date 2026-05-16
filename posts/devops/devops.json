@@ -1,0 +1,7 @@
+{
+  "id": "devops",
+  "name": "DevOps",
+  "slug": "devops",
+  "description": "Docker, Kubernetes, CI/CD, 云原生技术",
+  "order": 3
+}

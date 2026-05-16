@@ -1,96 +1,235 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getConfig, getArticles, getCategories } from '../data';
-import ArticleCard from '../components/ArticleCard';
-import PageTransition from '../components/PageTransition';
-import SearchModal from '../components/SearchModal';
-import { getConfig as getConfigData } from '../data';
+/**
+ * 首页
+ */
+import { useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Sparkles, TrendingUp, Tag, ArrowRight, Wrench, BookOpen } from 'lucide-react';
+import { PostCard } from '@/components/PostCard';
+import { TagCloud } from '@/components/TagCloud';
+import { SEO } from '@/components/SEO';
+import { posts, categories, tags, getPostsByCategory, getPostsByTag } from '@/data/posts';
+import { homepageConfig } from '@/data/config';
 
-export default function HomePage() {
-  const config = getConfigData();
-  const { homepage } = config;
-  const articles = getArticles();
-  const categories = getCategories();
-  const [searchOpen, setSearchOpen] = useState(false);
+// 图标映射
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Sparkles,
+  TrendingUp,
+  ArrowRight,
+  Wrench,
+  BookOpen,
+};
 
-  const featuredSlugs = homepage.featured.posts;
-  const featuredArticles = featuredSlugs.length
-    ? articles.filter(a => featuredSlugs.includes(a.slug))
-    : articles.slice(0, 6);
+export const HomePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTag = searchParams.get('tag');
+  const activeCategory = searchParams.get('category');
 
-  const latestArticles = articles.slice(0, 10);
+  // 筛选文章
+  const filteredPosts = useMemo(() => {
+    let result = [...posts];
+
+    if (activeTag) {
+      result = getPostsByTag(activeTag);
+    }
+
+    if (activeCategory) {
+      result = getPostsByCategory(activeCategory);
+    }
+
+    return result.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  }, [activeTag, activeCategory]);
+
+  // 精选文章（从配置中读取）
+  const featuredPosts = useMemo(() => {
+    if (!homepageConfig.featured.enabled || !homepageConfig.featured.posts?.length) {
+      // 如果未启用或没有配置，返回最新的3篇
+      return posts
+        .slice()
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .slice(0, 3);
+    }
+    // 根据配置的slug获取文章
+    return homepageConfig.featured.posts
+      .map(slug => posts.find(p => p.slug === slug))
+      .filter((p): p is NonNullable<typeof p> => p !== undefined)
+      .slice(0, 3);
+  }, []);
+
+  const handleTagClick = (tag: string) => {
+    if (activeTag?.toLowerCase() === tag.toLowerCase()) {
+      searchParams.delete('tag');
+    } else {
+      searchParams.set('tag', tag);
+    }
+    searchParams.delete('category');
+    setSearchParams(searchParams);
+  };
+
+  const clearFilters = () => {
+    setSearchParams({});
+  };
 
   return (
-    <PageTransition>
-      {/* Hero */}
-      <section className="relative py-16 sm:py-24 text-center">
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-transparent dark:from-blue-950/20 dark:to-transparent" />
-        <div className="relative max-w-3xl mx-auto px-4">
-          <h1 className="text-3xl sm:text-5xl font-bold mb-4">
-            {homepage.hero.title}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
-              {homepage.hero.highlight}
-            </span>
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-lg">{homepage.hero.subtitle}</p>
-        </div>
-      </section>
+    <>
+      <SEO 
+        title="首页" 
+        url="/"
+        keywords={['博客', '技术', '前端', '后端', 'DevOps']}
+      />
 
-      {/* Categories */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 mb-12">
-        <div className="flex flex-wrap justify-center gap-2">
-          <Link
-            to="/categories"
-            className="px-4 py-2 rounded-full text-sm font-medium bg-blue-600 text-white"
+      {/* Hero Section */}
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 -z-10" />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
           >
-            全部
-          </Link>
-          {categories.map(cat => (
-            <Link
-              key={cat.slug}
-              to={`/category/${cat.slug}`}
-              className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              {cat.name}
-            </Link>
-          ))}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+              {homepageConfig.hero.title}
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                {homepageConfig.hero.highlight}
+              </span>
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
+              {homepageConfig.hero.subtitle}
+            </p>
+            <div className="flex flex-wrap justify-center gap-4">
+              {homepageConfig.hero.buttons?.map((button, index) => {
+                const IconComponent = iconMap[button.icon] || Sparkles;
+                const isPrimary = button.variant === 'primary';
+                return (
+                  <a
+                    key={index}
+                    href={button.href}
+                    className={`inline-flex items-center px-6 py-3 rounded-full font-medium transition-colors ${
+                      isPrimary
+                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    <IconComponent className="w-5 h-5 mr-2" />
+                    {button.label}
+                  </a>
+                );
+              })}
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Featured */}
-      {homepage.featured.enabled && featuredArticles.length > 0 && (
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 mb-12">
-          <h2 className="text-xl font-bold mb-6">{homepage.featured.title}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredArticles.map(article => (
-              <ArticleCard key={article.slug} article={article} />
-            ))}
+      {/* Featured Posts */}
+      {!activeTag && !activeCategory && homepageConfig.featured.enabled && featuredPosts.length > 0 && (
+        <section className="py-12 bg-white dark:bg-gray-900">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center">
+              <Sparkles className="w-6 h-6 mr-2 text-yellow-500" />
+              {homepageConfig.featured.title}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {featuredPosts.map((post, index) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                >
+                  <PostCard post={post} variant="default" />
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
       )}
 
-      {/* Latest */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">{homepage.latest.title}</h2>
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            搜索文章 →
-          </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {latestArticles.map(article => (
-            <ArticleCard key={article.slug} article={article} />
-          ))}
-        </div>
-        {latestArticles.length === 0 && (
-          <p className="text-center text-gray-500 py-12">还没有文章，快去添加第一篇吧！</p>
-        )}
-      </section>
+      {/* Main Content */}
+      <section id="latest" className="py-12 bg-gray-50 dark:bg-gray-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Posts Grid */}
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  {activeTag ? `标签: ${activeTag}` : activeCategory ? '分类文章' : homepageConfig.latest.title}
+                </h2>
+                {(activeTag || activeCategory) && (
+                  <button
+                    onClick={clearFilters}
+                    className="text-sm text-blue-600 hover:text-blue-700"
+                  >
+                    清除筛选
+                  </button>
+                )}
+              </div>
 
-      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
-    </PageTransition>
+              {filteredPosts.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {filteredPosts.map((post, index) => (
+                    <motion.div
+                      key={post.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: index * 0.05 }}
+                    >
+                      <PostCard post={post} />
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16">
+                  <p className="text-gray-500 dark:text-gray-400">
+                    没有找到相关文章
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Sidebar */}
+            <aside className="lg:w-80 space-y-8">
+              {/* Categories */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  分类
+                </h3>
+                <div className="space-y-2">
+                  {categories.map((category) => (
+                    <a
+                      key={category.slug}
+                      href={`/categories?category=${category.slug}`}
+                      className={`flex items-center justify-between p-3 rounded-lg transition-colors ${
+                        activeCategory === category.slug
+                          ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400'
+                          : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      }`}
+                    >
+                      <span>{category.name}</span>
+                      <span className="text-sm text-gray-400">
+                        {posts.filter((p) => p.category === category.slug).length}
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tags */}
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+                  <Tag className="w-5 h-5 mr-2" />
+                  标签
+                </h3>
+                <TagCloud
+                  tags={tags.map(t => t.name)}
+                  activeTag={activeTag || undefined}
+                  onTagClick={handleTagClick}
+                />
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+    </>
   );
-}
+};

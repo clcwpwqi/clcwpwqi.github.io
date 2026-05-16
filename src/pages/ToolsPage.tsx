@@ -1,73 +1,210 @@
-import { useState } from 'react';
-import { getConfig } from '../data';
-import PageTransition from '../components/PageTransition';
-import { getIcon } from '../utils/icons';
-import JsonFormatter from '../components/tools/JsonFormatter';
-import Base64Converter from '../components/tools/Base64Converter';
-import TimestampConverter from '../components/tools/TimestampConverter';
-import TextDiff from '../components/tools/TextDiff';
-import UrlCodec from '../components/tools/UrlCodec';
-import ColorConverter from '../components/tools/ColorConverter';
+/**
+ * 工具箱页面
+ */
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Wrench, 
+  Braces, 
+  Code, 
+  Clock, 
+  GitCompare, 
+  Link, 
+  Palette,
+  X,
+  Hash,
+  FileJson,
+  Type,
+  Calculator
+} from 'lucide-react';
+import { SEO } from '@/components/SEO';
+import { JsonFormatter } from '@/components/tools/JsonFormatter';
+import { Base64Tool } from '@/components/tools/Base64Tool';
+import { TimestampTool } from '@/components/tools/TimestampTool';
+import { TextDiffTool } from '@/components/tools/TextDiffTool';
+import { UrlEncoderTool } from '@/components/tools/UrlEncoderTool';
+import { ColorConverterTool } from '@/components/tools/ColorConverterTool';
+import { cn } from '@/lib/utils';
+import { toolsConfig, enabledTools } from '@/data/config';
 
-const toolComponents: Record<string, React.ComponentType> = {
-  JsonFormatter,
-  Base64Converter,
-  TimestampConverter,
-  TextDiff,
-  UrlCodec,
-  ColorConverter,
+// 图标映射
+const toolIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Braces,
+  Code,
+  Clock,
+  GitCompare,
+  Link,
+  Palette,
+  Hash,
+  FileJson,
+  Type,
+  Calculator,
+  Wrench,
 };
 
-export default function ToolsPage() {
-  const config = getConfig();
-  const { tools } = config;
-  const [activeTool, setActiveTool] = useState<string | null>(null);
+interface Tool {
+  id: string;
+  name: string;
+  description: string;
+  icon: React.ElementType;
+  component: React.ComponentType;
+  color: string;
+}
 
-  const visibleTools = tools.tools.filter(t => t.show);
+// 组件映射
+const componentMap: Record<string, React.ComponentType> = {
+  JsonFormatter,
+  Base64Tool,
+  TimestampTool,
+  TextDiffTool,
+  UrlEncoderTool,
+  ColorConverterTool,
+};
 
-  const ActiveComponent = activeTool ? toolComponents[tools.tools.find(t => t.id === activeTool)?.component || ''] : null;
-  const activeToolConfig = tools.tools.find(t => t.id === activeTool);
+// 从配置生成工具列表
+const tools: Tool[] = enabledTools.map(tool => ({
+  id: tool.id,
+  name: tool.name,
+  description: tool.description,
+  icon: toolIconMap[tool.icon] || Wrench,
+  component: componentMap[tool.component] || JsonFormatter,
+  color: tool.color,
+}));
+
+export const ToolsPage: React.FC = () => {
+  const [activeTool, setActiveTool] = useState<Tool | null>(null);
+
+  const handleToolClick = (tool: Tool) => {
+    setActiveTool(tool);
+  };
+
+  const handleClose = () => {
+    setActiveTool(null);
+  };
 
   return (
-    <PageTransition>
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
-        <h1 className="text-2xl font-bold mb-2">{tools.title}</h1>
-        <p className="text-gray-600 dark:text-gray-400 text-sm mb-8">{tools.subtitle}</p>
+    <>
+      <SEO
+        title="工具箱"
+        description="实用的前端开发工具集合，包括 JSON 格式化、Base64 编解码、时间戳转换等"
+        url="/tools"
+        keywords={['工具', 'JSON', 'Base64', '时间戳', 'URL编码', '颜色转换']}
+      />
 
-        {activeTool && activeToolConfig && ActiveComponent ? (
-          <div>
-            <button
-              onClick={() => setActiveTool(null)}
-              className="mb-4 text-sm text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              ← 返回工具箱
-            </button>
-            <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6">
-              <h2 className="text-xl font-bold mb-4">{activeToolConfig.name}</h2>
-              <ActiveComponent />
-            </div>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {visibleTools.map(tool => {
-              const IconComponent = getIcon(tool.icon);
+      {/* Hero */}
+      <section className="pt-24 pb-12 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+          >
+            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 flex items-center justify-center">
+              <Wrench className="w-8 h-8 mr-3 text-blue-500" />
+              {toolsConfig.title}
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+              {toolsConfig.subtitle}
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Tools Grid */}
+      <section className="py-12 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {tools.map((tool, index) => {
+              const Icon = tool.icon;
               return (
-                <button
+                <motion.button
                   key={tool.id}
-                  onClick={() => setActiveTool(tool.id)}
-                  className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-lg transition-all text-left"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  onClick={() => handleToolClick(tool)}
+                  className="group p-6 bg-gray-50 dark:bg-gray-800 rounded-xl text-left hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                 >
-                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${tool.color} flex items-center justify-center mb-4`}>
-                    <IconComponent className="w-6 h-6 text-white" />
+                  <div
+                    className={cn(
+                      'w-12 h-12 rounded-lg bg-gradient-to-br flex items-center justify-center mb-4',
+                      tool.color
+                    )}
+                  >
+                    <Icon className="w-6 h-6 text-white" />
                   </div>
-                  <h3 className="font-semibold mb-1">{tool.name}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">{tool.description}</p>
-                </button>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {tool.name}
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {tool.description}
+                  </p>
+                </motion.button>
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Tool Modal */}
+      <AnimatePresence>
+        {activeTool && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={handleClose}
+            />
+
+            {/* Modal */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-3xl max-h-[90vh] overflow-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl"
+            >
+              {/* Header */}
+              <div className="sticky top-0 flex items-center justify-between p-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 z-10">
+                <div className="flex items-center">
+                  <div
+                    className={cn(
+                      'w-10 h-10 rounded-lg bg-gradient-to-br flex items-center justify-center mr-3',
+                      activeTool.color
+                    )}
+                  >
+                    <activeTool.icon className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                      {activeTool.name}
+                    </h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {activeTool.description}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleClose}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <X className="w-5 h-5 text-gray-500" />
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="p-6">
+                <activeTool.component />
+              </div>
+            </motion.div>
+          </motion.div>
         )}
-      </div>
-    </PageTransition>
+      </AnimatePresence>
+    </>
   );
-}
+};

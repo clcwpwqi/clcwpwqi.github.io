@@ -1,19 +1,13 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
-import App from './App';
-import { ThemeProvider } from './components/ThemeProvider';
-import './index.css';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+
+// 导入代码高亮样式
+import 'highlight.js/styles/github.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider>
-      <HashRouter>
-        <HelmetProvider>
-          <App />
-        </HelmetProvider>
-      </HashRouter>
-    </ThemeProvider>
-  </StrictMode>
-);
+    <App />
+  </StrictMode>,
+)
