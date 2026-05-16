@@ -56,9 +56,28 @@ export const Footer = () => {
                 to="/" 
                 className="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white mb-4"
               >
-                <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
-                  {brand?.logo || siteConfig.logo || siteConfig.title.charAt(0)}
-                </span>
+                {brand?.icon ? (
+                  <img
+                    src={brand.icon}
+                    alt={brand?.name || siteConfig.title}
+                    className="w-8 h-8 object-contain rounded-lg"
+                    onError={(e) => {
+                      // Fallback: show letter logo if image fails to load
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      const fallback = e.target.parentElement?.querySelector('.footer-logo-fallback');
+                      if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                    }}
+                  />
+                ) : (
+                  <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
+                    {brand?.logo || siteConfig.logo || siteConfig.title.charAt(0)}
+                  </span>
+                )}
+                {brand?.icon && (
+                  <span className="footer-logo-fallback hidden w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg items-center justify-center text-white text-sm">
+                    {brand?.logo || siteConfig.logo || siteConfig.title.charAt(0)}
+                  </span>
+                )}
                 <span>{brand?.name || siteConfig.title}</span>
               </Link>
               {brand?.description && (

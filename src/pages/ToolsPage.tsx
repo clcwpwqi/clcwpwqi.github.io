@@ -15,7 +15,9 @@ import {
   Hash,
   FileJson,
   Type,
-  Calculator
+  Calculator,
+  QrCode,
+  Key,
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
 import { JsonFormatter } from '@/components/tools/JsonFormatter';
@@ -40,6 +42,8 @@ const toolIconMap: Record<string, React.ComponentType<{ className?: string }>> =
   Type,
   Calculator,
   Wrench,
+  QrCode,
+  Key,
 };
 
 interface Tool {

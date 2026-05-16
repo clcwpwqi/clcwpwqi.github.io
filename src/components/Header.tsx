@@ -54,7 +54,26 @@ export const Header = ({ onSearchClick }: HeaderProps) => {
               className="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
               {navigationConfig.brand?.showLogo !== false && (
-                <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
+                navigationConfig.brand?.icon ? (
+                  <img
+                    src={navigationConfig.brand.icon}
+                    alt={navigationConfig.brand?.name || 'Logo'}
+                    className="w-8 h-8 object-contain rounded-lg"
+                    onError={(e) => {
+                      // Fallback: show letter logo if image fails to load
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      const fallback = e.target.parentElement?.querySelector('.logo-fallback');
+                      if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                    }}
+                  />
+                ) : (
+                  <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-sm">
+                    {navigationConfig.brand?.logo || 'C'}
+                  </span>
+                )
+              )}
+              {navigationConfig.brand?.icon && (
+                <span className="logo-fallback hidden w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg items-center justify-center text-white text-sm">
                   {navigationConfig.brand?.logo || 'C'}
                 </span>
               )}

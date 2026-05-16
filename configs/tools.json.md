@@ -198,3 +198,13 @@
 3. 在 `tools.json` 中添加配置
 
 **注意**：这需要修改代码，建议有一定 React 基础的用户操作。
+
+## ❓ 图标显示异常排查
+
+如果工具图标显示异常，检查：
+
+1. **图标名是否在映射表中** — `ToolsPage.tsx` 的 `toolIconMap` 必须包含该图标
+2. **组件名是否在映射表中** — `componentMap` 必须包含对应的组件
+3. **图标名拼写** — 必须与 Lucide Icons 中的名称完全一致（大小写敏感）
+
+目前已内置支持的图标：`Braces`, `Code`, `Clock`, `GitCompare`, `Link`, `Palette`, `QrCode`, `Key`, `Hash`, `FileJson`, `Type`, `Calculator`, `Wrench`

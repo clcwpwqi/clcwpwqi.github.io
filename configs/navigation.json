@@ -3,7 +3,8 @@
   "brand": {
     "showLogo": true,
     "logo": "C",
-    "name": "clc'blog"
+    "name": "clc'blog",
+    "icon": "/images/top.png"
   },
   "items": [
     {

@@ -280,3 +280,32 @@
   }
 }
 ```
+
+### 示例 4：作者标签
+
+```json
+{
+  "authorTags": {
+    "enabled": true,
+    "title": "作者标签",
+    "tags": ["青年开发者", "开源爱好者", "技术分享者", "全栈开发者"]
+  }
+}
+```
+
+作者标签显示在关于页面作者头像和称号下方，以彩色标签形式展示。
+
+---
+
+## ⚡ 推荐使用 Markdown 文件
+
+关于页面的核心内容（关于我、关于博客、技术栈、作者标签）推荐使用 `configs/about/` 目录下的 Markdown 文件编辑，优先级高于 about.json：
+
+| MD 文件 | 对应内容 |
+|---------|---------|
+| `about/about-me.md` | 关于我 |
+| `about/about-blog.md` | 关于博客 |
+| `about/tech-stack.md` | 技术栈 |
+| `about/author-tags.md` | 作者标签 |
+
+修改后运行 `node scripts/build-about.js` 重新构建。详见 [关于页面自定义教程](../关于页面自定义教程.md)。

@@ -17,11 +17,22 @@ import {
   Share2,
   MessageCircle,
   Send,
-  Check
+  Check,
+  Tag
 } from 'lucide-react';
 import { SEO } from '@/components/SEO';
+import { MarkdownRenderer } from '@/components/MarkdownRenderer';
 import { siteConfig, aboutConfig } from '@/data/config';
 import { posts } from '@/data/posts';
+
+// 尝试导入关于页面 MD 内容
+let aboutContent: any = null;
+try {
+  aboutContent = (await import('@/data/about-content.json')).default;
+} catch {
+  // 如果没有构建过的 about-content.json，使用空配置
+  aboutContent = { aboutMe: null, aboutBlog: null, techStack: [], authorTags: [] };
+}
 
 // 图标映射
 const contactIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -105,6 +116,20 @@ export const AboutPage: React.FC = () => {
                 {aboutConfig.profile.role}
               </p>
             )}
+            {/* 作者标签 */}
+            {aboutConfig.authorTags?.enabled && (aboutConfig.authorTags.tags?.length > 0 || (aboutContent?.authorTags?.items?.length > 0)) && (
+              <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+                {(aboutContent?.authorTags?.items?.length > 0 ? aboutContent.authorTags.items : aboutConfig.authorTags.tags).map((tag: string, index: number) => (
+                  <span
+                    key={index}
+                    className="inline-flex items-center px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium"
+                  >
+                    <Tag className="w-3 h-3 mr-1" />
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
               {aboutConfig.profile.bio || aboutConfig.hero.subtitle}
             </p>
@@ -146,32 +171,42 @@ export const AboutPage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-8">
-              {/* About */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm"
-              >
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                  {aboutConfig.hero.title}
-                </h2>
-                <div className="prose dark:prose-invert max-w-none">
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    本人技术涉猎主要包括：
-                    C++、Python、Shell、HTML、Linux 及 Android 开发
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-                    设备环境：
-                    Windows 11 
-                    Ubuntu 22.04
-                    Android 16
-                  </p>
-                </div>
-              </motion.div>
+              {/* About Me - 从 MD 文件读取 */}
+              {aboutContent?.aboutMe && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm"
+                >
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    {aboutContent.aboutMe.title}
+                  </h2>
+                  <MarkdownRenderer content={aboutContent.aboutMe.content} />
+                </motion.div>
+              )}
 
-              {/* Skills */}
-              {skills.length > 0 && (
+              {/* Fallback: 如果没有 MD 文件，使用配置的 bio */}
+              {!aboutContent?.aboutMe && aboutConfig.profile.bio && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm"
+                >
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    {aboutConfig.hero.title}
+                  </h2>
+                  <div className="prose dark:prose-invert max-w-none">
+                    <p className="text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line">
+                      {aboutConfig.profile.bio}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Skills/技术栈 - 从 MD 文件或配置读取 */}
+              {((aboutContent?.techStack?.items?.length > 0) || skills.length > 0) && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -180,10 +215,10 @@ export const AboutPage: React.FC = () => {
                 >
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center">
                     <Code className="w-6 h-6 mr-2 text-blue-500" />
-                    技术栈
+                    {aboutContent?.techStack?.title || '技术栈'}
                   </h2>
                   <div className="flex flex-wrap gap-2">
-                    {skills.map((skill) => (
+                    {(aboutContent?.techStack?.items?.length > 0 ? aboutContent.techStack.items : skills).map((skill: string) => (
                       <span
                         key={skill}
                         className="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium"
@@ -195,7 +230,7 @@ export const AboutPage: React.FC = () => {
                 </motion.div>
               )}
 
-              {/* About Blog */}
+              {/* About Blog - 从 MD 文件或配置读取 */}
               {aboutConfig.blog.enabled && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -204,31 +239,33 @@ export const AboutPage: React.FC = () => {
                   className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-sm"
                 >
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {aboutConfig.blog.title}
+                    {aboutContent?.aboutBlog?.title || aboutConfig.blog.title}
                   </h2>
-                  <div className="prose dark:prose-invert max-w-none">
-                    {aboutConfig.blog.content ? (
+                  {aboutContent?.aboutBlog?.content ? (
+                    <MarkdownRenderer content={aboutContent.aboutBlog.content} />
+                  ) : aboutConfig.blog.content ? (
+                    <div className="prose dark:prose-invert max-w-none">
                       <p className="text-gray-600 dark:text-gray-400 leading-relaxed whitespace-pre-line">
                         {aboutConfig.blog.content}
                       </p>
-                    ) : (
-                      <>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                          {siteConfig.title} 是一个基于 React + TypeScript + Tailwind CSS
-                          构建的静态博客。博客采用纯前端架构，部署在 GitHub Pages 上，
-                          无需后端服务器即可运行。
-                        </p>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-                          博客的主要功能包括：文章展示、分类标签、搜索功能、
-                          暗黑模式、响应式设计等。同时还提供了一系列实用的开发工具。
-                        </p>
-                        <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
-                          如果你对这个博客的源码感兴趣，可以在 GitHub 上找到它，
-                          欢迎 Star 和 Fork。
-                        </p>
-                      </>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="prose dark:prose-invert max-w-none">
+                      <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
+                        {siteConfig.title} 是一个基于 React + TypeScript + Tailwind CSS
+                        构建的静态博客。博客采用纯前端架构，部署在 GitHub Pages 上，
+                        无需后端服务器即可运行。
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
+                        博客的主要功能包括：文章展示、分类标签、搜索功能、
+                        暗黑模式、响应式设计等。同时还提供了一系列实用的开发工具。
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-400 leading-relaxed mt-4">
+                        如果你对这个博客的源码感兴趣，可以在 GitHub 上找到它，
+                        欢迎 Star 和 Fork。
+                      </p>
+                    </div>
+                  )}
                 </motion.div>
               )}
             </div>
