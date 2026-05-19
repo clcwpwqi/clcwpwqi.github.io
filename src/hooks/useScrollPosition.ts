@@ -18,6 +18,8 @@ export const useScrollPosition = () => {
   });
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     let lastScrollY = window.scrollY;
 
     const handleScroll = throttle(() => {
@@ -48,6 +50,8 @@ export const useScrolled = (threshold = 50) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleScroll = throttle(() => {
       setScrolled(window.scrollY > threshold);
     }, 100);

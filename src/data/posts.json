@@ -1,6 +1,73 @@
 {
   "posts": [
     {
+      "id": "markdown-test",
+      "title": "Markdown 测试文章",
+      "slug": "markdown-test",
+      "excerpt": "Markdown语法、多语言文本、Unicode等内容测试。",
+      "content": "Markdown 测试\n\n一、标题层级测试\n\nMarkdown 支持 6 级标题，使用  #  符号表示，数量对应标题级别。\n\n# 一级标题 H1\n\n## 二级标题 H2\n\n### 三级标题 H3\n\n#### 四级标题 H4\n\n##### 五级标题 H5\n\n###### 六级标题 H6\n\n\n二、文本格式测试\n\n2.1 基础文本格式\n\n粗体文本：使用  **文本**  或  __文本__\n斜体文本 ：使用  *文本*  或  _文本_\n粗斜体文本：使用  ***文本***  或  ___文本___\n删除线文本：使用  ~~文本~~\n下划线文本：使用 HTML 标签  <u>文本</u>\n==高亮文本==：使用  ==文本== （部分渲染器支持）\n 行内代码 ：使用  `代码`\n\n2.2 特殊文本效果\n\n> 这是一段引用文本\n>> 这是嵌套的引用文本\n>>> 这是更深层次的嵌套引用\n\n这是一段包含换行的文本  \n（上面使用两个空格加回车实现强制换行）\n\n这是一段包含\n软换行的文本（直接回车，部分渲染器会忽略）\n\n\n三、列表测试\n\n3.1 无序列表\n\n- 项目 1\n- 项目 2\n  - 子项目 2.1\n  - 子项目 2.2\n    - 子子项目 2.2.1\n- 项目 3\n\n3.2 有序列表\n\n1. 第一步\n2. 第二步\n   3. 子步骤 2.1\n   4. 子步骤 2.2\n5. 第三步\n\n3.3 任务列表\n\n- [x] 已完成任务\n- [ ] 未完成任务\n- [x] 已完成的复杂任务 🎯\n- [ ] 待处理的紧急任务 ⚠️\n\n\n四、链接与图片测试\n\n4.1 链接\n\n普通链接：[Markdown 官方文档](sslocal://flow/file_open?url=https%3A%2F%2Fwww.markdownguide.org&flow_extra=eyJsaW5rX3R5cGUiOiJjb2RlX2ludGVycHJldGVyIn0=)\n带标题的链接：[百度](sslocal://flow/file_open?url=https%3A%2F%2Fwww.baidu.com+%22%E7%99%BE%E5%BA%A6%E4%B8%80%E4%B8%8B%EF%BC%8C%E4%BD%A0%E5%B0%B1%E7%9F%A5%E9%81%93%22&flow_extra=eyJsaW5rX3R5cGUiOiJjb2RlX2ludGVycHJldGVyIn0=)\n引用式链接：[Google][google-link]\n直接链接：https://www.github.com\n邮箱链接：<test@example.com>\n\n[google-link]: https://www.google.com \"Google 搜索引擎\"\n\n4.2 图片\n\n普通图片：\n![示例图片](https://example.com/image.jpg)\n带链接的图片：\n[![带链接的图片](https://example.com/image.jpg)](https://www.github.com)\n\n\n五、表格测试\n\n5.1 基础表格\n\n| 姓名 | 年龄 | 职业     |\n|------|------|----------|\n| 张三 | 25   | 工程师   |\n| 李四 | 30   | 设计师   |\n| 王五 | 28   | 产品经理 |\n\n5.2 对齐方式表格\n\n| 左对齐     | 居中对齐 | 右对齐 |\n|:-----------|:--------:|-------:|\n| 内容 1     | 内容 2   | 内容 3 |\n| 长文本内容 | 中等长度 |     短 |\n\n5.3 复杂表格\n\n| 国家   | 首都   | 国旗 | 人口（亿） |\n|--------|--------|------|------------|\n| 中国   | 北京   | 🇨🇳  | 14.1       |\n| 美国   | 华盛顿 | 🇺🇸  | 3.3        |\n| 英国   | 伦敦   | 🇬🇧  | 0.67       |\n| 日本   | 东京   | 🇯🇵  | 1.25       |\n| 韩国   | 首尔   | 🇰🇷  | 0.52       |\n| 俄罗斯 | 莫斯科 | 🇷🇺  | 1.44       |\n| 德国   | 柏林   | 🇩🇪  | 0.83       |\n| 法国   | 巴黎   | 🇫🇷  | 0.67       |\n| 意大利 | 罗马   | 🇮🇹  | 0.60       |\n| 加拿大 | 渥太华 | 🇨🇦  | 0.39       |\n| 澳大利亚 | 堪培拉 | 🇦🇺 | 0.26       |\n\n\n六、代码测试\n\n6.1 行内代码\n\n使用  `print(\"Hello, World!\")`  可以在 Python 中输出 Hello World。\n\n6.2 代码块\n\n```python\n# Python 示例代码\ndef hello_world():\n    print(\"Hello, World!\")\n\nif __name__ == \"__main__\":\n    hello_world()\n \n \njavascript\n  \n// JavaScript 示例代码\nfunction helloWorld() {\n    console.log(\"Hello, World!\");\n}\n\nhelloWorld();\n\n```\n七、数学公式测试\n \n7.1 行内公式\n \n勾股定理： a^2 + b^2 = c^2\n \n7.2 块级公式\n \n\n\\int_{a}^{b} f(x) \\, dx = F(b) - F(a)\n\n \n\n\\sum_{n=1}^{\\infty} \\frac{1}{n^2} = \\frac{\\pi^2}{6}\n\n \n八、脚注测试\n \n这是一个带有脚注的句子^1。\n这是另一个带有脚注的句子^2。\n \n^1: 这是第一个脚注的内容。\n^2: 这是第二个脚注的内容。\n \n九、多语言与特殊字符测试\n \n9.1 多语言文本\n \n中文：你好，世界！这是一段中文测试文本。\n英文：Hello, World! This is an English test text.\n日语：こんにちは、世界！これは日本語のテストテキストです。\n韩语：안녕하세요, 세계! 이것은 한국어 테스트 텍스트입니다.\n法语：Bonjour le monde! Ceci est un texte de test en français.\n德语：Hallo Welt! Dies ist ein deutscher Testtext.\n西班牙语：¡Hola mundo! Este es un texto de prueba en español.\n俄语：Привет, мир! Это тестовый текст на русском языке.\n阿拉伯语：مرحبا بالعالم! هذا نص اختبار باللغة العربية.\n印地语：नमस्ते दुनिया! यह हिंदी में एक परीक्षण पाठ है।\n \n9.2 特殊字符与符号\n \n数学符号：± × ÷ = ≠ ≈ ∞ ∑ ∫ ∂ ∇\n希腊字母：α β γ δ ε ζ η θ ι κ λ μ ν ξ ο π ρ σ τ υ φ χ ψ ω\n箭头符号：← → ↑ ↓ ↔ ↕ ⇐ ⇒ ⇑ ⇓ ⇔\n标点符号：！？。，；：\"\"''()[]{}<>\n货币符号：$ € £ ¥ ₹ ₽ ₩\n其他符号：© ® ™ § ¶ † ‡ • ‣ ⁃\n \n9.3 Emoji 测试\n \n表情类：😀 😂 😍 😭 😡 🤔 😴 🤩 🥳 😎\n物品类：📱 💻 📷 🎧 🎮 ⌚ 💡 🔑 📚 ✏️\n自然类：☀️ 🌙 ⭐ 🌈 🌧️ ❄️ 🔥 💧 🌿 🌸\n交通类：🚗 🚕 🚂 ✈️ 🚀 🚢 🚲 🛵 🚦 🚧\n其他类：❤️ 💯 ✅ ❌ ⭐ 🔥 💪 🎉 🎊 🏆\n \n9.4 Unicode 特殊字符\n \n方块元素：■ □ ▢ ▣ ▤ ▥ ▦ ▧ ▨ ▩\n几何形状：● ○ ◉ ◎ ◐ ◑ ◒ ◓ ◔ ◕\n星星符号：★ ☆ ✡ ✦ ✧ ✩ ✪ ✫ ✬ ✭\n装饰符号：✿ ❀ ❁ ❂ ❃ ❄ ❅ ❆ ❇ ❈\n技术符号：⌘ ⌥ ⇧ ⌃ ⏎ ⏏ ⏚ ⏛ ⏜ ⏝\n \n十、转义字符测试\n \nMarkdown 中的特殊字符可以使用反斜杠  \\  进行转义：\n```\n* 星号\n_ 下划线\n# 井号\n` 反引号\n[左方括号\n]右方括号\n(左括号\n)右括号\n{ 左大括号\n} 右大括号\n. 点号\n! 感叹号\n ```\n十一、HTML 嵌入测试\n\n 这是一个包含 <strong>加粗文本</strong> 和 <em>斜体文本</em> 的段落。\n\n你可以使用 <code>行内代码</code> 或者 <mark>高亮文本</mark>。\n\n这里有一个 <a href=\"https://www.google.com\" target=\"_blank\">外部链接</a>。\n\n十二、分割线测试\n \n使用三个或更多的  -、 *  或  _  可以创建分割线：\n\n--- \n*** \n___",
+      "date": "2026-04-06",
+      "updatedAt": "2026-04-06",
+      "category": "test",
+      "tags": [
+        "Test",
+        "Markdown"
+      ],
+      "cover": null,
+      "readingTime": 5,
+      "author": "Developer"
+    },
+    {
+      "id": "chrome-flag",
+      "title": "Chrome浏览器实验性功能开启推荐",
+      "slug": "chrome-flag",
+      "excerpt": "介绍了一些好用的Chrome实验性选项。",
+      "content": "# Chrome浏览器实验性功能开启推荐\n \n### 操作说明\n \n1. 在Chrome地址栏输入  chrome://flags  进入实验性功能页面；\n2. 在顶部「Search flags」搜索框中输入选项对应的关键词（下文#后内容）；\n3. 点击选项下拉菜单选择「Enabled」启用（部分选项支持「Disabled」关闭）；\n4. 点击页面右下角「Relaunch」按钮重启浏览器，使设置生效。\n \n#### 一、性能优化类\n \n针对搭载高性能处理器的设备，以下选项可优化资源调度，减少加载延迟与画面卡顿，充分发挥硬件性能。\n \n1. 多线程并行下载（#enable-parallel-downloading）\n \n- 功能：采用多线程分段下载机制，将单一文件拆分后同步获取；\n- 建议：优先启用，对大文件下载速度提升显著，性能接近专业下载工具。\n \n2. 平滑滚动（#smooth-scrolling）\n \n- 功能：优化滚动算法，动态调整帧率适配屏幕刷新率；\n- 建议：搭配120Hz及以上高刷屏幕使用，可彻底消除滚动过程中的阻滞感与跳帧现象。\n \n3. GPU栅格化（#enable-gpu-rasterization）\n \n- 功能：强制将网页栅格化渲染任务分配至GPU执行；\n- 建议：有效减轻CPU负载，在图片密集型网页或复杂布局页面中，可显著提升渲染效率与响应速度。\n \n4. 零拷贝栅格化（#enable-zero-copy）\n \n- 功能：允许栅格线程直接向GPU显存写入数据，省略中间内存拷贝步骤；\n- 建议：减少内存占用与数据传输开销，进一步优化滚动响应与页面加载流畅度。\n \n5. 实验性QUIC协议（#enable-quic）\n \n- 功能：启用Google研发的新一代网络传输协议，优化连接建立流程；\n- 建议：缩短网络连接耗时，在网络波动环境下可提升加载稳定性，降低中断概率。\n \n6. 前后页缓存（#back-forward-cache）\n \n- 功能：将已浏览页面的完整状态缓存至内存，而非仅保留链接；\n- 建议：实现返回上一页面的瞬时加载，大幅提升浏览连贯性。\n \n#### 二、界面设计类\n \n遵循Material Design 3的核心设计原则，包括动态配色、圆角元素与层级感表达，以下选项可实现浏览器界面的现代化改造，契合简约美学需求。\n \n1. Chrome Refresh 2023（#chrome-refresh-2023）\n \n- 功能：启用桌面端全新UI设计体系，包含圆角菜单、扁平化图标及优化后的控件布局；\n- 设计契合点：符合MD3对界面简洁性与一致性的要求，提升视觉舒适度。\n \n2. 界面质感优化（#enable-surface-polish）\n \n- 功能：针对Android端新标签页（NTP）进行视觉精细化调整；\n- 设计契合点：优化搜索栏比例与图标间距，强化界面层次感，符合MD3的表面设计规范。\n \n3. Android动态配色（#dynamic-color-android）\n \n- 功能：通过Monet色彩系统自动提取系统壁纸主色调，同步适配浏览器UI；\n- 设计契合点：实现浏览器与HyperOS等系统的视觉统一，符合MD3动态主题色设计理念。\n \n4. 全屏边缘延伸（#draw-web-edge-to-edge）\n \n- 功能：允许网页内容延伸至屏幕底部导航条区域，消除黑边；\n- 建议：Android端专属优化，实现真正意义上的全屏沉浸体验，提升视觉完整性。\n \n5. 标签页悬停预览（#tab-hover-card-images）\n \n- 功能：鼠标悬停于标签页时，显示网页缩略图预览；\n- 设计契合点：简化标签页识别流程，搭配MD3风格的悬浮卡片设计，兼顾美观与实用性。\n \n#### 三、效率类\n \n聚焦实用性与便捷性，以下选项通过功能扩展与交互优化，满足多场景使用需求，降低操作成本。\n \n1. 垂直标签页（#vertical-tabs）\n \n- 功能：2026年新增特性，支持标签页侧边栏布局，包含折叠、分组、固定等功能；\n- 建议：适配宽屏设备，标签标题完整显示，管理多标签页时更直观高效。\n \n2. 页面AI摘要（#page-summary）\n \n- 功能：基于WebMCP协议的内置AI能力，自动提取长文核心要点；\n- 建议：地址栏一键触发，大幅缩短信息获取时间，提升阅读效率。\n \n3. 网页朗读（#read-aloud）\n \n- 功能：支持网页正文语音朗读，包含语速调节与后台播放模式；\n- 建议：通勤等移动场景适用，实现\"听觉阅读\"，契合无障碍访问设计规范。\n \n4. Android标签页置顶（#android-pinned-tabs）\n \n- 功能：手机端支持标签页固定置顶，防止误关闭；\n- 建议：适用于邮箱、工作台等常用网页，提升使用便捷性。\n \n5. 阅读模式（#enable-reader-mode）\n \n- 功能：强制过滤网页广告、弹窗等干扰元素，保留纯净正文；\n- 建议：支持字体自定义与行距调整，符合MD3字体角色规范，提升长文阅读舒适度。\n \n6. 网页强制暗色模式（#enable-force-dark）\n \n- 功能：通过算法将所有网页转换为暗色显示，适配不支持原生暗色模式的老旧网站；\n- 建议：降低屏幕亮度刺激，保护视力，尤其适合夜间使用。\n \n7. 密码生物验证（#biometric-reauth-password-filling）\n \n- 功能：自动填充密码前触发指纹等生物识别验证；\n- 建议：在保障登录便捷性的同时，提升账号安全性，防止未授权访问。\n \n8. 地址栏简化显示（#omnibox-ui-hide-steady-state-url-scheme-subdomains）\n \n- 功能：隐藏地址栏中的 https:// 协议前缀 与 www 子域名；\n- 设计契合点：简化界面视觉元素，回归MD3的简约设计理念，提升地址栏整洁度。\n \n9. 标签栏滚动（#tab-scrolling）\n \n- 功能：标签页数量过多时，支持通过滚轮滑动标签栏，替代标签挤压显示；\n- 建议：避免标签标题截断，提升多标签管理效率。",
+      "date": "2026-3-28",
+      "updatedAt": "2026-3-28",
+      "category": "tools",
+      "tags": [
+        "Chrome",
+        "Tools",
+        "Productivity"
+      ],
+      "cover": null,
+      "readingTime": 12,
+      "author": "Developer"
+    },
+    {
+      "id": "cms-2026-ma",
+      "title": "CMS-2026 Magisk",
+      "slug": "cms-2026-ma",
+      "excerpt": "Magisk 模块实现",
+      "content": "# CMS-2026 Magisk Module\n\n![Magisk](https://img.shields.io/badge/Magisk-v24.0+-red)\n![System](https://img.shields.io/badge/System-Android-3DDC84)\n\n将 **CMS-2026** 加解密算法带入KernelSU、APatch、Magisk等管理器中，点击WebUI即可直接打开加解密页面\n\n---\n\n## 功能介绍\n\n* **[开发中]系统级注入:** 将加密工具集成至 `/system/bin/`。\n* **[开发中]CLI 支持:** 通过终端（Termux 或 ADB Shell）输入 `cms2026` 即可调用。\n* **WebUI支持:** 直接打开WebUI即可使用\n\n---\n\n## 安装指南\n\n1.  在 [Releases](https://github.com/clcwpwqi/CMS-2026-Magisk/releases) 页面下载最新的 `.zip` 模块文件。\n2.  打开 Root管理器\n3.  点击 `模块` -> `从本地安装`。\n4.  选择下载的 zip 文件并重启手机。\n\n---\n\n## 使用方法\n\n#### [开发中]命令行用法：\n\n安装完成后，打开终端输入：\n\n```bash\n# 加密字符串\ncms2026 -e \"待加密内容\" -p \"我的密码\"\n\n# 解密字符串\ncms2026 -d \"密文内容\" -p \"我的密码\"\n\n# 强加密模式 (自定义 密钥)\ncms2026 -e \"内容\" -p \"密码\" --strong\n\n```\n\n#### WebUI用法\n\n* 安装完成后，Magisk用户需要使用类似于[KsuWebUI](https://github.com/5ec1cff/KsuWebUIStandalone/releases/download/v1.0/KsuWebUI-1.0-34-release.apk)等应用打开WebUI界面，APatch和KernelSU用户直接点击WebUI按钮即可打开。\n* [界面截图](https://github.com/CMS-2026-Magisk/photo/webui.jpg)\n\n---\n\n## 支持情况\n\n| 类型        | 支持范围                                  \n| :-------- | :------------------------------------ \n| **Root方式**    | KernelSU、APatch、Magisk                      | \n| **安卓版本**    | Android 8及以上                         |\n| **管理器版本** | KSU v0.8.0及以上  AP v10957及以上 |\n| **安卓越狱** | 支持 不读写系统分区 |\n---\n\n## 注意事项\n\n * 请务必妥善保管你的自定义密钥，强加密模式下遗失密码将无法找回加密数据。\n * 本模块处于开发状态，目前(v1.0.0)原理上没有修改系统内容，不会导致不开机等系统问题。\n * 本模块刷入需要Root，请在刷入前备份boot/init_boot等重要分区以及基带、个人数据等，对于刷机操作失误、设备类型不匹配、自身系统bug等导致的数据丢失、系统损坏、设备无法开机等问题不提供维修支持，不承担任何责任。\n \n---\n\n## 问题排查解决\n* 如果刷入后导致不开机，请使用TWRP的第三方recovery删除 **/data/adb/modules/cms_2026_magisk** 下全部内容；或使用fastboot等刷入备份好的boot/init_boot\n* 如果开机后没有WebUI选项，Magisk用户请安装[KsuWebUI](https://github.com/5ec1cff/KsuWebUIStandalone/releases/download/v1.0/KsuWebUI-1.0-34-release.apk)，KernelSU和APatch用户请检查管理器版本是否符合要求\n* 若打开WebUI页面后出现使用功能问题，请携带完整复现步骤、录屏以及日志提交issue\n\n---\n\n## 关联项目\n* **算法底层:** [CMS-2026](https://github.com/clcwpwqi/CMS-2026)\n* **网页版:** [CMS-2026-WEB](https://github.com/clcwpwqi/CMS-2026-WEB)",
+      "date": "2026-3-21",
+      "category": "Magisk",
+      "tags": [
+        "Magisk",
+        "CMS-2026"
+      ],
+      "cover": null,
+      "readingTime": 10,
+      "author": "Developer"
+    },
+    {
+      "id": "cms-2026-ea",
+      "title": "CMS-2026 加密算法",
+      "slug": "cms-2026-ea",
+      "excerpt": "文章摘要，显示在列表中",
+      "content": "# CMS-2026 Encryption Algorithm\n\n![License](https://img.shields.io/badge/License-MIT-blue.svg)\n![Version](https://img.shields.io/badge/Version-1.0.0-success)\n![Platform](https://img.shields.io/badge/Platform-Web_Crypto_API-orange)\n\n**CMS-2026** 是一种基于现代浏览器原生的 Web Crypto API 构建的高强度加解密算法方案。它专为处理复杂的 Unicode 字符（如中文、Emoji）设计。\n\n---\n\n## 原理实现\n\nCMS-2026 不依赖任何外部第三方数学库，完全利用硬件级加速的浏览器底层 API。\n\n### 核心实现\n算法遵循 **PBKDF2 → AES-256-GCM** 的安全链路：\n\n* **密钥:** 使用 $PBKDF2$ (Password-Based Key Derivation Function 2) 算法。通过随机生成的 Salt与 $100,000$ 次 $SHA-256$ 迭代，将用户密码转化为 256 位的强加密密钥。\n* **加密模式:** 采用 **AES-GCM** (Galois/Counter Mode)。与传统的 CBC 模式不同，GCM 提供“关联数据的认证加密”，能同时保证数据的机密性与完整性，防止密文被篡改。\n* **编码转换:** 通过 `TextEncoder` 将 Unicode 字符串转为 `Uint8Array`，确保所有特殊符号无损。\n\n### 报文结构\n加密后的数据包含三部分：\n`[16字节 Salt] + [12字节 IV] + [加密后的 Ciphertext]`\n\n---\n\n## 支持情况\n\n| 类型        | 支持范围                                  | 备注    |\n| :-------- | :------------------------------------ | :---- |\n| **语言**    | 中文、英文等所有 Unicode                      | 无乱码   |\n| **符号**    | 特殊符号、数学公式、空格                          | 完美保留  |\n| **Emoji** | 🌈, 🚀, 🐱‍👤 等复杂组合 Emoji             | 正常加解密 |\n| **环境**    | Chrome, Edge, Safari, Android WebView | 正常支持  |\n\n---\n\n## 免责声明\n此算法加密能力较弱，为HTML学习中的练习作品，且为开源算法，**请勿**在包括但不限于商业机密、密码保存、隐私数据、机密数据等方面使用本算法。使用本算法造成的包括但不限于机密泄露、隐私泄露、密码丢失等问题算法作者不承担任何责任。\n\n## 快速开始\n\n#### 安装\n直接引用 `CMS2026.js` 到你的项目中。\n\n#### 示例代码\n```javascript\nconst cms = new CMS2026();\n\n// 加密\nconst cipher = await cms.encrypt(\"你好 🚀 CMS-2026\", \"your_password\");\n\n// 解密\nconst plain = await cms.decrypt(cipher, \"your_password\");",
+      "date": "2026-3-21",
+      "category": "frontend",
+      "tags": [
+        "HTML",
+        "CMS-2026"
+      ],
+      "cover": null,
+      "readingTime": 10,
+      "author": "Developer"
+    },
+    {
       "id": "react-typescript-modern-web",
       "title": "使用 React 和 TypeScript 构建现代 Web 应用",
       "slug": "react-typescript-modern-web",
@@ -116,7 +183,7 @@
       "slug": "frontend",
       "description": "HTML, CSS, JavaScript, React, Vue 等前端技术",
       "order": 1,
-      "count": 2
+      "count": 3
     },
     {
       "id": "backend",
@@ -140,7 +207,7 @@
       "slug": "tools",
       "description": "开发工具、编辑器、效率提升技巧",
       "order": 4,
-      "count": 1
+      "count": 2
     },
     {
       "id": "best-practices",
@@ -149,9 +216,39 @@
       "description": "代码规范、架构设计、性能优化",
       "order": 5,
       "count": 1
+    },
+    {
+      "id": "Magisk",
+      "name": "Magisk",
+      "slug": "Magisk",
+      "description": "Magisk模块类开发，同样适用于KSU、AP",
+      "order": 6,
+      "count": 1
+    },
+    {
+      "id": "test",
+      "name": "测试内容",
+      "slug": "test",
+      "description": "测试用 For test",
+      "order": 999,
+      "count": 1
     }
   ],
   "tags": [
+    {
+      "id": "magisk",
+      "name": "Magisk",
+      "slug": "magisk",
+      "color": "#3B82F6",
+      "count": 1
+    },
+    {
+      "id": "cms-2026",
+      "name": "CMS-2026",
+      "slug": "cms-2026",
+      "color": "#3B82F6",
+      "count": 2
+    },
     {
       "id": "nodejs",
       "name": "Node.js",
@@ -209,6 +306,13 @@
       "count": 1
     },
     {
+      "id": "html",
+      "name": "HTML",
+      "slug": "html",
+      "color": "#3B82F6",
+      "count": 1
+    },
+    {
       "id": "react",
       "name": "React",
       "slug": "react",
@@ -244,10 +348,24 @@
       "count": 1
     },
     {
-      "id": "vscode",
-      "name": "VS Code",
-      "slug": "vscode",
-      "color": "#007ACC",
+      "id": "test",
+      "name": "Test",
+      "slug": "test",
+      "color": "#264DE4",
+      "count": 1
+    },
+    {
+      "id": "markdown",
+      "name": "Markdown",
+      "slug": "markdown",
+      "color": "#264DE4",
+      "count": 1
+    },
+    {
+      "id": "chrome",
+      "name": "Chrome",
+      "slug": "chrome",
+      "color": "#3B82F6",
       "count": 1
     },
     {
@@ -255,13 +373,20 @@
       "name": "工具",
       "slug": "tools",
       "color": "#E74C3C",
-      "count": 1
+      "count": 2
     },
     {
       "id": "productivity",
       "name": "效率",
       "slug": "productivity",
       "color": "#27AE60",
+      "count": 2
+    },
+    {
+      "id": "vscode",
+      "name": "VS Code",
+      "slug": "vscode",
+      "color": "#007ACC",
       "count": 1
     }
   ],
@@ -290,6 +415,12 @@
       "slug": "tailwind-css",
       "color": "#06B6D4"
     },
+    "Test": {
+      "id": "test",
+      "name": "Test",
+      "slug": "test",
+      "color": "#264DE4"
+    },
     "CSS": {
       "id": "css",
       "name": "CSS",
@@ -301,6 +432,12 @@
       "name": "Docker",
       "slug": "docker",
       "color": "#2496ED"
+    },
+    "Markdown": {
+      "id": "markdown",
+      "name": "Markdown",
+      "slug": "markdown",
+      "color": "#264DE4"
     },
     "DevOps": {
       "id": "devops",
@@ -361,6 +498,30 @@
       "name": "性能",
       "slug": "performance",
       "color": "#FF9500"
+    },
+    "Magisk": {
+      "id": "magisk",
+      "name": "Magisk",
+      "slug": "magisk",
+      "color": "#3B82F6"
+    },
+    "CMS-2026": {
+      "id": "cms-2026",
+      "name": "CMS-2026",
+      "slug": "cms-2026",
+      "color": "#3B82F6"
+    },
+    "HTML": {
+      "id": "html",
+      "name": "HTML",
+      "slug": "html",
+      "color": "#3B82F6"
+    },
+    "Chrome": {
+      "id": "chrome",
+      "name": "Chrome",
+      "slug": "chrome",
+      "color": "#3B82F6"
     }
   }
 }

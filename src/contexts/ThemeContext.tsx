@@ -15,7 +15,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // 获取系统主题偏好
 const getSystemTheme = (): 'light' | 'dark' => {
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
     return 'dark';
   }
   return 'light';
@@ -23,19 +23,23 @@ const getSystemTheme = (): 'light' | 'dark' => {
 
 // 获取初始主题
 const getInitialTheme = (): Theme => {
-  const savedTheme = localStorage.getItem('theme') as Theme;
-  if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
-    return savedTheme;
+  if (typeof window !== 'undefined') {
+    const savedTheme = localStorage.getItem('theme') as Theme;
+    if (savedTheme && ['light', 'dark', 'system'].includes(savedTheme)) {
+      return savedTheme;
+    }
   }
   return 'system';
 };
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setThemeState] = useState<Theme>('light');
+  const [theme, setThemeState] = useState<Theme>('system');
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // 应用主题
   const applyTheme = (newTheme: Theme) => {
+    if (typeof window === 'undefined') return;
     const root = window.document.documentElement;
     const effectiveTheme = newTheme === 'system' ? getSystemTheme() : newTheme;
     
@@ -51,7 +55,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // 设置主题
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    localStorage.setItem('theme', newTheme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('theme', newTheme);
+    }
     applyTheme(newTheme);
   };
 
@@ -61,8 +67,9 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTheme(newTheme);
   };
 
-  // 初始化主题
+  // 初始化主题 - 只有在组件挂载后
   useEffect(() => {
+    setMounted(true);
     const initialTheme = getInitialTheme();
     setThemeState(initialTheme);
     applyTheme(initialTheme);
@@ -70,6 +77,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // 监听系统主题变化
   useEffect(() => {
+    if (!mounted || typeof window === 'undefined') return;
     if (theme === 'system') {
       const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
       const handleChange = () => {
@@ -79,7 +87,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       mediaQuery.addEventListener('change', handleChange);
       return () => mediaQuery.removeEventListener('change', handleChange);
     }
-  }, [theme]);
+  }, [theme, mounted]);
+
+  // 防止水合不匹配
+  if (!mounted) {
+    return <>{children}</>;
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, isDark }}>

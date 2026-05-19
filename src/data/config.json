@@ -6,15 +6,15 @@
     },
     "profile": {
       "name": "clcwpwqi",
-      "role": "全栈开发者",
-      "bio": "热爱开源，喜欢分享技术文章和开发经验。专注于前端开发，同时也熟悉后端技术和 DevOps 实践。",
-      "avatar": "/images/avatar.png",
+      "role": "青年开发者",
+      "bio": "分享技术文章和开发经验。主要擅长C++ Python HTML Shell Linux 和 Andorid 开发。",
+      "avatar": "/public/images/avatar.png",
       "skills": [
-        "React",
-        "TypeScript",
+        "C++",
+        "Python",
         "Node.js",
-        "Next.js",
-        "Tailwind CSS",
+        "HTML",
+        "Android",
         "Docker",
         "Git",
         "Linux"
@@ -67,12 +67,12 @@
         {
           "text": "微信打赏",
           "icon": "Heart",
-          "image": "/images/wechat-pay.png"
+          "image": "images/wechat-pay.png"
         },
         {
           "text": "支付宝打赏",
           "icon": "Heart",
-          "image": "/images/alipay.png"
+          "image": "images/alipay.jpg"
         },
         {
           "text": "爱发电",
