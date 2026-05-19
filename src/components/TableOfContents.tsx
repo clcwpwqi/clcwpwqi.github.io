@@ -40,7 +40,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => 
 
   // 监听滚动，高亮当前章节
   useEffect(() => {
-    if (headings.length === 0) return;
+    if (headings.length === 0 || typeof document === 'undefined' || typeof window === 'undefined') return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -65,7 +65,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => 
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    if (typeof window === 'undefined') return;
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
     
     const element = document.getElementById(id);
     if (element) {

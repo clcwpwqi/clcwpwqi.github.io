@@ -94,9 +94,11 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 }) => {
   // 动态加载暗黑模式的代码高亮样式
   useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark');
-    if (isDark) {
-      import('highlight.js/styles/github-dark.css');
+    if (typeof document !== 'undefined') {
+      const isDark = document.documentElement.classList.contains('dark');
+      if (isDark) {
+        import('highlight.js/styles/github-dark.css');
+      }
     }
   }, []);
 

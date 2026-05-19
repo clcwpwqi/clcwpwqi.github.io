@@ -27,7 +27,7 @@ export const GiscusComments = ({ term }: GiscusCommentsProps) => {
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (typeof document === 'undefined' || !containerRef.current) return;
 
     const { comment } = siteConfig;
     
@@ -75,6 +75,8 @@ export const GiscusComments = ({ term }: GiscusCommentsProps) => {
 
   // 主题变化时更新 giscus 主题
   useEffect(() => {
+    if (typeof document === 'undefined') return;
+    
     const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
     if (iframe) {
       iframe.contentWindow?.postMessage(
