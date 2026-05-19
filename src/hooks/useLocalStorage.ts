@@ -2,54 +2,62 @@
  * 本地存储 Hook
  */
 import { useState, useEffect, useCallback } from 'react';
+import browser from '@/lib/browser';
 
-export function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
-  // 获取初始值
-  const readValue = useCallback((): T => {
-    if (typeof window === 'undefined') {
-      return initialValue;
-    }
+export const useLocalStorage = <T,>(
+  key: string,
+  initialValue: T
+): [T, (value: T | ((val: T) => T)) => void, () => void] => {
+  const [storedValue, setStoredValue] = useState<T>(initialValue);
 
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? (JSON.parse(item) as T) : initialValue;
-    } catch (error) {
-      console.warn(`Error reading localStorage key "${key}":`, error);
-      return initialValue;
-    }
-  }, [initialValue, key]);
-
-  const [storedValue, setStoredValue] = useState<T>(readValue);
-
-  // 返回一个包装函数，同时更新 state 和 localStorage
-  const setValue = useCallback((value: T | ((prev: T) => T)) => {
-    try {
-      // 允许 value 是一个函数
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-      
-      // 保存到 state
-      setStoredValue(valueToStore);
-      
-      // 保存到 localStorage
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
-      }
-    } catch (error) {
-      console.warn(`Error setting localStorage key "${key}":`, error);
-    }
-  }, [key, storedValue]);
-
-  // 监听其他标签页的更改
+  // 从本地存储读取
   useEffect(() => {
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === key && event.newValue) {
-        setStoredValue(JSON.parse(event.newValue));
+    try {
+      const ls = browser.getLocalStorage();
+      if (ls) {
+        const item = ls.getItem(key);
+        if (item) {
+          setStoredValue(JSON.parse(item));
+        }
       }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    } catch (error) {
+      console.error(`Error reading localStorage key "${key}":`, error);
+    }
   }, [key]);
 
-  return [storedValue, setValue];
-}
+  // 设置值
+  const setValue = useCallback(
+    (value: T | ((val: T) => T)) => {
+      try {
+        const valueToStore =
+          value instanceof Function ? value(storedValue) : value;
+        setStoredValue(valueToStore);
+        
+        const ls = browser.getLocalStorage();
+        if (ls) {
+          ls.setItem(key, JSON.stringify(valueToStore));
+        }
+      } catch (error) {
+        console.error(`Error setting localStorage key "${key}":`, error);
+      }
+    },
+    [key, storedValue]
+  );
+
+  // 删除值
+  const removeValue = useCallback(() => {
+    try {
+      const ls = browser.getLocalStorage();
+      if (ls) {
+        ls.removeItem(key);
+      }
+      setStoredValue(initialValue);
+    } catch (error) {
+      console.error(`Error removing localStorage key "${key}":`, error);
+    }
+  }, [key, initialValue]);
+
+  return [storedValue, setValue, removeValue];
+};
+
+export default useLocalStorage;

@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '@/contexts/ThemeContext';
 import { siteConfig } from '@/data/config';
 import { MessageCircle, ExternalLink } from 'lucide-react';
+import { browser } from '@/lib/browser';
 
 interface GiscusCommentsProps {
   term?: string;
@@ -27,12 +28,12 @@ export const GiscusComments = ({ term }: GiscusCommentsProps) => {
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
-    if (typeof document === 'undefined' || !containerRef.current) return;
+    if (!browser.isBrowser || !containerRef.current) return;
 
     const { comment } = siteConfig;
     
-    // 清空容器
-    containerRef.current.innerHTML = '';
+    const container = containerRef.current;
+    container.innerHTML = '';
 
     // 检查配置是否完整
     if (!comment.repo || comment.repo === 'username/blog-comments') {
@@ -42,7 +43,10 @@ export const GiscusComments = ({ term }: GiscusCommentsProps) => {
     }
 
     // 创建 giscus 脚本
-    const script = document.createElement('script');
+    const doc = browser.getDocument();
+    if (!doc) return;
+    
+    const script = doc.createElement('script');
     script.src = 'https://giscus.app/client.js';
     script.setAttribute('data-repo', comment.repo);
     script.setAttribute('data-repo-id', comment.repoId || '');
@@ -64,20 +68,20 @@ export const GiscusComments = ({ term }: GiscusCommentsProps) => {
       setLoadError(true);
     };
 
-    containerRef.current.appendChild(script);
+    container.appendChild(script);
 
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
+      if (container) {
+        container.innerHTML = '';
       }
     };
   }, [term, isDark]);
 
   // 主题变化时更新 giscus 主题
   useEffect(() => {
-    if (typeof document === 'undefined') return;
+    if (!browser.isBrowser) return;
     
-    const iframe = document.querySelector<HTMLIFrameElement>('iframe.giscus-frame');
+    const iframe = browser.querySelector('iframe.giscus-frame') as HTMLIFrameElement | null;
     if (iframe) {
       iframe.contentWindow?.postMessage(
         { giscus: { setConfig: { theme: isDark ? 'dark' : 'light' } } },

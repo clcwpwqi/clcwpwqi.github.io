@@ -2,6 +2,7 @@
  * 文章目录组件 (TOC)
  */
 import React, { useEffect, useState } from 'react';
+import { browser } from '@/lib/browser';
 import { cn } from '@/lib/utils';
 
 interface TOCItem {
@@ -40,7 +41,8 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => 
 
   // 监听滚动，高亮当前章节
   useEffect(() => {
-    if (headings.length === 0 || typeof document === 'undefined' || typeof window === 'undefined') return;
+    if (headings.length === 0) return;
+    if (!browser.hasIntersectionObserver()) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -54,7 +56,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => 
     );
 
     headings.forEach((heading) => {
-      const element = document.getElementById(heading.id);
+      const element = browser.getElementById(heading.id);
       if (element) {
         observer.observe(element);
       }
@@ -65,18 +67,15 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => 
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
-    if (typeof window === 'undefined' || typeof document === 'undefined') return;
     
-    const element = document.getElementById(id);
+    const element = browser.getElementById(id);
     if (element) {
-      const offset = 80; // 头部高度
+      const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - offset;
+      const { y } = browser.getScrollPosition();
+      const offsetPosition = elementPosition + y - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
+      browser.scrollTo(0, offsetPosition, 'smooth');
     }
   };
 

@@ -20,15 +20,15 @@ import { SEO } from '@/components/SEO';
 import { posts, getPostBySlug, getCategoryBySlug } from '@/data/posts';
 import { formatDate, getRelativeTime } from '@/utils/helpers';
 import { siteConfig } from '@/data/config';
+import { browser } from '@/lib/browser';
 
 export const PostPage = () => {
   const { slug } = useParams<{ slug: string }>();
   const post = slug ? getPostBySlug(slug) : undefined;
 
-  // 滚动到顶部
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      window.scrollTo(0, 0);
+    if (browser.isBrowser) {
+      browser.scrollTo(0, 0);
     }
   }, [slug]);
 

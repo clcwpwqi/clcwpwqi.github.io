@@ -11,6 +11,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { Copy, Check } from 'lucide-react';
 import { copyToClipboard } from '@/utils/helpers';
 import { cn } from '@/lib/utils';
+import { browser } from '@/lib/browser';
 
 // 导入 highlight.js 样式
 import 'highlight.js/styles/github.css';
@@ -94,9 +95,8 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
 }) => {
   // 动态加载暗黑模式的代码高亮样式
   useEffect(() => {
-    if (typeof document !== 'undefined') {
-      const isDark = document.documentElement.classList.contains('dark');
-      if (isDark) {
+    if (browser.isBrowser) {
+      if (browser.hasClass('dark')) {
         import('highlight.js/styles/github-dark.css');
       }
     }

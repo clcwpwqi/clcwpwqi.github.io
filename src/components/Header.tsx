@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Sun, Moon, Search } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useScrolled } from '@/hooks/useScrollPosition';
+import browser from '@/lib/browser';
 import { navLinks, navigationConfig } from '@/data/config';
 import { cn } from '@/lib/utils';
 
@@ -16,11 +16,25 @@ interface HeaderProps {
 export const Header = ({ onSearchClick }: HeaderProps) => {
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
-  const scrolled = useScrolled(50);
+  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [logoError, setLogoError] = useState(false);
 
   const brand = navigationConfig.brand;
+
+  // 监听滚动
+  useEffect(() => {
+    const handleScroll = () => {
+      const { y } = browser.getScrollPosition();
+      setScrolled(y > 50);
+    };
+
+    // 初始检查
+    handleScroll();
+
+    // 添加监听
+    browser.addEventListener('scroll', handleScroll, { passive: true });
+  }, []);
 
   // 关闭移动端菜单当路由变化
   useEffect(() => {
@@ -29,16 +43,17 @@ export const Header = ({ onSearchClick }: HeaderProps) => {
 
   // 阻止滚动当菜单打开
   useEffect(() => {
-    if (typeof document !== 'undefined' && document.body) {
-      if (mobileMenuOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
-      return () => {
-        document.body.style.overflow = '';
-      };
+    if (!browser.isBrowser) return;
+
+    if (mobileMenuOpen) {
+      browser.addBodyClass('overflow-hidden');
+    } else {
+      browser.removeBodyClass('overflow-hidden');
     }
+
+    return () => {
+      browser.removeBodyClass('overflow-hidden');
+    };
   }, [mobileMenuOpen]);
 
   return (

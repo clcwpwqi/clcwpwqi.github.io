@@ -25,6 +25,7 @@ import { SEO } from '@/components/SEO';
 import { siteConfig, aboutConfig } from '@/data/config';
 import { posts } from '@/data/posts';
 import aboutContentData from '@/data/about-content.json';
+import { browser } from '@/lib/browser';
 
 // 联系方式图标映射
 const contactIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -62,26 +63,13 @@ export const AboutPage = () => {
   // 作者标签
   const authorTags = authorTagsContent?.tags || [];
 
-  const handleCopy = (text: string) => {
-    if (typeof navigator !== 'undefined' && navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(() => {
+  const handleCopy = async (text: string) => {
+    if (browser.isBrowser) {
+      const success = await browser.copyToClipboard(text);
+      if (success) {
         setCopied(text);
         setTimeout(() => setCopied(null), 2000);
-      });
-    } else {
-      // 降级方案
-      const textArea = document.createElement('textarea');
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.select();
-      try {
-        document.execCommand('copy');
-        setCopied(text);
-        setTimeout(() => setCopied(null), 2000);
-      } catch (err) {
-        console.error('复制失败', err);
       }
-      document.body.removeChild(textArea);
     }
   };
 

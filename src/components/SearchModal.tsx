@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, X, FileText, Tag } from 'lucide-react';
 import { posts } from '@/data/posts';
-// import { cn } from '@/lib/utils';
+import browser from '@/lib/browser';
 
 interface SearchModalProps {
   isOpen: boolean;
@@ -41,30 +41,38 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose }) => 
 
   // 键盘快捷键
   useEffect(() => {
-    if (typeof document === 'undefined') return;
-    
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+    if (!browser.isBrowser) return;
+
+    const handleKeyDown = (e: Event) => {
+      const keyboardEvent = e as KeyboardEvent;
+      if (keyboardEvent.key === 'Escape' && isOpen) {
         onClose();
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    const win = browser.getWindow();
+    if (win) {
+      win.addEventListener('keydown', handleKeyDown);
+      
+      return () => {
+        win.removeEventListener('keydown', handleKeyDown);
+      };
+    }
   }, [isOpen, onClose]);
 
   // 阻止滚动
   useEffect(() => {
-    if (typeof document !== 'undefined' && document.body) {
-      if (isOpen) {
-        document.body.style.overflow = 'hidden';
-      } else {
-        document.body.style.overflow = '';
-      }
-      return () => {
-        document.body.style.overflow = '';
-      };
+    if (!browser.isBrowser) return;
+
+    if (isOpen) {
+      browser.addBodyClass('overflow-hidden');
+    } else {
+      browser.removeBodyClass('overflow-hidden');
     }
+
+    return () => {
+      browser.removeBodyClass('overflow-hidden');
+    };
   }, [isOpen]);
 
   const handleResultClick = (slug: string) => {

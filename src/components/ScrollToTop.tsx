@@ -3,26 +3,25 @@
  */
 import React, { useEffect, useState } from 'react';
 import { ArrowUp } from 'lucide-react';
-import { scrollToTop } from '@/utils/helpers';
+import { browser } from '@/lib/browser';
 import { cn } from '@/lib/utils';
 
 export const ScrollToTop: React.FC = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
     const handleScroll = () => {
-      setVisible(window.scrollY > 300);
+      const { y } = browser.getScrollPosition();
+      setVisible(y > 300);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const cleanup = browser.addEventListener('scroll', handleScroll, { passive: true });
+    return cleanup;
   }, []);
 
   return (
     <button
-      onClick={() => scrollToTop()}
+      onClick={() => browser.scrollToTop('smooth')}
       className={cn(
         'fixed bottom-8 right-8 z-40 p-3 rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all duration-300',
         visible 

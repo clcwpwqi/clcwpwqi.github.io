@@ -2,67 +2,31 @@
  * 滚动位置 Hook
  */
 import { useState, useEffect } from 'react';
-import { throttle } from '@/utils/helpers';
+import browser from '@/lib/browser';
 
-interface ScrollPosition {
-  x: number;
-  y: number;
-  direction: 'up' | 'down' | null;
-}
-
-export const useScrollPosition = () => {
-  const [scrollPosition, setScrollPosition] = useState<ScrollPosition>({
-    x: 0,
-    y: 0,
-    direction: null,
-  });
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    let lastScrollY = window.scrollY;
-
-    const handleScroll = throttle(() => {
-      const currentScrollY = window.scrollY;
-      const direction = currentScrollY > lastScrollY ? 'down' : 'up';
-      
-      setScrollPosition({
-        x: window.scrollX,
-        y: currentScrollY,
-        direction: currentScrollY === lastScrollY ? null : direction,
-      });
-      
-      lastScrollY = currentScrollY;
-    }, 100);
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  return scrollPosition;
-};
-
-// 是否滚动超过阈值
-export const useScrolled = (threshold = 50) => {
+export const useScrollPosition = (threshold: number = 0) => {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const handleScroll = throttle(() => {
-      setScrolled(window.scrollY > threshold);
-    }, 100);
+    if (!browser.isBrowser) return;
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
+    const handleScroll = () => {
+      const { y } = browser.getScrollPosition();
+      setScrolled(y > threshold);
     };
+
+    // 初始检查
+    handleScroll();
+
+    // 添加监听
+    const cleanup = browser.addEventListener('scroll', handleScroll, {
+      passive: true,
+    });
+
+    return cleanup;
   }, [threshold]);
 
   return scrolled;
 };
+
+export default useScrollPosition;
