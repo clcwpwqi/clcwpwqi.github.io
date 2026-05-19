@@ -89,11 +89,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [theme, mounted]);
 
-  // 防止水合不匹配
-  if (!mounted) {
-    return <>{children}</>;
-  }
-
+  // 确保始终提供 Context Provider，防止组件报错
   return (
     <ThemeContext.Provider value={{ theme, setTheme, toggleTheme, isDark }}>
       {children}
