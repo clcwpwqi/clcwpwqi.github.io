@@ -65,6 +65,8 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ content }) => 
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
+    if (typeof window === 'undefined') return;
+    
     const element = document.getElementById(id);
     if (element) {
       const offset = 80; // 头部高度

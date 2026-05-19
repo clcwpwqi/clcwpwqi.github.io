@@ -10,6 +10,8 @@ export const ScrollToTop: React.FC = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const handleScroll = () => {
       setVisible(window.scrollY > 300);
     };

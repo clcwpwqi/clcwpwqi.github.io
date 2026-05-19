@@ -27,7 +27,9 @@ export const PostPage = () => {
 
   // 滚动到顶部
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
   }, [slug]);
 
   if (!post) {

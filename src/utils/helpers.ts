@@ -76,8 +76,19 @@ export const generateSlug = (text: string): string => {
 // 复制到剪贴板
 export const copyToClipboard = async (text: string): Promise<boolean> => {
   try {
-    await navigator.clipboard.writeText(text);
-    return true;
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } else {
+      // 降级方案
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      return true;
+    }
   } catch (err) {
     console.error('Failed to copy:', err);
     return false;
@@ -133,8 +144,11 @@ export const deepClone = <T>(obj: T): T => {
 export const storage = {
   get: <T>(key: string, defaultValue: T): T => {
     try {
-      const item = localStorage.getItem(key);
-      return item ? (JSON.parse(item) as T) : defaultValue;
+      if (typeof window !== 'undefined' && localStorage) {
+        const item = localStorage.getItem(key);
+        return item ? (JSON.parse(item) as T) : defaultValue;
+      }
+      return defaultValue;
     } catch {
       return defaultValue;
     }
@@ -142,7 +156,9 @@ export const storage = {
   
   set: <T>(key: string, value: T): void => {
     try {
-      localStorage.setItem(key, JSON.stringify(value));
+      if (typeof window !== 'undefined' && localStorage) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
     } catch (error) {
       console.error('Storage set error:', error);
     }
@@ -150,7 +166,9 @@ export const storage = {
   
   remove: (key: string): void => {
     try {
-      localStorage.removeItem(key);
+      if (typeof window !== 'undefined' && localStorage) {
+        localStorage.removeItem(key);
+      }
     } catch (error) {
       console.error('Storage remove error:', error);
     }
@@ -167,6 +185,8 @@ export const scrollToTop = (smooth = true): void => {
 
 // 检查元素是否在视口内
 export const isInViewport = (element: HTMLElement): boolean => {
+  if (typeof window === 'undefined') return false;
+  
   const rect = element.getBoundingClientRect();
   return (
     rect.top >= 0 &&
