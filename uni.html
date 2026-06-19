@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicode 探索者</title>
+    <style>
+        :root {
+            /* 默认莫奈/Material主题色 */
+            --primary: #6750A4;
+            --primary-container: #EADDFF;
+            --on-primary: #FFFFFF;
+            --bg: #FDFBFF;
+            --surface: #FEF7FF;
+            --surface-variant: #E7E0EC;
+            --text: #1C1B1F;
+            --text-secondary: #49454F;
+            --border: #CAC4D0;
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        /* 深色模式变量 */
+        body.dark-mode {
+            --primary: #D0BCFF;
+            --primary-container: #4F378B;
+            --on-primary: #381E72;
+            --bg: #141218;
+            --surface: #2B2930;
+            --surface-variant: #49454F;
+            --text: #E6E0E9;
+            --text-secondary: #CAC4D0;
+            --border: #938F99;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏 */
+        nav {
+            background-color: var(--surface);
+            padding: 1rem 2rem;
+            display: flex;
+            gap: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--surface-variant);
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-container);
+            color: var(--primary);
+        }
+
+        /* 页面容器 */
+        .page {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex: 1;
+            width: 100%;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 卡片和输入框 */
+        .card {
+            background-color: var(--surface);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--bg);
+            color: var(--text);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-container);
+        }
+
+        button.primary {
+            background-color: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        button.primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* 查看页 (Grid) */
+        .search-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+        .search-bar input { flex: 1; }
+        
+        .unicode-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .char-box {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .char-box:hover {
+            background-color: var(--primary-container);
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+
+        .char-symbol { font-size: 2rem; margin-bottom: 5px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+        .char-code { font-size: 0.75rem; color: var(--text-secondary); }
+
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem; }
+        .pagination button { padding: 0.5rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+        .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* 查询页 */
+        .query-result-container { text-align: center; margin-top: 2rem; }
+        .huge-char { font-size: 8rem; margin: 2rem 0; line-height: 1; color: var(--primary); }
+        .char-info { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .error-msg { color: #B3261E; margin-top: 1rem; display: none; }
+
+        /* 设置页 */
+        .settings-group { margin-bottom: 2rem; }
+        .settings-group h3 { margin-bottom: 1rem; }
+        .color-picker { width: 50px; height: 50px; border: none; border-radius: 50%; cursor: pointer; overflow: hidden; padding: 0; }
+        .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-picker::-webkit-color-swatch { border: none; border-radius: 50%; }
+        
+        .toggle-switch { display: flex; align-items: center; gap: 1rem; cursor: pointer; }
+        
+        /* 历史记录 */
+        .history-list { list-style: none; margin-top: 1rem; max-height: 300px; overflow-y: auto; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid var(--surface-variant); }
+        .history-item:last-child { border-bottom: none; }
+        .history-left { display: flex; align-items: center; gap: 1rem; }
+        .history-char { font-size: 1.5rem; width: 30px; text-align: center; }
+        .delete-btn { background: none; border: none; color: #B3261E; cursor: pointer; font-size: 0.9rem; }
+        
+        /* Toast 提示 */
+        #toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background-color: var(--text); color: var(--bg);
+            padding: 10px 20px; border-radius: 8px; opacity: 0; visibility: hidden;
+            transition: var(--transition); z-index: 1000;
+        }
+        #toast.show { opacity: 1; visibility: visible; }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <button class="tab-btn active" onclick="switchTab('viewer')">查看页</button>
+        <button class="tab-btn" onclick="switchTab('query')">查询页</button>
+        <button class="tab-btn" onclick="switchTab('settings')">设置页</button>
+    </nav>
+
+    <main id="viewer" class="page active">
+        <div class="card">
+            <h2>探索 Unicode</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">当前页面渲染 256 个字符，使用分页浏览或搜索特定代码点。</p>
+            <div class="search-bar">
+                <input type="text" id="viewSearch" placeholder="搜索字符 (如 'A') 或代码点 (如 U+0041)..." onkeyup="if(event.key === 'Enter') searchInViewer()">
+                <button class="primary" onclick="searchInViewer()" style="margin-top:0;">跳转/搜索</button>
+            </div>
+            
+            <div class="unicode-grid" id="unicodeGrid"></div>
+            
+            <div class="pagination">
+                <button onclick="changePage(-1)" id="prevBtn">上一页</button>
+                <span id="pageInfo">U+0000 - U+00FF</span>
+                <button onclick="changePage(1)" id="nextBtn">下一页</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="query" class="page">
+        <div class="card">
+            <h2>精准查询</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">支持输入格式: U+xxxx, 0x0000, \uxxxx, 或直接粘贴字符。</p>
+            <div class="search-bar">
+                <input type="text" id="queryInput" placeholder="输入要查询的代码..." onkeyup="if(event.key === 'Enter') execQuery()">
+                <button class="primary" onclick="execQuery()" style="margin-top:0;">查询</button>
+            </div>
+            <div id="queryError" class="error-msg">未找到该字符或输入格式错误。</div>
+            
+            <div id="queryResult" class="query-result-container" style="display: none;">
+                <div class="huge-char" id="resultChar">A</div>
+                <div class="char-info" id="resultInfo">U+0041 | 十进制: 65</div>
+                <button class="primary" onclick="copyResult()">一键复制字符</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="settings" class="page">
+        <div class="card">
+            <h2>个性化设置</h2>
+            
+            <div class="settings-group" style="margin-top: 2rem;">
+                <h3>主题外观</h3>
+                <div class="toggle-switch" onclick="toggleDarkMode()">
+                    <input type="checkbox" id="darkModeToggle" style="pointer-events: none;">
+                    <label>开启深色模式</label>
+                </div>
+                
+                <div style="margin-top: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem;">莫奈主色调 (Material You)</label>
+                    <input type="color" id="themeColorPicker" class="color-picker" value="#6750A4" onchange="applyMonetColor(this.value)">
+                </div>
+            </div>
+
+            <hr style="border:0; border-top: 1px solid var(--border); margin: 2rem 0;">
+
+            <div class="settings-group">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>查询历史记录</h3>
+                    <button class="delete-btn" onclick="clearHistory()">清空全部</button>
+                </div>
+                <ul class="history-list" id="historyList">
+                    </ul>
+            </div>
+        </div>
+    </main>
+
+    <div id="toast">操作成功</div>
+
+    <script>
+        /* ================= 核心状态 ================= */
+        const CHARS_PER_PAGE = 256;
+        let currentPage = 0;
+        const MAX_UNICODE = 0x10FFFF;
+        let historyData = JSON.parse(localStorage.getItem('unicodeHistory')) || [];
+
+        /* ================= 初始化 ================= */
+        window.onload = () => {
+            initTheme();
+            renderGrid();
+            renderHistory();
+        };
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        /* ================= 标签页切换 ================= */
+        function switchTab(tabId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        /* ================= 1. 查看页逻辑 ================= */
+        function renderGrid() {
+            const grid = document.getElementById('unicodeGrid');
+            grid.innerHTML = '';
+            const startCode = currentPage * CHARS_PER_PAGE;
+            
+            for (let i = 0; i < CHARS_PER_PAGE; i++) {
+                const codePoint = startCode + i;
+                if (codePoint > MAX_UNICODE) break;
+
+                let charStr = "";
+                try {
+                    charStr = String.fromCodePoint(codePoint);
+                } catch (e) {
+                    charStr = ""; // 代理对或无效字符的容错
+                }
+
+                // 过滤掉控制字符等不可见字符的显示
+                const isControl = codePoint < 32 || (codePoint >= 0x7F && codePoint <= 0x9F);
+                const displayChar = isControl ? '▯' : charStr;
+                const hexCode = 'U+' + codePoint.toString(16).toUpperCase().padStart(4, '0');
+
+                const box = document.createElement('div');
+                box.className = 'char-box';
+                box.innerHTML = `
+                    <div class="char-symbol">${displayChar}</div>
+                    <div class="char-code">${hexCode}</div>
+                `;
+                // 点击卡片直接填入查询页
+                box.onclick = () => {
+                    document.getElementById('queryInput').value = hexCode;
+                    switchTab('query');
+                    document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                    document.querySelector('.tab-btn:nth-child(1)').classList.remove('active');
+                    execQuery();
+                };
+                grid.appendChild(box);
+            }
+
+            // 更新翻页信息
+            const endCode = Math.min(startCode + CHARS_PER_PAGE - 1, MAX_UNICODE);
+            document.getElementById('pageInfo').innerText = 
+                `U+${startCode.toString(16).toUpperCase().padStart(4,'0')} - U+${endCode.toString(16).toUpperCase().padStart(4,'0')}`;
+            
+            document.getElementById('prevBtn').disabled = currentPage === 0;
+            document.getElementById('nextBtn').disabled = endCode >= MAX_UNICODE;
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            renderGrid();
+        }
+
+        function searchInViewer() {
+            const input = document.getElementById('viewSearch').value.trim();
+            if (!input) return;
+            
+            const codePoint = parseUnicodeInput(input);
+            if (codePoint !== null && codePoint <= MAX_UNICODE) {
+                currentPage = Math.floor(codePoint / CHARS_PER_PAGE);
+                renderGrid();
+                showToast('已跳转至所在页');
+            } else {
+                showToast('无法解析的字符或超出范围');
+            }
+        }
+
+        /* ================= 2. 查询页逻辑 ================= */
+        // 解析 U+xxxx, 0x0000, \uxxxx, 或者单个字符
+        function parseUnicodeInput(input) {
+            input = input.trim();
+            if(!input) return null;
+
+            // 如果是单个字符（考虑Surrogate pairs）
+            if (Array.from(input).length === 1) {
+                return input.codePointAt(0);
+            }
+
+            // 匹配格式
+            const regex = /^(U\+|0x|\\u)?([0-9A-Fa-f]+)$/i;
+            const match = input.match(regex);
+            
+            if (match && match[2]) {
+                const hex = parseInt(match[2], 16);
+                if (!isNaN(hex)) return hex;
+            }
+            return null;
+        }
+
+        function execQuery() {
+            const input = document.getElementById('queryInput').value;
+            const errorMsg = document.getElementById('queryError');
+            const resultBox = document.getElementById('queryResult');
+            
+            const codePoint = parseUnicodeInput(input);
+
+            if (codePoint === null || codePoint > MAX_UNICODE) {
+                errorMsg.style.display = 'block';
+                resultBox.style.display = 'none';
+                return;
+            }
+
+            errorMsg.style.display = 'none';
+            resultBox.style.display = 'block';
+
+            let charStr = "";
+            try { charStr = String.fromCodePoint(codePoint); } catch (e) { charStr = ""; }
+            
+            const hexFormat = 'U+' + codePoint.toString(16).toUpperCase().padStart(4, '0');
+            const decFormat = codePoint;
+
+            document.getElementById('resultChar').innerText = charStr;
+            document.getElementById('resultInfo').innerText = `${hexFormat} | 十进制: ${decFormat}`;
+
+            saveHistory(charStr, hexFormat);
+        }
+
+        function copyResult() {
+            const char = document.getElementById('resultChar').innerText;
+            navigator.clipboard.writeText(char).then(() => {
+                showToast('复制成功: ' + char);
+            }).catch(() => {
+                showToast('复制失败，请手动复制');
+            });
+        }
+
+        /* ================= 3. 设置与历史记录逻辑 ================= */
+        function initTheme() {
+            const isDark = localStorage.getItem('darkMode') === 'true';
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeToggle').checked = true;
+            }
+
+            const savedColor = localStorage.getItem('monetColor');
+            if (savedColor) {
+                applyMonetColor(savedColor);
+                document.getElementById('themeColorPicker').value = savedColor;
+            }
+        }
+
+        function toggleDarkMode() {
+            const checkbox = document.getElementById('darkModeToggle');
+            checkbox.checked = !checkbox.checked;
+            document.body.classList.toggle('dark-mode', checkbox.checked);
+            localStorage.setItem('darkMode', checkbox.checked);
+        }
+
+        function applyMonetColor(hexCode) {
+            const root = document.documentElement;
+            // 设置主色
+            root.style.setProperty('--primary', hexCode);
+            
+            // 简易模拟 Material You 的次级容器颜色 (加一点透明度模拟变浅/变暗)
+            // 在实际工程中需要使用HCT/HSL色彩空间换算，此处为了单文件简洁做透明度处理
+            root.style.setProperty('--primary-container', hexCode + '33'); 
+            
+            localStorage.setItem('monetColor', hexCode);
+        }
+
+        function saveHistory(char, hex) {
+            // 防止重复或空
+            historyData = historyData.filter(item => item.hex !== hex);
+            historyData.unshift({ char, hex, time: new Date().toLocaleString() });
+            
+            // 最多保留50条
+            if (historyData.length > 50) historyData.pop();
+            
+            localStorage.setItem('unicodeHistory', JSON.stringify(historyData));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            list.innerHTML = '';
+            
+            if (historyData.length === 0) {
+                list.innerHTML = '<li style="color: var(--text-secondary); text-align: center; padding: 1rem;">暂无历史记录</li>';
+                return;
+            }
+
+            historyData.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'history-item';
+                li.innerHTML = `
+                    <div class="history-left">
+                        <div class="history-char">${item.char}</div>
+                        <div>
+                            <div style="font-weight: bold;">${item.hex}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-secondary);">${item.time}</div>
+                        </div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteHistory(${index})">删除</button>
+                `;
+                
+                // 点击历史记录左侧，自动填入查询
+                li.querySelector('.history-left').onclick = () => {
+                    document.getElementById('queryInput').value = item.hex;
+                    switchTab('query');
+                    document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+                    document.querySelector('.tab-btn:nth-child(3)').classList.remove('active');
+                    execQuery();
+                };
+                li.querySelector('.history-left').style.cursor = 'pointer';
+
+                list.appendChild(li);
+            });
+        }
+
+        function deleteHistory(index) {
+            historyData.splice(index, 1);
+            localStorage.setItem('unicodeHistory', JSON.stringify(historyData));
+            renderHistory();
+            showToast('已删除记录');
+        }
+
+        function clearHistory() {
+            historyData = [];
+            localStorage.removeItem('unicodeHistory');
+            renderHistory();
+            showToast('历史记录已清空');
+        }
+    </script>
+</body>
+</html>

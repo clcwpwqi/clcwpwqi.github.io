@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft 基岩版指令生成器 (高级版)</title>
+    <style>
+        :root {
+            --bg-color: #1e1e2e;
+            --panel-bg: #252538;
+            --text-color: #cdd6f4;
+            --accent-color: #89b4fa;
+            --accent-hover: #b4befe;
+            --border-color: #45475a;
+            --input-bg: #313244;
+            --success-color: #a6e3a1;
+            --danger-color: #f38ba8;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 { margin: 0; color: var(--accent-color); font-size: 28px; }
+        p { margin: 5px 0 0; color: #a6adc8; font-size: 14px; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 850px) {
+            .grid { grid-template-columns: 1.2fr 1fr; }
+        }
+
+        .card {
+            background-color: var(--panel-bg);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 6px;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="number"], select, textarea {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .row > * { flex: 1; }
+
+        /* hasitem 样式 */
+        .hasitem-box {
+            background-color: rgba(0,0,0,0.15);
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .btn-delete {
+            background-color: var(--danger-color);
+            color: #11111b;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            float: right;
+            font-size: 12px;
+        }
+
+        .btn-add {
+            background-color: var(--accent-color);
+            color: #11111b;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            display: inline-block;
+            margin-top: 5px;
+        }
+        .btn-add:hover { background-color: var(--accent-hover); }
+
+        /* 组件复选框样式 */
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            background: rgba(255,255,255,0.03);
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .checkbox-label input {
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* 输出结果区域 */
+        .output-card {
+            position: sticky;
+            top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .output-box {
+            background-color: #11111b;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            min-height: 80px;
+            word-break: break-all;
+            white-space: pre-wrap;
+            color: #a6e3a1;
+        }
+        .btn-copy {
+            background-color: var(--success-color);
+            color: #11111b;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: opacity 0.2s;
+        }
+        .btn-copy:hover { opacity: 0.9; }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+        .tab {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 4px;
+        }
+        .tab.active {
+            background-color: var(--accent-color);
+            color: #11111b;
+            font-weight: bold;
+        }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Minecraft 基岩版指令生成器</h1>
+        <p>支持新版 execute 语法、完整选择器参数、hasitem 高级筛选器及全新物品 JSON 组件</p>
+    </header>
+
+    <div class="grid">
+        <div class="left-panel" style="display: flex; flex-direction: column; gap: 20px;">
+            
+            <div class="card">
+                <div class="card-title">① 目标选择器构建 (@)</div>
+                <div class="row">
+                    <div class="form-group" style="flex: 0.5;">
+                        <label>主目标</label>
+                        <select id="sel_base" onchange="generate()">
+                            <option value="@s">@s (当前执行者)</option>
+                            <option value="@p" selected>@p (最近的玩家)</option>
+                            <option value="@a">@a (所有玩家)</option>
+                            <option value="@r">@r (随机玩家)</option>
+                            <option value="@e">@e (所有实体)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>常规过滤参数 (例如: r=5,type=zombie)</label>
+                        <input type="text" id="sel_args" placeholder="多个用逗号隔开，不要带方括号" oninput="generate()">
+                    </div>
+                </div>
+
+                <div style="margin-top: 10px;">
+                    <label style="font-weight: bold; color: var(--accent-hover);">hasitem 属性过滤器 (高级筛选)</label>
+                    <div id="hasitem_container"></div>
+                    <button class="btn-add" onclick="addHasitemRule()">+ 添加 hasitem 条件</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">② 核心指令配置</div>
+                <div class="tabs">
+                    <button class="tab active" id="tab_give" onclick="switchCmdMode('give')">/give (给予物品)</button>
+                    <button class="tab" id="tab_execute" onclick="switchCmdMode('execute')">/execute (环境执行)</button>
+                </div>
+
+                <div id="panel_give">
+                    <div class="row">
+                        <div class="form-group" style="flex: 2;">
+                            <label>物品 ID (英文命名空间)</label>
+                            <input type="text" id="give_id" value="diamond_pickaxe" placeholder="如: diamond_pickaxe" oninput="generate()">
+                        </div>
+                        <div class="form-group">
+                            <label>数量</label>
+                            <input type="number" id="give_count" value="1" min="1" oninput="generate()">
+                        </div>
+                        <div class="form-group">
+                            <label>特殊数据值 (Data)</label>
+                            <input type="number" id="give_data" value="0" min="0" oninput="generate()">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px;">
+                        <label style="font-weight: bold; color: var(--accent-hover);">物品 JSON 组件配置 (完整物理支持)</label>
+                        <div class="component-grid">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="comp_keep" onchange="generate()"> 死亡不掉落 (keep_on_death)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="comp_unbreakable" onchange="generate()"> 无法破坏/无限耐久 (unbreakable)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="comp_lock_inv" onchange="generate()"> 锁定在背包 (item_lock)
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="comp_lock_slot" onchange="generate()"> 锁定在槽位 (item_lock)
+                            </label>
+                        </div>
+
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label>允许破坏的方块 (can_destroy) - 英文ID，多个用逗号分隔</label>
+                            <input type="text" id="comp_destroy_list" placeholder="如: stone,dirt" oninput="generate()">
+                        </div>
+                        <div class="form-group">
+                            <label>允许放置于方块上 (can_place_on) - 英文ID，多个用逗号分隔</label>
+                            <input type="text" id="comp_place_list" placeholder="如: sand,grass_block" oninput="generate()">
+                        </div>
+                        <div class="form-group">
+                            <label>自定义追加额外 JSON 组件 (高级深度扩展，需符合标准 JSON)</label>
+                            <textarea id="comp_custom_json" rows="2" placeholder='如: "minecraft:explodable": {}' oninput="generate()"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="panel_execute" class="hidden">
+                    <div class="form-group">
+                        <label>执行修饰符组 (按执行顺序排列，支持多个修饰符串联)</label>
+                        <div class="row">
+                            <select id="exe_mod_type" style="flex: 0.4;">
+                                <option value="as">as (以实体身份)</option>
+                                <option value="at">at (在实体位置)</option>
+                                <option value="positioned">positioned (在指定坐标)</option>
+                                <option value="if entity">if entity (如果实体存在)</option>
+                            </select>
+                            <input type="text" id="exe_mod_val" placeholder="填写目标选择器或坐标，如 @s 或 ~ ~ ~" style="flex: 1.2;">
+                            <button class="btn-add" onclick="addExecuteModifier()" style="margin: 0; padding: 0 15px;">添加段</button>
+                        </div>
+                        <div id="exe_modifiers_list" style="margin-top: 10px; font-size: 13px; color: #b4befe;"></div>
+                    </div>
+                    <hr style="border-color: var(--border-color); margin: 15px 0;">
+                    <div class="form-group">
+                        <label>最后执行的终点命令 (RUN)</label>
+                        <input type="text" id="exe_run_cmd" value="say hello" placeholder="不需要输入斜杠，例如: say hi" oninput="generate()">
+                        <p style="color: #f38ba8; font-size: 12px; margin-top: 4px;">* 提示：如果想用 execute 执行上面的 give，可以直接在此处填入上面生成的 give 命令体。</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="card output-card">
+                <div class="card-title">输出结果预览</div>
+                <div class="form-group">
+                    <label>最终生成的指令实时预览：</label>
+                    <div class="output-box" id="output_text">/give @p diamond_pickaxe 1 0</div>
+                </div>
+                <button class="btn-copy" onclick="copyCommand()">一键复制到剪贴板</button>
+                <div style="font-size: 12px; color: #a6adc8; line-height: 1.6;">
+                    <strong>基岩版（Bedrock）特别说明：</strong><br>
+                    1. <code>hasitem</code> 的范围判断在基岩版中使用 <code>..</code> 表示。例如数量 1 到 5 表示为 <code>1..5</code>。<br>
+                    2. 物品 JSON 组件（如无法破坏等）在基岩版内**只能**通过 <code>/give</code> 给予才能正确赋予物品，放在方块中或用常规附魔手段表现不同。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentMode = 'give';
+    let exeModifiers = [];
+
+    // hasitem 槽位位置常量定义
+    const slotLocations = [
+        "", "slot.weapon.mainhand", "slot.weapon.offhand", "slot.armor.head", 
+        "slot.armor.chest", "slot.armor.legs", "slot.armor.feet", "slot.hotbar", "slot.inventory"
+    ];
+
+    // 初始化：默认添加一个hasitem示例占位
+    window.onload = function() {
+        generate();
+    };
+
+    function switchCmdMode(mode) {
+        currentMode = mode;
+        document.getElementById('tab_give').classList.toggle('active', mode === 'give');
+        document.getElementById('tab_execute').classList.toggle('active', mode === 'execute');
+        document.getElementById('panel_give').classList.toggle('hidden', mode !== 'give');
+        document.getElementById('panel_execute').classList.toggle('hidden', mode !== 'execute');
+        generate();
+    }
+
+    // 动态添加 hasitem 规则 UI
+    function addHasitemRule() {
+        const container = document.getElementById('hasitem_container');
+        const id = 'hasitem_' + Date.now();
+        
+        let optionsHtml = slotLocations.map(loc => `<option value="${loc}">${loc || '-- 任意位置 --'}</option>`).join('');
+
+        const html = `
+            <div class="hasitem-box" id="${id}">
+                <button class="btn-delete" onclick="removeHasitemRule('${id}')">删除</button>
+                <div class="row" style="margin-top: 5px;">
+                    <div>
+                        <label>物品名(ID)</label>
+                        <input type="text" class="hi-item" placeholder="如: iron_sword" oninput="generate()">
+                    </div>
+                    <div>
+                        <label>数量(支持 1.. 或 ..5)</label>
+                        <input type="text" class="hi-quantity" placeholder="如: 1" oninput="generate()">
+                    </div>
+                </div>
+                <div class="row">
+                    <div>
+                        <label>所处特殊位置(location)</label>
+                        <select class="hi-location" onchange="generate()">${optionsHtml}</select>
+                    </div>
+                    <div>
+                        <label>具体槽位(slot)</label>
+                        <input type="text" class="hi-slot" placeholder="整数或范围" oninput="generate()">
+                    </div>
+                    <div>
+                        <label>数据值(data)</label>
+                        <input type="number" class="hi-data" placeholder="任意" oninput="generate()">
+                    </div>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+        generate();
+    }
+
+    function removeHasitemRule(id) {
+        document.getElementById(id).remove();
+        generate();
+    }
+
+    // execute 修饰符动态添加逻辑
+    function addExecuteModifier() {
+        const type = document.getElementById('exe_mod_type').value;
+        const val = document.getElementById('exe_mod_val').value.trim();
+        if(!val) return;
+        
+        exeModifiers.push({type, val});
+        document.getElementById('exe_mod_val').value = '';
+        renderModifiers();
+        generate();
+    }
+
+    function removeModifier(index) {
+        exeModifiers.splice(index, 1);
+        renderModifiers();
+        generate();
+    }
+
+    function renderModifiers() {
+        const box = document.getElementById('exe_modifiers_list');
+        if(exeModifiers.length === 0) {
+            box.innerHTML = '暂无修饰符段（默认为全局环境）';
+            return;
+        }
+        box.innerHTML = exeModifiers.map((mod, i) => `
+            <span style="background:#45475a; padding:4px 8px; border-radius:4px; margin-right:5px; display:inline-block; margin-bottom:5px;">
+                <strong>${mod.type}</strong> ${mod.val} 
+                <span style="color:var(--danger-color); cursor:pointer; margin-left:5px; font-weight:bold;" onclick="removeModifier(${i})">×</span>
+            </span>
+        `).join(' ');
+    }
+
+    // 核心构建逻辑
+    function buildSelector() {
+        let base = document.getElementById('sel_base').value;
+        let args = document.getElementById('sel_args').value.trim();
+        
+        let argList = [];
+        if (args) argList.push(args);
+
+        // 提取并构建 hasitem
+        let hasitemBoxes = document.querySelectorAll('.hasitem-box');
+        let hasitemRules = [];
+
+        hasitemBoxes.forEach(box => {
+            let item = box.querySelector('.hi-item').value.trim();
+            let quantity = box.querySelector('.hi-quantity').value.trim();
+            let location = box.querySelector('.hi-location').value;
+            let slot = box.querySelector('.hi-slot').value.trim();
+            let data = box.querySelector('.hi-data').value.trim();
+
+            let ruleObj = {};
+            if(item) ruleObj.item = item;
+            if(quantity) ruleObj.quantity = isNaN(quantity) ? quantity : parseInt(quantity);
+            if(location) ruleObj.location = location;
+            if(slot) ruleObj.slot = isNaN(slot) ? slot : parseInt(slot);
+            if(data) ruleObj.data = parseInt(data);
+
+            if(Object.keys(ruleObj).length > 0) {
+                hasitemRules.push(ruleObj);
+            }
+        });
+
+        if(hasitemRules.length > 0) {
+            if(hasitemRules.length === 1) {
+                // 单个规则转化为对象格式字符串
+                let objStr = JSON.stringify(hasitemRules[0]).replace(/"([^"]+)":/g, '$1='); // 去掉键的双引号，匹配MC规范
+                argList.push(`hasitem=${objStr}`);
+            } else {
+                // 多个规则转化为数组格式字符串
+                let arrStr = JSON.stringify(hasitemRules).replace(/"([^"]+)":/g, '$1=');
+                argList.push(`hasitem=${arrStr}`);
+            }
+        }
+
+        if(argList.length > 0) {
+            return `${base}[${argList.join(',')}]`;
+        }
+        return base;
+    }
+
+    function buildJsonComponents() {
+        let components = {};
+
+        if (document.getElementById('comp_keep').checked) {
+            components["minecraft:keep_on_death"] = {};
+        }
+        if (document.getElementById('comp_unbreakable').checked) {
+            components["minecraft:unbreakable"] = {};
+        }
+        if (document.getElementById('comp_lock_inv').checked) {
+            components["minecraft:item_lock"] = { "mode": "lock_in_inventory" };
+        } else if (document.getElementById('comp_lock_slot').checked) {
+            components["minecraft:item_lock"] = { "mode": "lock_in_slot" };
+        }
+
+        // can_destroy
+        let destroyVal = document.getElementById('comp_destroy_list').value.trim();
+        if(destroyVal) {
+            let blocks = destroyVal.split(',').map(b => b.trim().startsWith('minecraft:') ? b.trim() : 'minecraft:' + b.trim());
+            components["minecraft:can_destroy"] = { "blocks": blocks };
+        }
+
+        // can_place_on
+        let placeVal = document.getElementById('comp_place_list').value.trim();
+        if(placeVal) {
+            let blocks = placeVal.split(',').map(b => b.trim().startsWith('minecraft:') ? b.trim() : 'minecraft:' + b.trim());
+            components["minecraft:can_place_on"] = { "blocks": blocks };
+        }
+
+        // 自定义追加组件
+        let customJson = document.getElementById('comp_custom_json').value.trim();
+        if(customJson) {
+            try {
+                // 为了让用户写起来方便，尝试补全最外层的花括号
+                if(!customJson.startsWith('{')) customJson = '{' + customJson + '}';
+                let parsedCustom = JSON.parse(customJson);
+                components = Object.assign({}, components, parsedCustom);
+            } catch(e) {
+                // 如果解析失败则不合并，防止阻塞主进程生成
+            }
+        }
+
+        if(Object.keys(components).length > 0) {
+            return JSON.stringify(components);
+        }
+        return "";
+    }
+
+    // 主调度生成系统
+    function generate() {
+        let selector = buildSelector();
+        let finalCommand = "";
+
+        if(currentMode === 'give') {
+            let item = document.getElementById('give_id').value.trim() || "stone";
+            let count = document.getElementById('give_count').value || 1;
+            let data = document.getElementById('give_data').value || 0;
+            let jsonStr = buildJsonComponents();
+
+            finalCommand = `/give ${selector} ${item} ${count} ${data}`;
+            if(jsonStr) {
+                finalCommand += ` ${jsonStr}`;
+            }
+        } else {
+            // execute 模式
+            let modifierStr = exeModifiers.map(mod => `${mod.type} ${mod.val}`).join(' ');
+            let runCmd = document.getElementById('exe_run_cmd').value.trim();
+            
+            // 确保去除开头的 / 斜杠避免玩家错填
+            if(runCmd.startsWith('/')) runCmd = runCmd.substring(1);
+
+            finalCommand = `/execute ${modifierStr ? modifierStr + ' ' : ''}run ${runCmd}`;
+        }
+
+        document.getElementById('output_text').innerText = finalCommand;
+    }
+
+    // 复制功能
+    function copyCommand() {
+        let text = document.getElementById('output_text').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('指令已成功复制到剪贴板！可以直接在游戏内粘贴。');
+        }).catch(err => {
+            alert('复制失败，请手动选择文字进行复制。');
+        });
+    }
+</script>
+
+</body>
+</html>

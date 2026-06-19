@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>莫奈更新记录器</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+  :root {
+    --bg-color: #E3F2FD;
+    --card-bg: #FFFFFF;
+    --text-primary: #263238;
+    --text-secondary: #546E7A;
+    --accent-color: #64B5F6;
+    --accent-light: #BBDEFB;
+    --border-color: #E0E0E0;
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
+    --nav-bg: rgba(255,255,255,0.85);
+    --input-bg: #F5F9FF;
+    --danger-color: #EF5350;
+    --radius: 16px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 莫奈色系 - 浅绿 */
+  body.theme-green {
+    --bg-color: #E8F5E9;
+    --accent-color: #81C784;
+    --accent-light: #C8E6C9;
+    --input-bg: #F1F8E9;
+  }
+  /* 莫奈色系 - 白/中性 */
+  body.theme-white {
+    --bg-color: #FAFAFA;
+    --accent-color: #90A4AE;
+    --accent-light: #CFD8DC;
+    --input-bg: #F5F5F5;
+  }
+  /* 莫奈色系 - 灰 */
+  body.theme-gray {
+    --bg-color: #ECEFF1;
+    --accent-color: #78909C;
+    --accent-light: #B0BEC5;
+    --input-bg: #F5F7FA;
+  }
+
+  /* 深色模式 */
+  body.dark-mode {
+    --bg-color: #121826;
+    --card-bg: #1E293B;
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --border-color: #334155;
+    --shadow: 0 4px 20px rgba(0,0,0,0.3);
+    --nav-bg: rgba(30,41,59,0.9);
+    --input-bg: #0F172A;
+  }
+  body.dark-mode.theme-green { --bg-color: #14241B; --accent-color: #66BB6A; --accent-light: #2E4A35; --input-bg: #1A2E22; }
+  body.dark-mode.theme-blue { --bg-color: #121826; --accent-color: #42A5F5; --accent-light: #1E3A5F; --input-bg: #0F172A; }
+  body.dark-mode.theme-white { --bg-color: #1A1A1A; --accent-color: #B0BEC5; --accent-light: #333333; --input-bg: #242424; }
+  body.dark-mode.theme-gray { --bg-color: #1C2128; --accent-color: #90A4AE; --accent-light: #2D3748; --input-bg: #171B21; }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    transition: var(--transition);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #app {
+    max-width: 640px;
+    margin: 0 auto;
+    min-height: 100vh;
+    padding-bottom: 80px;
+    position: relative;
+  }
+
+  header {
+    padding: 20px 24px 10px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(to bottom, var(--bg-color) 80%, transparent);
+    backdrop-filter: blur(10px);
+  }
+  header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  header p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
+
+  main { padding: 10px 20px 20px; }
+
+  .view { display: none; animation: fadeIn 0.3s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* 卡片与表单元素 */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+  }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    gap: 8px;
+  }
+
+  input[type="text"], input[type="datetime-local"], select, textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font-size: 15px;
+    font-family: inherit;
+    transition: var(--transition);
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 4px var(--accent-light);
+  }
+  textarea {
+    min-height: 160px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23546E7A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--accent-color);
+    color: #FFF;
+    width: 100%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-secondary {
+    background: var(--input-bg);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+  }
+  .btn-icon {
+    width: 40px; height: 40px; padding: 0;
+    border-radius: 10px;
+    background: var(--input-bg);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    flex-shrink: 0;
+  }
+  .btn-icon:hover { background: var(--accent-light); color: var(--accent-color); }
+  .btn-danger { background: var(--danger-color); color: #fff; }
+
+  /* 更新列表 */
+  .update-item {
+    position: relative;
+    padding-left: 20px;
+    border-left: 3px solid var(--accent-light);
+    margin-bottom: 24px;
+    transition: var(--transition);
+  }
+  .update-item:hover { border-left-color: var(--accent-color); }
+  .update-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .update-date {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-color);
+  }
+  .update-author {
+    font-size: 12px;
+    background: var(--accent-light);
+    color: var(--accent-color);
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .update-actions {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+  }
+  .update-actions button {
+    width: 32px; height: 32px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+  }
+  .update-actions button:hover { background: var(--input-bg); }
+  .update-actions button.del:hover { color: var(--danger-color); background: #FFEBEE; }
+  body.dark-mode .update-actions button.del:hover { background: #3E1A1A; }
+
+  .update-content {
+    font-size: 15px;
+    color: var(--text-primary);
+    line-height: 1.7;
+    word-break: break-word;
+  }
+  .update-content p { margin-bottom: 8px; }
+  .update-content code {
+    background: var(--input-bg);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-family: 'Fira Code', monospace;
+  }
+  .update-content pre {
+    background: var(--input-bg);
+    padding: 12px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 8px 0;
+  }
+  .update-content pre code { background: none; padding: 0; }
+  .update-content ul, .update-content ol { padding-left: 20px; margin-bottom: 8px; }
+  .update-content blockquote {
+    border-left: 3px solid var(--accent-color);
+    padding-left: 12px;
+    color: var(--text-secondary);
+    margin: 8px 0;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+  }
+  .empty-state svg { width: 64px; height: 64px; margin-bottom: 16px; opacity: 0.5; }
+  .empty-state p { font-size: 15px; }
+
+  /* 设置页 */
+  .setting-section { margin-bottom: 24px; }
+  .setting-section h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .theme-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+  .theme-option {
+    aspect-ratio: 1;
+    border-radius: 16px;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .theme-option.active { border-color: var(--text-primary); transform: scale(1.05); }
+  .theme-option::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFF;
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 0;
+    transition: var(--transition);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+  .theme-option.active::after { opacity: 1; }
+  .theme-blue-bg { background: linear-gradient(135deg, #E3F2FD, #90CAF9); }
+  .theme-green-bg { background: linear-gradient(135deg, #E8F5E9, #A5D6A7); }
+  .theme-white-bg { background: linear-gradient(135deg, #FAFAFA, #E0E0E0); }
+  .theme-gray-bg { background: linear-gradient(135deg, #ECEFF1, #B0BEC5); }
+
+  .toggle-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+  }
+  .toggle-label { font-size: 15px; font-weight: 500; }
+  .toggle {
+    width: 52px; height: 28px;
+    background: var(--border-color);
+    border-radius: 14px;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .toggle.active { background: var(--accent-color); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    background: #FFF;
+    border-radius: 50%;
+    top: 3px; left: 3px;
+    transition: var(--transition);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .toggle.active::after { left: 27px; }
+
+  /* 底部导航 */
+  nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    z-index: 100;
+  }
+  .nav-inner {
+    max-width: 640px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    padding: 8px 20px;
+    border-radius: 12px;
+    transition: var(--transition);
+    color: var(--text-secondary);
+    text-decoration: none;
+  }
+  .nav-item.active { color: var(--accent-color); }
+  .nav-item svg { width: 24px; height: 24px; transition: var(--transition); }
+  .nav-item.active svg { transform: scale(1.1); }
+  .nav-item span { font-size: 11px; font-weight: 600; }
+
+  /* 模态框 */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 24px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal h2 { font-size: 18px; margin-bottom: 16px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+  .modal-actions .btn { flex: 1; }
+
+  /* 滚动条美化 */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+  /* 响应式微调 */
+  @media (max-width: 480px) {
+    header { padding: 16px 16px 8px; }
+    main { padding: 10px 16px 16px; }
+    .card { padding: 16px; }
+    .theme-grid { gap: 8px; }
+  }
+</style>
+</head>
+<body class="theme-blue">
+
+<div id="app">
+  <header>
+    <h1 id="page-title">新建更新</h1>
+    <p id="page-desc">记录项目的每一次迭代</p>
+  </header>
+
+  <main>
+    <!-- 主页：新建更新 -->
+    <section id="view-home" class="view active">
+      <div class="card">
+        <div class="form-group">
+          <label>选择项目</label>
+          <div class="input-wrapper">
+            <select id="home-project">
+              <option value="">-- 请选择项目 --</option>
+            </select>
+            <button class="btn btn-icon" id="btn-new-project" title="新建项目">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>日期与时间</label>
+          <input type="datetime-local" id="home-date">
+        </div>
+        <div class="form-group">
+          <label>作者</label>
+          <input type="text" id="home-author" placeholder="输入作者名称">
+        </div>
+        <div class="form-group">
+          <label>更新内容 (支持 Markdown)</label>
+          <textarea id="home-content" placeholder="记录本次更新的内容..."></textarea>
+        </div>
+        <button class="btn btn-primary" id="btn-save">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+          保存更新
+        </button>
+      </div>
+    </section>
+
+    <!-- 更新内容页 -->
+    <section id="view-updates" class="view">
+      <div class="card" style="padding: 12px 16px; margin-bottom: 20px;">
+        <select id="filter-project">
+          <option value="all">全部项目</option>
+        </select>
+      </div>
+      <div id="updates-list"></div>
+    </section>
+
+    <!-- 设置页 -->
+    <section id="view-settings" class="view">
+      <div class="card">
+        <div class="setting-section">
+          <h3>莫奈主题色</h3>
+          <div class="theme-grid">
+            <div class="theme-option theme-blue-bg active" data-theme="blue"></div>
+            <div class="theme-option theme-green-bg" data-theme="green"></div>
+            <div class="theme-option theme-white-bg" data-theme="white"></div>
+            <div class="theme-option theme-gray-bg" data-theme="gray"></div>
+          </div>
+        </div>
+        <div class="setting-section">
+          <h3>外观模式</h3>
+          <div class="toggle-wrapper">
+            <span class="toggle-label">深色模式</span>
+            <div class="toggle" id="toggle-dark"></div>
+          </div>
+        </div>
+        <div class="setting-section">
+          <h3>数据导出</h3>
+          <div class="form-group">
+            <select id="export-project">
+              <option value="">-- 选择要导出的项目 --</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" id="btn-export" style="background: var(--accent-color);">导出为 Markdown</button>
+        </div>
+        <div class="setting-section">
+          <h3>数据导入</h3>
+          <p style="font-size:13px; color:var(--text-secondary); margin-bottom:12px;">导入 .md 文件，系统将自动解析并合并到对应项目中。</p>
+          <input type="file" id="import-file" accept=".md,.markdown,.txt" style="display:none">
+          <button class="btn btn-secondary" id="btn-import" style="width:100%;">选择并导入 .md 文件</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav>
+    <div class="nav-inner">
+      <a class="nav-item active" data-view="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>主页</span>
+      </a>
+      <a class="nav-item" data-view="updates">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        <span>记录</span>
+      </a>
+      <a class="nav-item" data-view="settings">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        <span>设置</span>
+      </a>
+    </div>
+  </nav>
+</div>
+
+<!-- 编辑模态框 -->
+<div class="modal-overlay" id="modal-edit">
+  <div class="modal">
+    <h2>编辑更新记录</h2>
+    <div class="form-group">
+      <label>日期与时间</label>
+      <input type="datetime-local" id="edit-date">
+    </div>
+    <div class="form-group">
+      <label>作者</label>
+      <input type="text" id="edit-author">
+    </div>
+    <div class="form-group">
+      <label>更新内容</label>
+      <textarea id="edit-content"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="btn-cancel-edit">取消</button>
+      <button class="btn btn-primary" id="btn-confirm-edit">保存修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- 新建项目模态框 -->
+<div class="modal-overlay" id="modal-new-project">
+  <div class="modal">
+    <h2>新建项目</h2>
+    <div class="form-group">
+      <label>项目名称</label>
+      <input type="text" id="new-project-name" placeholder="例如：我的博客、App v2.0">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="btn-cancel-new">取消</button>
+      <button class="btn btn-primary" id="btn-confirm-new">创建</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ================= 数据管理 =================
+  const DB_KEY = 'monet_updater_db';
+  
+  const defaultDB = {
+    projects: {},
+    settings: { theme: 'blue', darkMode: false }
+  };
+
+  let db = loadDB();
+
+  function loadDB() {
+    try {
+      const data = localStorage.getItem(DB_KEY);
+      if (data) {
+        const parsed = JSON.parse(data);
+        // 确保结构完整
+        if (!parsed.projects) parsed.projects = {};
+        if (!parsed.settings) parsed.settings = { theme: 'blue', darkMode: false };
+        return parsed;
+      }
+    } catch (e) { console.error('Load DB error', e); }
+    return JSON.parse(JSON.stringify(defaultDB));
+  }
+
+  function saveDB() {
+    localStorage.setItem(DB_KEY, JSON.stringify(db));
+  }
+
+  function genId() {
+    return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+  }
+
+  // ================= UI 管理 =================
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => document.querySelectorAll(sel);
+
+  // 初始化时间
+  function getLocalISOString() {
+    const now = new Date();
+    const offset = now.getTimezoneOffset();
+    const local = new Date(now.getTime() - offset * 60000);
+    return local.toISOString().slice(0, 16);
+  }
+
+  // 视图切换
+  function switchView(viewName) {
+    $$('.view').forEach(v => v.classList.remove('active'));
+    $(`#view-${viewName}`).classList.add('active');
+    $$('.nav-item').forEach(n => n.classList.remove('active'));
+    $(`.nav-item[data-view="${viewName}"]`).classList.add('active');
+    
+    const titles = { home: '新建更新', updates: '更新记录', settings: '设置' };
+    const descs = { home: '记录项目的每一次迭代', updates: '查看与管理历史更新', settings: '个性化与数据管理' };
+    $('#page-title').textContent = titles[viewName];
+    $('#page-desc').textContent = descs[viewName];
+
+    if (viewName === 'updates') renderUpdates();
+    if (viewName === 'home') $('#home-date').value = getLocalISOString();
+  }
+
+  // 渲染项目下拉列表
+  function renderProjectSelects() {
+    const projectNames = Object.keys(db.projects).sort();
+    
+    const homeSelect = $('#home-project');
+    const filterSelect = $('#filter-project');
+    const exportSelect = $('#export-project');
+
+    const currentHomeVal = homeSelect.value;
+    const currentFilterVal = filterSelect.value;
+    const currentExportVal = exportSelect.value;
+
+    homeSelect.innerHTML = '<option value="">-- 请选择项目 --</option>';
+    filterSelect.innerHTML = '<option value="all">全部项目</option>';
+    exportSelect.innerHTML = '<option value="">-- 选择要导出的项目 --</option>';
+
+    projectNames.forEach(name => {
+      homeSelect.innerHTML += `<option value="${name}">${name}</option>`;
+      filterSelect.innerHTML += `<option value="${name}">${name}</option>`;
+      exportSelect.innerHTML += `<option value="${name}">${name}</option>`;
+    });
+
+    if (projectNames.includes(currentHomeVal)) homeSelect.value = currentHomeVal;
+    if (currentFilterVal === 'all' || projectNames.includes(currentFilterVal)) filterSelect.value = currentFilterVal;
+    if (projectNames.includes(currentExportVal)) exportSelect.value = currentExportVal;
+  }
+
+  // 渲染更新列表
+  function renderUpdates() {
+    const filter = $('#filter-project').value;
+    const listEl = $('#updates-list');
+    let allUpdates = [];
+
+    const projectNames = filter === 'all' ? Object.keys(db.projects) : [filter];
+    
+    projectNames.forEach(pName => {
+      if (!db.projects[pName]) return;
+      db.projects[pName].updates.forEach(u => {
+        allUpdates.push({ ...u, projectName: pName });
+      });
+    });
+
+    // 按时间倒序
+    allUpdates.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    if (allUpdates.length === 0) {
+      listEl.innerHTML = `
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          <p>暂无更新记录</p>
+          <p style="font-size:13px; margin-top:4px;">去主页添加第一条记录吧</p>
+        </div>`;
+      return;
+    }
+
+    listEl.innerHTML = allUpdates.map(u => {
+      const dateStr = new Date(u.date).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+      const htmlContent = marked.parse(u.content || '');
+      return `
+        <div class="card update-item" data-id="${u.id}" data-project="${u.projectName}">
+          <div class="update-meta">
+            <span class="update-date">${dateStr}</span>
+            <span class="update-author">${u.author || '匿名'}</span>
+            ${filter === 'all' ? `<span class="update-author" style="background:var(--border-color);color:var(--text-secondary);">${u.projectName}</span>` : ''}
+            <div class="update-actions">
+              <button class="edit-btn" title="编辑">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              </button>
+              <button class="del-btn del" title="删除">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              </button>
+            </div>
+          </div>
+          <div class="update-content">${htmlContent}</div>
+        </div>`;
+    }).join('');
+
+    // 绑定事件
+    listEl.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.update-item');
+        openEditModal(card.dataset.project, card.dataset.id);
+      });
+    });
+
+    listEl.querySelectorAll('.del-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.update-item');
+        if (confirm('确定要删除这条更新记录吗？')) {
+          deleteUpdate(card.dataset.project, card.dataset.id);
+        }
+      });
+    });
+  }
+
+  // ================= 业务逻辑 =================
+  
+  // 保存新更新
+  function saveUpdate() {
+    const project = $('#home-project').value;
+    const date = $('#home-date').value;
+    const author = $('#home-author').value.trim();
+    const content = $('#home-content').value.trim();
+
+    if (!project) return alert('请选择或新建一个项目');
+    if (!date) return alert('请选择日期时间');
+    if (!content) return alert('请输入更新内容');
+
+    if (!db.projects[project]) {
+      db.projects[project] = { updates: [] };
+    }
+
+    db.projects[project].updates.push({
+      id: genId(),
+      date,
+      author: author || '匿名',
+      content
+    });
+
+    saveDB();
+    
+    // 清空表单
+    $('#home-author').value = '';
+    $('#home-content').value = '';
+    $('#home-date').value = getLocalISOString();
+    
+    alert('保存成功！');
+  }
+
+  // 删除更新
+  function deleteUpdate(projectName, id) {
+    if (!db.projects[projectName]) return;
+    db.projects[projectName].updates = db.projects[projectName].updates.filter(u => u.id !== id);
+    if (db.projects[projectName].updates.length === 0) {
+      // 保留项目，不自动删除项目壳
+    }
+    saveDB();
+    renderUpdates();
+  }
+
+  // 编辑模态框
+  let editingContext = { project: '', id: '' };
+
+  function openEditModal(projectName, id) {
+    const update = db.projects[projectName]?.updates.find(u => u.id === id);
+    if (!update) return;
+
+    editingContext = { project: projectName, id };
+    $('#edit-date').value = update.date;
+    $('#edit-author').value = update.author;
+    $('#edit-content').value = update.content;
+    $('#modal-edit').classList.add('show');
+  }
+
+  function confirmEdit() {
+    const { project, id } = editingContext;
+    const update = db.projects[project]?.updates.find(u => u.id === id);
+    if (!update) return;
+
+    const date = $('#edit-date').value;
+    const author = $('#edit-author').value.trim();
+    const content = $('#edit-content').value.trim();
+
+    if (!date || !content) return alert('日期和内容不能为空');
+
+    update.date = date;
+    update.author = author || '匿名';
+    update.content = content;
+
+    saveDB();
+    $('#modal-edit').classList.remove('show');
+    renderUpdates();
+  }
+
+  // 新建项目
+  function createNewProject() {
+    const name = $('#new-project-name').value.trim();
+    if (!name) return alert('请输入项目名称');
+    if (db.projects[name]) return alert('该项目已存在');
+
+    db.projects[name] = { updates: [] };
+    saveDB();
+    renderProjectSelects();
+    $('#home-project').value = name;
+    $('#new-project-name').value = '';
+    $('#modal-new-project').classList.remove('show');
+  }
+
+  // ================= 导入导出 =================
+  
+  function exportProject() {
+    const projectName = $('#export-project').value;
+    if (!projectName) return alert('请选择要导出的项目');
+
+    const project = db.projects[projectName];
+    if (!project || project.updates.length === 0) return alert('该项目暂无更新记录');
+
+    let md = `# ${projectName} 更新记录\n\n`;
+    
+    // 按时间倒序导出
+    const sorted = [...project.updates].sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    sorted.forEach(u => {
+      const dateStr = new Date(u.date).toLocaleString('zh-CN', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).replace(/\//g, '-');
+      md += `## ${dateStr} | ${u.author}\n\n${u.content}\n\n---\n\n`;
+    });
+
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${projectName}_更新记录_${new Date().toISOString().slice(0,10)}.md`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function importProject(file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const text = e.target.result;
+      // 解析项目名称 (从 # 标题)
+      let projectName = file.name.replace(/\.md$|\.markdown$|\.txt$/i, '').replace(/_更新记录.*/i, '').trim();
+      
+      const titleMatch = text.match(/^#\s+(.+)/m);
+      if (titleMatch) {
+        projectName = titleMatch[1].replace('更新记录', '').trim();
+      }
+
+      if (!projectName) projectName = '导入项目_' + Date.now();
+
+      if (!db.projects[projectName]) {
+        db.projects[projectName] = { updates: [] };
+      }
+
+      // 按 ## 分割
+      const blocks = text.split(/^##\s+/m).slice(1); // 去掉第一个 # 标题部分
+      
+      let importCount = 0;
+      blocks.forEach(block => {
+        // 格式: 2026/06/16 18:00 | 作者 \n\n 内容
+        const lines = block.split('\n');
+        const headerLine = lines[0];
+        
+        // 尝试解析日期和作者
+        const headerMatch = headerLine.match(/(.*?)[\s\|]+(.*)/);
+        let dateStr = headerMatch ? headerMatch[1].trim() : headerLine.trim();
+        let author = headerMatch ? headerMatch[2].trim() : '匿名';
+        
+        // 清理作者可能带有的多余符号
+        author = author.replace(/^[\|\-\s]+/, '').trim();
+        if (!author) author = '匿名';
+
+        // 解析日期
+        let dateObj = new Date(dateStr.replace(/\//g, '-'));
+        if (isNaN(dateObj.getTime())) {
+          dateObj = new Date(); // fallback
+        }
+        
+        // 转为 datetime-local 格式
+        const offset = dateObj.getTimezoneOffset();
+        const localDate = new Date(dateObj.getTime() - offset * 60000);
+        const isoDate = localDate.toISOString().slice(0, 16);
+
+        // 内容
+        let content = lines.slice(1).join('\n').trim();
+        content = content.replace(/---\s*$/, '').trim();
+
+        if (content) {
+          db.projects[projectName].updates.push({
+            id: genId(),
+            date: isoDate,
+            author,
+            content
+          });
+          importCount++;
+        }
+      });
+
+      saveDB();
+      renderProjectSelects();
+      alert(`导入成功！\n项目：${projectName}\n共导入 ${importCount} 条记录。`);
+    };
+    reader.readAsText(file);
+  }
+
+  // ================= 设置与主题 =================
+  
+  function applyTheme(theme, darkMode) {
+    document.body.className = '';
+    document.body.classList.add(`theme-${theme}`);
+    if (darkMode) document.body.classList.add('dark-mode');
+    
+    $$('.theme-option').forEach(el => {
+      el.classList.toggle('active', el.dataset.theme === theme);
+    });
+    $('#toggle-dark').classList.toggle('active', darkMode);
+  }
+
+  // ================= 事件绑定 =================
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    // 初始化
+    renderProjectSelects();
+    applyTheme(db.settings.theme, db.settings.darkMode);
+    $('#home-date').value = getLocalISOString();
+
+    // 导航
+    $$('.nav-item').forEach(nav => {
+      nav.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchView(nav.dataset.view);
+      });
+    });
+
+    // 主页保存
+    $('#btn-save').addEventListener('click', saveUpdate);
+
+    // 新建项目
+    $('#btn-new-project').addEventListener('click', () => {
+      $('#modal-new-project').classList.add('show');
+      setTimeout(() => $('#new-project-name').focus(), 100);
+    });
+    $('#btn-cancel-new').addEventListener('click', () => $('#modal-new-project').classList.remove('show'));
+    $('#btn-confirm-new').addEventListener('click', createNewProject);
+    $('#new-project-name').addEventListener('keydown', (e) => { if (e.key === 'Enter') createNewProject(); });
+
+    // 更新页筛选
+    $('#filter-project').addEventListener('change', renderUpdates);
+
+    // 编辑模态框
+    $('#btn-cancel-edit').addEventListener('click', () => $('#modal-edit').classList.remove('show'));
+    $('#btn-confirm-edit').addEventListener('click', confirmEdit);
+
+    // 设置页 - 主题
+    $$('.theme-option').forEach(opt => {
+      opt.addEventListener('click', () => {
+        db.settings.theme = opt.dataset.theme;
+        saveDB();
+        applyTheme(db.settings.theme, db.settings.darkMode);
+      });
+    });
+
+    // 设置页 - 深色模式
+    $('#toggle-dark').addEventListener('click', () => {
+      db.settings.darkMode = !db.settings.darkMode;
+      saveDB();
+      applyTheme(db.settings.theme, db.settings.darkMode);
+    });
+
+    // 导出
+    $('#btn-export').addEventListener('click', exportProject);
+
+    // 导入
+    $('#btn-import').addEventListener('click', () => $('#import-file').click());
+    $('#import-file').addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        importProject(e.target.files[0]);
+        e.target.value = ''; // reset
+      }
+    });
+
+    // 点击遮罩关闭模态框
+    $$('.modal-overlay').forEach(overlay => {
+      overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) overlay.classList.remove('show');
+      });
+    });
+
+    // 配置 marked
+    if (typeof marked !== 'undefined') {
+      marked.setOptions({
+        breaks: true,
+        gfm: true
+      });
+    }
+  });
+</script>
+</body>
+</html>
