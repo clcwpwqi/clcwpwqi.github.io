@@ -63,7 +63,7 @@
       "description": "生成文本或链接的二维码",
       "icon": "QrCode",
       "component": "QrCodeTool",
-      "enabled": false,
+      "enabled": true,
       "color": "from-teal-500 to-emerald-500"
     },
     {
@@ -72,7 +72,7 @@
       "description": "生成安全的随机密码",
       "icon": "Key",
       "component": "PasswordGeneratorTool",
-      "enabled": false,
+      "enabled": true,
       "color": "from-amber-500 to-orange-500"
     }
   ]
